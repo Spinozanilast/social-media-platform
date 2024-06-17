@@ -1,7 +1,8 @@
 namespace Domain;
 
-public class GroupStory : AuditableEntity
+public class GroupStory
 {
-    public Guid Id { get; set; }
-    public required StoryMeta StoryMeta { get; set; }
+    public required List<Guid>? EditorsUserGuids { get; set; }
+    public required List<Guid> FullAccessUsersGuids { get; set; } = new List<Guid>();
+    public required Story Story { get; set; }
 }
