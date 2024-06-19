@@ -1,5 +1,6 @@
 <p align="center">
   <img src="https://img.shields.io/badge/version_-0.1-green" />
+  <img src="https://img.shields.io/badge/.NET_-8.0-purple" />
 </p>
 
 ## Mockup:
