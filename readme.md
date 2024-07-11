@@ -1,10 +1,18 @@
-<p align="center">
-  <img src="https://img.shields.io/badge/version_-0.1-green" />
+<div align="center">
+  
+  # Platform
+  ## Platform for socials and media
+  ![PmIcon](https://github.com/Spinozanilast/social-media-platform/assets/107877150/ecc08a47-baf4-40ec-89c6-fa043d0e92e7)
+</div>
+
+<div align="center">
+  <img src="https://img.shields.io/badge/version_-0.05-green" />
   <img src="https://img.shields.io/badge/.NET_-8.0-purple" />
-</p>
+</div>
 
 ## Mockup:
-![image](https://github.com/Spinozanilast/social-media-platform/assets/107877150/c6ee103a-57eb-4701-b3aa-b6714736ff96)
+![FullHD-Frame](https://github.com/Spinozanilast/social-media-platform/assets/107877150/164fb0a9-ca73-4ecd-a5bd-6ddcbbb83aa8)
+
 ## Entities Scheme:
-![image](https://github.com/Spinozanilast/social-media-platform/assets/107877150/a9378f8d-c1db-4671-8ec8-d47d716a5c5e)
-![image](https://github.com/Spinozanilast/social-media-platform/assets/107877150/afc4e238-0ed8-4e39-8bda-02f2a9cba686)
+![image](https://github.com/Spinozanilast/social-media-platform/assets/107877150/3c37d1ca-74c3-4ceb-b9de-d9cbe4456aff)
+![image](https://github.com/Spinozanilast/social-media-platform/assets/107877150/9f1ef434-5c05-4b04-87e8-055855df446e)
