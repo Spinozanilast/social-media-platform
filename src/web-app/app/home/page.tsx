@@ -1,4 +1,3 @@
-import Image from "next/image";
 import "@fontsource/share-tech-mono";
 
 export default function Home() {
