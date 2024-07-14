@@ -38,17 +38,27 @@ export default function SignInPage() {
                         alignItems: "center",
                     }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+                    <Avatar
+                        sx={{
+                            m: 1,
+                            bgcolor: theme.palette.secondary.main,
+                            color: theme.palette.text.primary,
+                        }}
+                    >
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography
+                        sx={{
+                            fontFamily: "Share Tech",
+                            color: theme.palette.text.primary,
+                        }}
                         component="h1"
-                        fontFamily="Share Tech Mono"
                         variant="h5"
                     >
                         Sign in
                     </Typography>
                     <Box
+                        className="bg-background-secondary p-8 rounded-xl "
                         component="form"
                         onSubmit={handleSubmit}
                         noValidate
@@ -60,7 +70,6 @@ export default function SignInPage() {
                             fullWidth
                             id="email"
                             label="Email Address"
-                            variant="filled"
                             name="email"
                             autoComplete="email"
                             autoFocus
@@ -69,7 +78,7 @@ export default function SignInPage() {
                             margin="normal"
                             required
                             fullWidth
-                            variant="filled"
+                            variant="outlined"
                             name="password"
                             label="Password"
                             type="password"
