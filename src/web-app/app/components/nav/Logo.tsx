@@ -5,9 +5,13 @@ import { useState } from "react";
 
 type LogoProps = {
     animationType: "backward" | "forward";
+    className: string;
 };
 
-export default function Logo({ animationType }: LogoProps) {
+export default function Logo({
+    animationType,
+    className: textClassName,
+}: LogoProps) {
     const [isHovered, setIsHovered] = useState(false);
 
     const handlePointerEnter = () => {
@@ -22,22 +26,26 @@ export default function Logo({ animationType }: LogoProps) {
         animationType === "forward" ? "group-hover:inline hidden" : "inline";
 
     return (
-        <p
-            className="group logo text-accent-orange text-3xl"
+        <div
+            className="w-32"
             style={{ fontFamily: "Share Tech Mono" }}
-            onPointerEnter={handlePointerEnter}
-            onPointerLeave={handlePointerLeave}
+            onMouseEnter={handlePointerEnter}
+            onMouseLeave={handlePointerLeave}
         >
-            P
-            <OnDisplayAnimatedSpan
-                animationType={animationType}
-                classname={animatedSpanStyle}
-                duration={2}
-                isHovered={isHovered}
+            <p
+                className={`w-full group logo text-accent-orange text-3xl + ${textClassName}`}
             >
-                latfor
-            </OnDisplayAnimatedSpan>
-            m
-        </p>
+                P
+                <OnDisplayAnimatedSpan
+                    animationType={animationType}
+                    classname={animatedSpanStyle}
+                    duration={2}
+                    isHovered={isHovered}
+                >
+                    latfor
+                </OnDisplayAnimatedSpan>
+                m
+            </p>
+        </div>
     );
 }
