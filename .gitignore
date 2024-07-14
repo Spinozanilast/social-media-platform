@@ -6,4 +6,5 @@
 .history/
 
 obj/
+bin/
 node-modules/
