@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Logo from "./components/nav/Logo";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -14,12 +13,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body>
-                <div className="logo-container mt-page-part flex justify-center">
-                    <Logo animationType="backward" />
-                </div>
-                {children}
-            </body>
+            <body>{children}</body>
         </html>
     );
 }

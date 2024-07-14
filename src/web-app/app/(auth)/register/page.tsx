@@ -12,6 +12,7 @@ import Container from "@mui/material/Container";
 import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "@/app/themes/main-dark";
 import { AuthTextField } from "@themes/mui-components/AuthTextField";
+import "@fontsource/share-tech";
 
 export default function RegisterPage() {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -25,7 +26,7 @@ export default function RegisterPage() {
 
     return (
         <ThemeProvider theme={theme}>
-            <Container className="fg" component="main" maxWidth="xs">
+            <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box
                     sx={{
@@ -35,13 +36,27 @@ export default function RegisterPage() {
                         alignItems: "center",
                     }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+                    <Avatar
+                        sx={{
+                            m: 1,
+                            bgcolor: theme.palette.secondary.main,
+                            color: theme.palette.text.primary,
+                        }}
+                    >
                         <LockOutlinedIcon />
                     </Avatar>
-                    <Typography component="h1" variant="h5">
+                    <Typography
+                        sx={{
+                            fontFamily: "Share Tech",
+                            color: theme.palette.text.primary,
+                        }}
+                        component="h1"
+                        variant="h5"
+                    >
                         Sign up
                     </Typography>
                     <Box
+                        className="bg-background-secondary p-8 rounded-xl "
                         component="form"
                         noValidate
                         onSubmit={handleSubmit}

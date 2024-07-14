@@ -24,23 +24,23 @@ export default function OnDisplayAnimatedSpan({
 
     const singleCharacterAppearTime = (duration / children.length) * 1000;
 
-    const handleForwardAnimation = () => {
-        setCurrentText("");
+    const handleAnimation = (direction: "forward" | "backward") => {
+        let newText = "";
+        if (direction === "forward") {
+            newText = "";
+        } else {
+            newText = children;
+        }
+
         children.split("").map((char, index) => {
             const timer = setTimeout(() => {
-                setCurrentText((prevText) => prevText + char);
-            }, singleCharacterAppearTime * index);
-            timers.current.push(timer);
-        });
-    };
-
-    const handleBackwardAnimation = () => {
-        setCurrentText(children);
-        children.split("").map((_char, index) => {
-            const timer = setTimeout(() => {
-                setCurrentText((prevText) =>
-                    prevText.slice(0, prevText.length - 1)
-                );
+                if (direction === "forward") {
+                    setCurrentText((prevText) => prevText + char);
+                } else {
+                    setCurrentText((prevText) =>
+                        prevText.slice(0, prevText.length - 1)
+                    );
+                }
             }, singleCharacterAppearTime * index);
             timers.current.push(timer);
         });
@@ -48,11 +48,7 @@ export default function OnDisplayAnimatedSpan({
 
     useEffect(() => {
         if (isHovered) {
-            if (animationType === "forward") {
-                handleForwardAnimation();
-            } else {
-                handleBackwardAnimation();
-            }
+            handleAnimation(animationType);
         } else {
             animationType === "forward"
                 ? setCurrentText("")
@@ -66,7 +62,9 @@ export default function OnDisplayAnimatedSpan({
     return (
         <span ref={spanRef} className={`${classname}`}>
             {currentText.split("").map((char, index) => (
-                <span key={index}>{char}</span>
+                <span className="animated-span" key={index}>
+                    {char}
+                </span>
             ))}
         </span>
     );
