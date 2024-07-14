@@ -1,5 +1,11 @@
-import Copyright from "../themes/mui-components/Copyright";
-import Logo from "@app/components/nav/Logo";
+import type { Metadata } from "next";
+import "@app/globals.css";
+import Navbar from "./../components/nav/Navbar";
+
+export const metadata: Metadata = {
+    title: "Platform",
+    description: "Social media platform",
+};
 
 export default function Layout({
     children,
@@ -9,10 +15,9 @@ export default function Layout({
     return (
         <section>
             <div className="logo-container mt-page-part flex justify-center">
-                <Logo animationType="backward" className="text-center" />
+                <Navbar />
             </div>
             {children}
-            <Copyright sx={{ mt: 8, mb: 4 }} />{" "}
         </section>
     );
 }
