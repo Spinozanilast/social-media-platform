@@ -1,4 +1,4 @@
-using IdentityService.Contracts.Registration;
+using IdentityService.Contracts.Api.Registration;
 using IdentityService.Entities;
 using IdentityService.Mapping;
 using Microsoft.AspNetCore.Identity;
@@ -16,7 +16,7 @@ public class AccountsController : ControllerBase
         _userManager = userManager;
     }
 
-    [HttpPost(ApiEndpoints.AccountEndpoints.Register)]
+    [HttpPost(ApiEndpoints.AccountEndpoints.SignUp)]
     public async Task<IActionResult> RegisterUser([FromBody] UserForRegistration userForRegistration)
     {
         if (userForRegistration is null)
@@ -29,12 +29,10 @@ public class AccountsController : ControllerBase
 
         var result = await _userManager.CreateAsync(user);
 
-        if (!result.Succeeded)
-        {
-            var errors = result.Errors.Select(e => e.Description);
-            return BadRequest(new RegistrationResponse { Errors = errors });
-        }
+        if (result.Succeeded) return Created();
+        
+        var errors = result.Errors.Select(e => e.Description);
+        return BadRequest(new RegistrationResponse { Errors = errors });
 
-        return Created();
     }
 }

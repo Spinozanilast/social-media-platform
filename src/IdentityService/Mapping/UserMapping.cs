@@ -1,4 +1,4 @@
-using IdentityService.Contracts.Registration;
+using IdentityService.Contracts.Api.Registration;
 using IdentityService.Entities;
 
 namespace IdentityService.Mapping;
@@ -9,8 +9,8 @@ public static class UserMapping
     {
         return new User
         {
-            FirstName = userForRegistration.FirstName,
-            LastName = userForRegistration.LastName,
+            FirstName = userForRegistration.FirstName!,
+            LastName = userForRegistration.LastName!,
             Email = userForRegistration.Email,
             UserName = userForRegistration.Username,
         };

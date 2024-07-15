@@ -1,4 +1,4 @@
-namespace IdentityService.Contracts.Registration;
+namespace IdentityService.Contracts.Api.Registration;
 
 public class RegistrationResponse
 {
