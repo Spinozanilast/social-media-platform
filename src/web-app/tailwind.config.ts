@@ -18,6 +18,7 @@ const config: Config = {
                 background: {
                     secondary: "#181818",
                     "inline-button": "#262727",
+                    "text-fields": "#121313",
                 },
                 text: {
                     placeholder: "#9F9F9F",
