@@ -1,14 +1,12 @@
-using IdentityService;
 using IdentityService.Data;
 using IdentityService.Entities;
-using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddUsersDbContext(builder);
-builder.Services.AddIdentity<User, IdentityRole>()
-    .AddEntityFrameworkStores<UsersDbContext>();
+builder.Services.AddIdentity<User, Role>()
+    .AddEntityFrameworkStores<IdentityDbContext>();
 
 var app = builder.Build();
 
