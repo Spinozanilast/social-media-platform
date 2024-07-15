@@ -31,6 +31,25 @@ body {
     .logo {
         text-shadow: -2px -2px white;
     }
+
+    .animated-span {
+        opacity: 0;
+        animation: appear 0.5s forwards;
+    }
+
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0 1000px rgb(255, 15, 15) inset !important;
+        -webkit-background-clip: text !important;
+        background-clip: text !important;
+    }
+
+    .form_error {
+        @apply;
+    }
+
 }
 
 @keyframes appear {
