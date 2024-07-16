@@ -9,9 +9,8 @@ import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { ThemeProvider } from "@mui/material";
+import { ThemeProvider, Typography } from "@mui/material";
 import { AuthTextField } from "@themes/mui-components/AuthTextField";
 import { theme } from "@themes/main-dark";
 import "@fontsource/share-tech-mono";
@@ -48,14 +47,11 @@ export default function SignInPage() {
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography
-                        sx={{
-                            fontFamily: "Share Tech",
-                            color: theme.palette.text.primary,
-                        }}
-                        component="h1"
-                        variant="h5"
+                        className="text-3xl my-2"
+                        fontFamily="Share Tech"
+                        color={theme.palette.text.primary}
                     >
-                        Sign in
+                        Log in
                     </Typography>
                     <Box
                         className="bg-background-secondary p-8 rounded-xl "
@@ -97,7 +93,7 @@ export default function SignInPage() {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            Sign In
+                            Log in
                         </Button>
                         <Grid container>
                             <Grid item xs>

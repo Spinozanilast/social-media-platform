@@ -13,15 +13,14 @@ import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "@/app/themes/main-dark";
 import { AuthTextField } from "@themes/mui-components/AuthTextField";
 import "@fontsource/share-tech";
+import UserApi from "@app/api/userApi";
+import { LoginRequest } from "@/app/models/dto/userDto";
 
 export default function RegisterPage() {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get("email"),
-            password: data.get("password"),
-        });
+        const api: UserApi = new UserApi("http://localhost:5171");
     };
 
     return (
@@ -30,7 +29,7 @@ export default function RegisterPage() {
                 <CssBaseline />
                 <Box
                     sx={{
-                        marginTop: 8,
+                        marginTop: 2,
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
@@ -46,14 +45,11 @@ export default function RegisterPage() {
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography
-                        sx={{
-                            fontFamily: "Share Tech",
-                            color: theme.palette.text.primary,
-                        }}
-                        component="h1"
-                        variant="h5"
+                        className="text-3xl my-2"
+                        fontFamily="Share Tech"
+                        color={theme.palette.text.primary}
                     >
-                        Sign up
+                        Register
                     </Typography>
                     <Box
                         className="bg-background-secondary p-8 rounded-xl "
@@ -63,6 +59,16 @@ export default function RegisterPage() {
                         sx={{ mt: 3 }}
                     >
                         <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <AuthTextField
+                                    required
+                                    fullWidth
+                                    id="username"
+                                    label="Username"
+                                    name="username"
+                                    autoComplete="username"
+                                />
+                            </Grid>
                             <Grid item xs={12} sm={6}>
                                 <AuthTextField
                                     autoComplete="given-name"
@@ -112,7 +118,7 @@ export default function RegisterPage() {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            Sign Up
+                            Sign up
                         </Button>
                         <Grid container justifyContent="flex-end">
                             <Grid item>

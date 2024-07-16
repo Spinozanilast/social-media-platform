@@ -1,11 +1,7 @@
 import { alpha, styled } from "@mui/material";
 import TextField, { TextFieldProps } from "@mui/material/TextField";
-import { OutlinedInputProps } from "@mui/material/OutlinedInput";
 export const AuthTextField = styled((props: TextFieldProps) => (
-    <TextField
-        InputProps={{ disableUnderline: true } as Partial<OutlinedInputProps>}
-        {...props}
-    />
+    <TextField {...props} />
 ))(({ theme }) => ({
     "& .MuiFilledInput-root": {
         overflow: "hidden",
