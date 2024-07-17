@@ -1,1 +1,13 @@
 @IdentityService_HostAddress = http://localhost:5171
+
+POST {{IdentityService_HostAddress}}/user/register
+Content-Type: application/json
+
+{
+  "username": "spinozanilast",
+  "firstname": "vadim",
+  "lastname": "budchanin",
+  "email": "v@l.inbox",
+  "password": "vadim12345",
+  "confirmpassword": "vadim12345"
+}

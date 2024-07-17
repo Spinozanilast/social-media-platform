@@ -32,7 +32,7 @@ public class AccountsController : ControllerBase
         if (result.Succeeded) return Created();
         
         var errors = result.Errors.Select(e => e.Description);
-        return BadRequest(new RegistrationResponse { Errors = errors });
+        return BadRequest(new RegistrationResponse { IsSuccessfulRegistration  = false, Errors = errors });
 
     }
 }
