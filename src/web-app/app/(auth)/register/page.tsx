@@ -14,13 +14,15 @@ import { theme } from "@/app/themes/main-dark";
 import { AuthTextField } from "@themes/mui-components/AuthTextField";
 import "@fontsource/share-tech";
 import UserApi from "@app/api/userApi";
-import { LoginRequest } from "@/app/models/dto/userDto";
+import { getUserApi } from "@/app/api/apiManagement";
 
 export default function RegisterPage() {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        const api: UserApi = new UserApi("http://localhost:5171");
+        const api: UserApi = getUserApi();
+        api.registerUser(FormData);
+        console.log(data);
     };
 
     return (
@@ -54,7 +56,6 @@ export default function RegisterPage() {
                     <Box
                         className="bg-background-secondary p-8 rounded-xl "
                         component="form"
-                        noValidate
                         onSubmit={handleSubmit}
                         sx={{ mt: 3 }}
                     >
@@ -109,6 +110,16 @@ export default function RegisterPage() {
                                     type="password"
                                     id="password"
                                     autoComplete="new-password"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <AuthTextField
+                                    required
+                                    fullWidth
+                                    name="confirmpassword"
+                                    label="Confirm Password"
+                                    type="password"
+                                    id="confirm password"
                                 />
                             </Grid>
                         </Grid>

@@ -1,4 +1,5 @@
 export type RegisterRequest = {
+    username: string;
     firstName: string;
     lastName: string;
     email: string;
@@ -10,7 +11,7 @@ export type LoginRequest = {
     password: string;
 };
 
-export type AuthorizeResponse = {
+export type UserApiResponse = {
     isSuccesfully: boolean;
     errors: string[];
 };
