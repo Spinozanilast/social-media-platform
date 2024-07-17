@@ -1,6 +1,14 @@
 @GatewayService_HostAddress = http://localhost:5098
 
-GET {{GatewayService_HostAddress}}/weatherforecast/
-Accept: application/json
+POST {{GatewayService_HostAddress}}/user/register
+Content-Type: application/json
 
-###
+{
+  "firstname": "vadim",
+  "lastname": "budchanin",
+  "username": "rewrrt",
+  "email": "v@tew.com",
+  "password": "vadim12345",
+  "confirmpassword": "vadim12345"
+}
+
