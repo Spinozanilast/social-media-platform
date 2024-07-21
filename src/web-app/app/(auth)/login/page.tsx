@@ -60,27 +60,25 @@ export default function SignInPage() {
                         noValidate
                         sx={{ mt: 1 }}
                     >
-                        <AuthTextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="email"
-                            label="Email Address"
-                            name="email"
-                            autoComplete="email"
-                            autoFocus
-                        />
-                        <AuthTextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            variant="outlined"
-                            name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                            autoComplete="current-password"
-                        />
+                        <Grid container gap={1}>
+                            <AuthTextField
+                                required
+                                fullWidth
+                                id="email"
+                                label="Email Address"
+                                name="email"
+                                autoComplete="email"
+                            />
+                            <AuthTextField
+                                required
+                                fullWidth
+                                name="password"
+                                label="Password"
+                                type="password"
+                                id="password"
+                                autoComplete="current-password"
+                            />
+                        </Grid>
                         <FormControlLabel
                             control={
                                 <Checkbox value="remember" color="primary" />

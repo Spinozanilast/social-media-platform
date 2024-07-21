@@ -15,16 +15,115 @@ import { AuthTextField } from "@themes/mui-components/AuthTextField";
 import "@fontsource/share-tech";
 import UserApi from "@app/api/userApi";
 import { getUserApi } from "@/app/api/apiManagement";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { object, string, TypeOf } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
+import { FieldId, RegisterRequest } from "@/app/models/dto/userDto";
+import { UserApiResponse } from "@models/dto/userDto";
+
+const registerSchema = object({
+    username: string()
+        .min(1, "Username is required")
+        .max(64, "Username must be less than 64 characters"),
+    firstName: string()
+        .min(1, "Email is required")
+        .max(32, "Password ust be less 32 than characters"),
+    lastName: string()
+        .min(1, "Email is required")
+        .max(32, "Password ust be less 32 than characters"),
+    email: string().min(1, "Email is required").email("Email is invalid"),
+    password: string()
+        .min(8, "Password must be more than 8 characters")
+        .max(64, "Password must be less than 64 characters"),
+    confirmPassword: string(),
+}).refine((data) => data.password === data.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "Passwords do not match",
+});
+
+type TextFieldData = {
+    id: FieldId;
+    label: string;
+    autoComplete: string;
+    type: "text" | "password" | string;
+    parentSm?: number;
+};
+
+const pageTextFieldsData: TextFieldData[] = [
+    {
+        id: FieldId.Username,
+        label: "Username",
+        autoComplete: "username",
+        type: "text",
+    },
+    {
+        id: FieldId.FirstName,
+        label: "First Name",
+        autoComplete: "given-name",
+        type: "text",
+        parentSm: 6,
+    },
+    {
+        id: FieldId.LastName,
+        label: "Last Name",
+        autoComplete: "family-name",
+        type: "text",
+        parentSm: 6,
+    },
+    {
+        id: FieldId.Email,
+        label: "Email Address",
+        autoComplete: "email",
+        type: "text",
+    },
+    {
+        id: FieldId.Password,
+        label: "Password",
+        autoComplete: "new-password",
+        type: "password",
+    },
+    {
+        id: FieldId.ConfirmPassword,
+        label: "Confirm Password",
+        autoComplete: "",
+        type: "password",
+    },
+];
+
+type RegisterInput = TypeOf<typeof registerSchema>;
 
 export default function RegisterPage() {
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        const api: UserApi = getUserApi();
-        api.registerUser(FormData);
+    const {
+        register,
+        formState: { errors, isSubmitSuccessful },
+        reset,
+        handleSubmit,
+        setError,
+    } = useForm<RegisterInput>({
+        resolver: zodResolver(registerSchema),
+    });
+
+    useEffect(() => {
+        console.log(isSubmitSuccessful);
+        if (isSubmitSuccessful) {
+            reset();
+        }
+    }, [isSubmitSuccessful, reset]);
+
+    const onSubmit: SubmitHandler<RegisterInput> = async (data) => {
         console.log(data);
+        const api: UserApi = getUserApi();
+        const response: UserApiResponse = await api.registerUser(data);
+        if (!response.isSuccesfully) {
+            setError(response.errorField, {
+                type: "validate",
+                message: response.errors[1],
+            });
+        }
     };
 
+    console.log(errors);
     return (
         <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs">
@@ -56,72 +155,32 @@ export default function RegisterPage() {
                     <Box
                         className="bg-background-secondary p-8 rounded-xl "
                         component="form"
-                        onSubmit={handleSubmit}
+                        onSubmit={handleSubmit(onSubmit)}
                         sx={{ mt: 3 }}
                     >
                         <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <AuthTextField
-                                    required
-                                    fullWidth
-                                    id="username"
-                                    label="Username"
-                                    name="username"
-                                    autoComplete="username"
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <AuthTextField
-                                    autoComplete="given-name"
-                                    name="firstName"
-                                    required
-                                    fullWidth
-                                    id="firstName"
-                                    label="First Name"
-                                    autoFocus
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <AuthTextField
-                                    required
-                                    fullWidth
-                                    id="lastName"
-                                    label="Last Name"
-                                    name="lastName"
-                                    autoComplete="family-name"
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <AuthTextField
-                                    required
-                                    fullWidth
-                                    id="email"
-                                    label="Email Address"
-                                    name="email"
-                                    autoComplete="email"
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <AuthTextField
-                                    required
-                                    fullWidth
-                                    name="password"
-                                    label="Password"
-                                    type="password"
-                                    id="password"
-                                    autoComplete="new-password"
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <AuthTextField
-                                    required
-                                    fullWidth
-                                    name="confirmpassword"
-                                    label="Confirm Password"
-                                    type="password"
-                                    id="confirm password"
-                                />
-                            </Grid>
+                            {pageTextFieldsData.map((fieldData) => (
+                                <Grid
+                                    item
+                                    xs={12}
+                                    sm={fieldData.parentSm === 6 ? 6 : 12}
+                                    key={fieldData.id}
+                                >
+                                    <AuthTextField
+                                        required
+                                        fullWidth
+                                        id={fieldData.id}
+                                        label={fieldData.label}
+                                        type={fieldData.type}
+                                        error={!!errors[fieldData.id]}
+                                        helperText={
+                                            errors[fieldData.id] &&
+                                            errors[fieldData.id]!.message
+                                        }
+                                        {...register(fieldData.id)}
+                                    />
+                                </Grid>
+                            ))}
                         </Grid>
                         <Button
                             type="submit"
