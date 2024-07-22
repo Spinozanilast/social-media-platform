@@ -1,4 +1,5 @@
-using IdentityService.Contracts.Api.Registration;
+using IdentityService.Contracts.Login;
+using IdentityService.Contracts.Registration;
 using IdentityService.Entities;
 
 namespace IdentityService.Mapping;
@@ -15,5 +16,15 @@ public static class UserMapping
             UserName = userForRegistration.Username,
         };
     }
-}
 
+    public static LoginResponse ToLoginResponse(this User user, string tokenString)
+    {
+        return new LoginResponse(
+            Id: user.Id,
+            FirstName: user.FirstName,
+            LastName: user.LastName,
+            UserName: user.UserName ?? string.Empty,
+            Token: tokenString
+        );
+    }
+}

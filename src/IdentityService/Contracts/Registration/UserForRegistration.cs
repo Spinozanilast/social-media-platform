@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace IdentityService.Contracts.Api.Registration;
+namespace IdentityService.Contracts.Registration;
 
 public class UserForRegistration
 {
@@ -13,8 +13,4 @@ public class UserForRegistration
     
     [DataType(DataType.Password)]
     public required string Password { get; set; }
-
-    [DataType(DataType.Password)]
-    [Compare("Password", ErrorMessage = "The password and confirmation password do not match")]
-    public required string ConfirmPassword { get; set; }
 }
