@@ -14,15 +14,39 @@ import { ThemeProvider, Typography } from "@mui/material";
 import { AuthTextField } from "@themes/mui-components/AuthTextField";
 import { theme } from "@themes/main-dark";
 import "@fontsource/share-tech-mono";
+import UserApi from "@/app/api/userApi";
+import { getUserApi } from "@/app/api/apiManagement";
+import { LoginRequest, LoginResponse } from "@/app/models/user/login";
+import { ErrorOption, SubmitHandler, useForm } from "react-hook-form";
+import { UserApiResponse } from "@/app/models/user/util";
+import isEmailValid from "@/app/helpers/email-validation";
+import { useEffect, useState } from "react";
 
 export default function SignInPage() {
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get("email"),
-            password: data.get("password"),
-        });
+    const [isSuccess, setLoginSuccessfulity] = useState(true);
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        setError,
+    } = useForm<LoginRequest>();
+
+    const onSubmit: SubmitHandler<LoginRequest> = async (
+        data: LoginRequest
+    ) => {
+        const api: UserApi = getUserApi();
+        const response: UserApiResponse | LoginResponse = await api.loginUser(
+            data as LoginRequest
+        );
+        if (!(response as UserApiResponse).isSuccesfully) {
+            const formError: ErrorOption = {
+                type: "server",
+                message: "Email or Password Incorrect",
+            };
+
+            setError("email", formError);
+            setError("password", formError);
+        }
     };
 
     return (
@@ -56,8 +80,7 @@ export default function SignInPage() {
                     <Box
                         className="bg-background-secondary p-8 rounded-xl "
                         component="form"
-                        onSubmit={handleSubmit}
-                        noValidate
+                        onSubmit={handleSubmit(onSubmit)}
                         sx={{ mt: 1 }}
                     >
                         <Grid container gap={1}>
@@ -66,17 +89,37 @@ export default function SignInPage() {
                                 fullWidth
                                 id="email"
                                 label="Email Address"
-                                name="email"
                                 autoComplete="email"
+                                error={!!errors["email"]}
+                                helperText={
+                                    errors["email"] && errors["email"]!.message
+                                }
+                                {...register("email", {
+                                    validate: (value) => {
+                                        const isValid = isEmailValid(value);
+                                        if (!isValid) {
+                                            setError("email", {
+                                                type: "validate",
+                                                message: "Email is not valid",
+                                            });
+                                        }
+                                        return isValid;
+                                    },
+                                })}
                             />
                             <AuthTextField
                                 required
                                 fullWidth
-                                name="password"
                                 label="Password"
                                 type="password"
                                 id="password"
                                 autoComplete="current-password"
+                                error={!!errors["password"]}
+                                helperText={
+                                    errors["password"] &&
+                                    errors["password"]!.message
+                                }
+                                {...register("password")}
                             />
                         </Grid>
                         <FormControlLabel

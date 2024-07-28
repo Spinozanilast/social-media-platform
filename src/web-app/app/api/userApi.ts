@@ -6,13 +6,15 @@ import axios, {
     isAxiosError,
 } from "axios";
 import { ApiConfig } from "./types/apiConfig";
-import { RegisterRequest, UserApiResponse } from "@models/dto/userDto";
+import { RegisterRequest } from "@models/user/register";
+import { UserApiResponse } from "@models/user/util";
+import { LoginRequest, LoginResponse } from "@models/user/login";
 
 export default class UserApi {
     public config: ApiConfig;
     private apiClient: AxiosInstance;
 
-    private readonly userApiEndpoints = {
+    private readonly Endpoints = {
         register: "user/register",
         login: "user/login",
     };
@@ -32,13 +34,12 @@ export default class UserApi {
         R extends AxiosResponse<T> = AxiosResponse<T>,
         D extends RegisterRequest = RegisterRequest
     >(data: D, config?: AxiosRequestConfig<D>): Promise<UserApiResponse> {
-        config = {
-            validateStatus: (status) => status < 500,
-            url: this.userApiEndpoints.register,
-            method: "POST",
-            data: data,
-            ...config,
-        };
+        config = this.prepareConfig<D>(
+            config,
+            data,
+            this.Endpoints.register,
+            "POST"
+        );
 
         let response: AxiosResponse;
         try {
@@ -46,6 +47,30 @@ export default class UserApi {
             if (response.status >= 400) {
                 return response.data as UserApiResponse;
             }
+        } catch (error) {
+            console.error(error);
+        }
+        return { isSuccesfully: true } as UserApiResponse;
+    }
+
+    public async loginUser<
+        T extends LoginResponse = LoginResponse,
+        R extends AxiosResponse<T> = AxiosResponse<T>,
+        D extends LoginRequest = LoginRequest
+    >(
+        data: D,
+        config?: AxiosRequestConfig<D>
+    ): Promise<LoginResponse | UserApiResponse> {
+        config = this.prepareConfig<D>(
+            config,
+            data,
+            this.Endpoints.login,
+            "POST"
+        );
+
+        let response: AxiosResponse;
+        try {
+            response = await this.request<T, R, D>(config);
         } catch (error) {
             console.error(error);
         }
@@ -61,5 +86,21 @@ export default class UserApi {
             .catch((error: Error | AxiosError) => {
                 return Promise.reject(error.name);
             });
+    }
+
+    private prepareConfig<D>(
+        config: AxiosRequestConfig<D> | undefined,
+        data: D,
+        url: string,
+        method: string
+    ) {
+        config = {
+            validateStatus: (status) => status < 500,
+            url: url,
+            method: method,
+            data: data,
+            ...config,
+        };
+        return config;
     }
 }

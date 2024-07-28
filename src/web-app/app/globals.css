@@ -45,6 +45,10 @@ body {
         -webkit-background-clip: text !important;
         background-clip: text !important;
     }
+
+    .form_error {
+        @apply;
+    }
 }
 
 @keyframes appear {

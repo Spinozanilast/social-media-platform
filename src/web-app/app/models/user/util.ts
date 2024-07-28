@@ -1,16 +1,3 @@
-export type RegisterRequest = {
-    username: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    password: string;
-};
-
-export type LoginRequest = {
-    email: string;
-    password: string;
-};
-
 export enum FieldId {
     Username = "username",
     Email = "email",

@@ -19,8 +19,8 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { object, string, TypeOf } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
-import { FieldId, RegisterRequest } from "@/app/models/dto/userDto";
-import { UserApiResponse } from "@models/dto/userDto";
+import { FieldId } from "@models/user/util";
+import { UserApiResponse } from "@models/user/util";
 
 const registerSchema = object({
     username: string()
@@ -112,10 +112,10 @@ export default function RegisterPage() {
     }, [isSubmitSuccessful, reset]);
 
     const onSubmit: SubmitHandler<RegisterInput> = async (data) => {
-        console.log(data);
         const api: UserApi = getUserApi();
         const response: UserApiResponse = await api.registerUser(data);
-        if (!response.isSuccesfully) {
+        console.log(response);
+        if (!response.isSuccesfully && response.errors.length !== 0) {
             setError(response.errorField, {
                 type: "validate",
                 message: response.errors[1],
@@ -192,7 +192,7 @@ export default function RegisterPage() {
                         </Button>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
-                                <Link href="/signin" variant="body2">
+                                <Link href="/login" variant="body2">
                                     Already have an account? Sign in
                                 </Link>
                             </Grid>
