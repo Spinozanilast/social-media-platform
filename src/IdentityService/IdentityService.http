@@ -8,5 +8,5 @@ Content-Type: application/json
   "firstname": "vadim",
   "lastname": "budchanin",
   "email": "v@l.inbox",
-  "password": "vadim12345",
+  "password": "vadim12345"
 }
