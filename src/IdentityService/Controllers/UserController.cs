@@ -1,5 +1,4 @@
 using IdentityService.Contracts.Authentication;
-using IdentityService.Contracts.Login;
 using IdentityService.Contracts.Registration;
 using IdentityService.Entities;
 using IdentityService.Mapping;
