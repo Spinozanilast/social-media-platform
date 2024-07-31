@@ -18,12 +18,12 @@ import UserApi from "@/app/api/userApi";
 import { getUserApi } from "@/app/api/apiManagement";
 import { LoginRequest, LoginResponse } from "@/app/models/user/login";
 import { ErrorOption, SubmitHandler, useForm } from "react-hook-form";
-import { UserApiResponse } from "@/app/models/user/util";
 import isEmailValid from "@/app/helpers/email-validation";
 import { useEffect, useState } from "react";
+import { object } from "zod";
+import { UserApiResponse } from "@models/user/util";
 
 export default function SignInPage() {
-    const [isSuccess, setLoginSuccessfulity] = useState(true);
     const {
         register,
         handleSubmit,
@@ -38,7 +38,7 @@ export default function SignInPage() {
         const response: UserApiResponse | LoginResponse = await api.loginUser(
             data as LoginRequest
         );
-        if (!(response as UserApiResponse).isSuccesfully) {
+        if ((response as UserApiResponse).isSuccesfully !== null) {
             const formError: ErrorOption = {
                 type: "server",
                 message: "Email or Password Incorrect",
@@ -47,6 +47,7 @@ export default function SignInPage() {
             setError("email", formError);
             setError("password", formError);
         }
+        console.log(response);
     };
 
     return (

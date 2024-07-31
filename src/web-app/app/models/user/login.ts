@@ -9,6 +9,4 @@ export type LoginResponse = {
     lastName: string;
     username?: string;
     token: string;
-
-    getFullName(): string;
 };

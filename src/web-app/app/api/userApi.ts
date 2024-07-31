@@ -3,7 +3,6 @@ import axios, {
     AxiosInstance,
     AxiosRequestConfig,
     AxiosResponse,
-    isAxiosError,
 } from "axios";
 import { ApiConfig } from "./types/apiConfig";
 import { RegisterRequest } from "@models/user/register";
@@ -71,6 +70,10 @@ export default class UserApi {
         let response: AxiosResponse;
         try {
             response = await this.request<T, R, D>(config);
+            if (response.status >= 400) {
+                return { isSuccesfully: false } as UserApiResponse;
+            }
+            return response.data as LoginResponse;
         } catch (error) {
             console.error(error);
         }
