@@ -1,3 +1,5 @@
+import { ErrorOption } from "react-hook-form";
+
 export type LoginRequest = {
     email: string;
     password: string;
@@ -10,3 +12,9 @@ export type LoginResponse = {
     username?: string;
     token: string;
 };
+
+export type IsErrorResult = {
+    isError: boolean;
+};
+
+export type LoginErrorResult = ErrorOption & IsErrorResult;

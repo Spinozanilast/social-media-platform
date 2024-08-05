@@ -16,14 +16,38 @@ import { theme } from "@themes/main-dark";
 import "@fontsource/share-tech-mono";
 import UserApi from "@/app/api/userApi";
 import { getUserApi } from "@/app/api/apiManagement";
-import { LoginRequest, LoginResponse } from "@/app/models/user/login";
+import {
+    LoginErrorResult,
+    LoginRequest,
+    LoginResponse,
+} from "@/app/models/user/login";
 import { ErrorOption, SubmitHandler, useForm } from "react-hook-form";
 import isEmailValid from "@/app/helpers/email-validation";
-import { useEffect, useState } from "react";
-import { object } from "zod";
 import { UserApiResponse } from "@models/user/util";
+import { useRouter } from "next/navigation";
+
+const handleLogin: SubmitHandler<LoginRequest> = async (
+    data: LoginRequest
+): Promise<LoginErrorResult | LoginResponse> => {
+    const api: UserApi = getUserApi();
+    const response: UserApiResponse | LoginResponse = await api.loginUser(
+        data as LoginRequest
+    );
+    if ((response as UserApiResponse).isSuccesfully !== undefined) {
+        const formError: LoginErrorResult = {
+            isError: true,
+            type: "server",
+            message: "Email or Password Incorrect",
+        };
+
+        return formError;
+    }
+
+    return response as LoginResponse;
+};
 
 export default function SignInPage() {
+    const router = useRouter();
     const {
         register,
         handleSubmit,
@@ -34,20 +58,16 @@ export default function SignInPage() {
     const onSubmit: SubmitHandler<LoginRequest> = async (
         data: LoginRequest
     ) => {
-        const api: UserApi = getUserApi();
-        const response: UserApiResponse | LoginResponse = await api.loginUser(
-            data as LoginRequest
-        );
-        if ((response as UserApiResponse).isSuccesfully !== null) {
-            const formError: ErrorOption = {
-                type: "server",
-                message: "Email or Password Incorrect",
-            };
-
-            setError("email", formError);
-            setError("password", formError);
+        const result = await handleLogin(data);
+        if ((result as LoginErrorResult).isError) {
+            const errorOption = result as ErrorOption;
+            setError("email", errorOption);
+            setError("password", errorOption);
+            return;
         }
-        console.log(response);
+
+        const response = result as LoginResponse;
+        router.push(`/${response.username ?? response.id}`);
     };
 
     return (
