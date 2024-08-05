@@ -1,3 +1,4 @@
+using IdentityService.Contracts.Login;
 using IdentityService.Contracts.Registration;
 using IdentityService.Entities;
 
@@ -9,11 +10,21 @@ public static class UserMapping
     {
         return new User
         {
-            FirstName = userForRegistration.FirstName,
-            LastName = userForRegistration.LastName,
+            FirstName = userForRegistration.FirstName!,
+            LastName = userForRegistration.LastName!,
             Email = userForRegistration.Email,
             UserName = userForRegistration.Username,
         };
     }
-}
 
+    public static LoginResponse ToLoginResponse(this User user, string tokenString)
+    {
+        return new LoginResponse(
+            Id: user.Id,
+            FirstName: user.FirstName,
+            LastName: user.LastName,
+            UserName: user.UserName ?? string.Empty,
+            Token: tokenString
+        );
+    }
+}

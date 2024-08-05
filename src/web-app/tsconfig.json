@@ -21,6 +21,8 @@
       "@/*": ["./*"],
       "@themes/*": ["./app/themes/*"],
       "@app/*": ["./app/*"],
+      "@api/*": ["./app/api/*"],
+      "@models/*": ["./app/models/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

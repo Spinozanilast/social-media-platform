@@ -4,9 +4,5 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IdentityService.Data;
 
-public class UsersDbContext : IdentityDbContext<User                    >
-{
-    public UsersDbContext(DbContextOptions options) : base(options)
-    {
-    }
-}
+public class IdentityDbContext(DbContextOptions<IdentityDbContext> options)
+    : IdentityDbContext<User, Role, Guid>(options);
