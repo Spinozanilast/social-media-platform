@@ -49,6 +49,7 @@ body {
     .form_error {
         @apply;
     }
+
 }
 
 @keyframes appear {
