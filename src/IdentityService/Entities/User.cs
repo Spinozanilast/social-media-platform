@@ -7,20 +7,6 @@ namespace IdentityService.Entities;
 [ExportTsClass(OutputDir = "../web-app/app/models/shared")]
 public class User : IdentityUser<Guid>
 {
-    public User()
-    {
-    }
-
-    public User(string userName) : base(userName)
-    {
-    }
-
-    [Required]
-    [StringLength(40)]
-    public string FirstName { get; set; }
-    [Required]
-    [StringLength(40)]
-    public string LastName { get; set; }
-    
-    public ProfilePicture? ProfilePicture { get; set; }
+    [Required] [StringLength(40)] public required string FirstName { get; set; }
+    [Required] [StringLength(40)] public required string LastName { get; set; }
 }
