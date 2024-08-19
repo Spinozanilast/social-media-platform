@@ -1,9 +1,8 @@
 using Authentication.Configuration.Configurations;
-using Authentication.Extensions.Configurations;
 
 namespace Authentication.Extensions.Tests;
 
-public class Tests
+public class ConfigurationsManagerTests
 {
     [Test]
     public void Test_ConfigAttributesAreCorrect_WhenUserSecretsExists()
