@@ -25,7 +25,7 @@ public class AccountsController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpPost(ApiEndpoints.AccountEndpoints.SignUp)]
+    [HttpPost(IdentityApiEndpoints.AccountEndpoints.SignUp)]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> RegisterUser([FromBody] UserForRegistration userForRegistration)
@@ -41,10 +41,10 @@ public class AccountsController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpPost(ApiEndpoints.AccountEndpoints.Signin)]
+    [HttpPost(IdentityApiEndpoints.AccountEndpoints.Signin)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> Authenticate([FromBody] LoginRequest loginRequest)
+    public async Task<IActionResult> LoginUser([FromBody] LoginRequest loginRequest)
     {
         var user = await _userManager.FindByEmailAsync(loginRequest.Email);
 
@@ -57,7 +57,7 @@ public class AccountsController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpGet(ApiEndpoints.AccountEndpoints.GetUserByIdOrUsername)]
+    [HttpGet(IdentityApiEndpoints.AccountEndpoints.GetUserByIdOrUsername)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetUser([FromRoute] string idOrUsername)
     {
@@ -73,7 +73,7 @@ public class AccountsController : ControllerBase
 
 
     [AllowAnonymous]
-    [HttpGet(ApiEndpoints.AccountEndpoints.GetAll)]
+    [HttpGet(IdentityApiEndpoints.AccountEndpoints.GetAll)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetAllUsers()
@@ -87,7 +87,7 @@ public class AccountsController : ControllerBase
     }
 
     [Authorize]
-    [HttpPut(ApiEndpoints.AccountEndpoints.UpdateUser)]
+    [HttpPut(IdentityApiEndpoints.AccountEndpoints.UpdateUser)]
     public async Task<IActionResult> UpdateUserIdentity([FromRoute] string id, [FromBody] UserUpdateDto updatedUser)
     {
         var user = await _userManager.FindByIdAsync(id);

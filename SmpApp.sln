@@ -19,7 +19,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwsConfigurators", "src\Aws
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{1EEA9947-F71F-4118-971D-CEE80881E87B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authentication.Extensions.Tests", "src\Tests\Authentication.Extensions.Tests\Authentication.Extensions.Tests.csproj", "{D9E12898-48E0-4E34-AFCF-08106D4AE7EE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authentication.Extensions.Tests.Unit", "src\Tests\Authentication.Extensions.Tests.Unit\Authentication.Extensions.Tests.Unit.csproj", "{D9E12898-48E0-4E34-AFCF-08106D4AE7EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwsConfigurators.Tests.Unit", "src\Tests\AwsConfigurators.Tests.Unit\AwsConfigurators.Tests.Unit.csproj", "{60806963-3583-49CA-B345-ADC2BE0BF31D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{D9E12898-48E0-4E34-AFCF-08106D4AE7EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9E12898-48E0-4E34-AFCF-08106D4AE7EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D9E12898-48E0-4E34-AFCF-08106D4AE7EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60806963-3583-49CA-B345-ADC2BE0BF31D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60806963-3583-49CA-B345-ADC2BE0BF31D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60806963-3583-49CA-B345-ADC2BE0BF31D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60806963-3583-49CA-B345-ADC2BE0BF31D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -64,5 +70,6 @@ Global
 		{D8673A1B-552C-41B7-B0E4-691C9543C7B0} = {E89D1045-23FC-4B48-82D7-C143CF3AE8C0}
 		{1EEA9947-F71F-4118-971D-CEE80881E87B} = {E89D1045-23FC-4B48-82D7-C143CF3AE8C0}
 		{D9E12898-48E0-4E34-AFCF-08106D4AE7EE} = {1EEA9947-F71F-4118-971D-CEE80881E87B}
+		{60806963-3583-49CA-B345-ADC2BE0BF31D} = {1EEA9947-F71F-4118-971D-CEE80881E87B}
 	EndGlobalSection
 EndGlobal

@@ -16,6 +16,7 @@ public class AwsS3ServiceConfigurator : IAwsServiceConfigurator
     private void InitCredentials(string profileName)
     {
         var profileStoreChain = new CredentialProfileStoreChain();
+        
         if (!profileStoreChain.TryGetProfile(profileName, out var credentials))
         {
             throw new Exception($"Failed to find the {profileName} profile");

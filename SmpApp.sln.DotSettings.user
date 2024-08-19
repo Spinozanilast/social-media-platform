@@ -1,6 +1,7 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=e1156cb4_002D8725_002D4f80_002Db174_002Dcaca5fb23356/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Test_ConfigManager_SecretsExists" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=afcbb96d_002Ddee9_002D4b46_002Db12a_002Db8e0fb2c1fd1/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="ConfigurationsManagerTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;NUnit3x::D9E12898-48E0-4E34-AFCF-08106D4AE7EE::net8.0::Authentication.Extensions.Tests.Tests.Test_ConfigAttributesAreCorrect_WhenUserSecretsExists&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::D9E12898-48E0-4E34-AFCF-08106D4AE7EE::net8.0::Authentication.Extensions.Tests.ConfigurationsManagerTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::60806963-3583-49CA-B345-ADC2BE0BF31D::net8.0::AwsConfigurators.Tests.Unit.AwsS3ServiceConfiguratorTests.Test_AwsConfigurationIsCorrect_WhenItExists&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
