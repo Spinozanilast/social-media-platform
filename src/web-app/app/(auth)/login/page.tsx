@@ -46,7 +46,7 @@ const handleLogin: SubmitHandler<LoginRequest> = async (
     return response as LoginResponse;
 };
 
-export default function SignInPage() {
+export default function LoginPage() {
     const router = useRouter();
     const {
         register,
@@ -67,7 +67,7 @@ export default function SignInPage() {
         }
 
         const response = result as LoginResponse;
-        router.push(`/${response.username ?? response.id}`);
+        router.push(`/${response.userName ?? response.id}`);
     };
 
     return (
@@ -76,7 +76,7 @@ export default function SignInPage() {
                 <CssBaseline />
                 <Box
                     sx={{
-                        marginTop: 8,
+                        marginTop: 4,
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",

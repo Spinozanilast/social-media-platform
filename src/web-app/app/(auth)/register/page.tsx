@@ -10,17 +10,18 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { ThemeProvider } from "@mui/material/styles";
-import { theme } from "@/app/themes/main-dark";
+import { theme } from "@app/themes/main-dark";
 import { AuthTextField } from "@themes/mui-components/AuthTextField";
 import "@fontsource/share-tech";
 import UserApi from "@app/api/userApi";
-import { getUserApi } from "@/app/api/apiManagement";
+import { getUserApi } from "@app/api/apiManagement";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { object, string, TypeOf } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { FieldId } from "@models/user/util";
 import { UserApiResponse } from "@models/user/util";
+import { useRouter } from "next/navigation";
 
 const registerSchema = object({
     username: string()
@@ -104,6 +105,8 @@ export default function RegisterPage() {
         resolver: zodResolver(registerSchema),
     });
 
+    const router = useRouter();
+
     useEffect(() => {
         console.log(isSubmitSuccessful);
         if (isSubmitSuccessful) {
@@ -114,16 +117,17 @@ export default function RegisterPage() {
     const onSubmit: SubmitHandler<RegisterInput> = async (data) => {
         const api: UserApi = getUserApi();
         const response: UserApiResponse = await api.registerUser(data);
-        console.log(response);
         if (!response.isSuccesfully && response.errors.length !== 0) {
             setError(response.errorField, {
                 type: "validate",
                 message: response.errors[1],
             });
+            return;
         }
+
+        router.push("/signin");
     };
 
-    console.log(errors);
     return (
         <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs">
