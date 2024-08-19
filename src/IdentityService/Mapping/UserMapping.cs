@@ -18,14 +18,13 @@ public static class UserMapping
         };
     }
 
-    public static LoginResponse ToLoginResponse(this User user, string tokenString)
+    public static LoginResponse ToLoginResponse(this User user)
     {
         return new LoginResponse(
             Id: user.Id,
             FirstName: user.FirstName,
             LastName: user.LastName,
-            UserName: user.UserName ?? string.Empty,
-            Token: tokenString
+            UserName: user.UserName!
         );
     }
 

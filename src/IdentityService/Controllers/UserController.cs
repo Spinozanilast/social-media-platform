@@ -25,7 +25,7 @@ public class AccountsController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpPost(IdentityApiEndpoints.AccountEndpoints.SignUp)]
+    [HttpPost(IdentityApiEndpoints.AccountEndpoints.Register)]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> RegisterUser([FromBody] UserForRegistration userForRegistration)
@@ -41,7 +41,7 @@ public class AccountsController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpPost(IdentityApiEndpoints.AccountEndpoints.Signin)]
+    [HttpPost(IdentityApiEndpoints.AccountEndpoints.Login)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> LoginUser([FromBody] LoginRequest loginRequest)
@@ -52,8 +52,12 @@ public class AccountsController : ControllerBase
         {
             return NotFound();
         }
-
-        return Ok(user.ToLoginResponse(_tokenService.GenerateToken(user)));
+        
+        Response.Cookies.Append("jwt", _tokenService.GenerateToken(user), new CookieOptions
+        {
+            HttpOnly = true
+        });
+        return Ok(user.ToLoginResponse());
     }
 
     [AllowAnonymous]

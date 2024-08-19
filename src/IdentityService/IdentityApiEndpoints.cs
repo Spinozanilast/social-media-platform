@@ -6,8 +6,8 @@ public static class IdentityApiEndpoints
 
     public static class AccountEndpoints
     {
-        public const string SignUp = $"{Base}/register";
-        public const string Signin = $"{Base}/login";
+        public const string Register = $"{Base}/register";
+        public const string Login = $"{Base}/login";
 
         public const string GetUserByIdOrUsername = $"{Base}s/" + "{idOrUsername}";
         public const string GetAll = $"{Base}s/get";
