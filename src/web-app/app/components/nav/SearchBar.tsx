@@ -3,11 +3,15 @@ import { SearchOutlined } from "@mui/icons-material";
 
 type SearchBarProps = {
     placeholderText: string;
+    className?: string;
 };
 
-export default function SearchBar({ placeholderText }: SearchBarProps) {
+export default function SearchBar({
+    placeholderText,
+    className,
+}: SearchBarProps) {
     return (
-        <div className="h-full">
+        <div className={className}>
             <input
                 type="text"
                 placeholder={placeholderText}
