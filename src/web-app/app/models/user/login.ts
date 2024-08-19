@@ -9,8 +9,7 @@ export type LoginResponse = {
     id: string;
     firstName: string;
     lastName: string;
-    username?: string;
-    token: string;
+    userName: string;
 };
 
 export type IsErrorResult = {

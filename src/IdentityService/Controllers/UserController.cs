@@ -1,5 +1,5 @@
 using IdentityService.Contracts;
-using IdentityService.Contracts.Authentication;
+using IdentityService.Contracts.Login;
 using IdentityService.Contracts.Registration;
 using IdentityService.Entities;
 using IdentityService.Mapping;
@@ -78,7 +78,7 @@ public class AccountsController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet(IdentityApiEndpoints.AccountEndpoints.GetAll)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetAllUsers()
     {

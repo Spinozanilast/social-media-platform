@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using Amazon.S3;
 using Amazon.S3.Model;
+using IdentityService.Controllers;
 using IdentityService.Entities;
 using Microsoft.Extensions.Options;
 
@@ -51,7 +52,7 @@ public class ProfileImageService : IProfileImageService
         return default;
     }
 
-    public async Task<bool> UploadProfileImageAsync(IFormFile image, Guid id)
+    public async Task<bool> UploadProfileImageAsync(Photo image, Guid id)
     {
         try
         {
@@ -64,12 +65,12 @@ public class ProfileImageService : IProfileImageService
             {
                 BucketName = _bucketName,
                 Key = GetImageKey(id),
-                InputStream = image.OpenReadStream(),
-                ContentType = image.ContentType,
+                InputStream = image.formFile.OpenReadStream(),
+                ContentType = image.formFile.ContentType,
                 Metadata =
                 {
-                    ["x-amz-meta-original-file-name"] = image.FileName,
-                    ["x-amz-meta-original-file-extension"] = Path.GetExtension(image.FileName),
+                    ["x-amz-meta-original-file-name"] = image.formFile.FileName,
+                    ["x-amz-meta-original-file-extension"] = Path.GetExtension(image.formFile.FileName),
                 }
             };
 

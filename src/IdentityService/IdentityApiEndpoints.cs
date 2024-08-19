@@ -17,7 +17,7 @@ public static class IdentityApiEndpoints
 
     public static class ProfileImagesEndpoints
     {
-        private const string Base = $"{IdentityApiEndpoints.Base}/" + "userId:guid" + "/profile-image";
+        private const string Base = $"{IdentityApiEndpoints.Base}/" + "{userId}" + "/profile-image";
 
         public const string Upload = $"{Base}/upload";
         public const string Remove = $"{Base}/remove";

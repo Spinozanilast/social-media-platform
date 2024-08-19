@@ -1,5 +1,4 @@
-﻿using IdentityService.Contracts.Registration;
-using IdentityService.Services;
+﻿using IdentityService.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,7 +19,7 @@ public class ProfileImageController : ControllerBase
     [HttpPost(IdentityApiEndpoints.ProfileImagesEndpoints.Upload)]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> UploadProfileImage([FromForm] IFormFile profileImage, [FromRoute] Guid userId)
+    public async Task<IActionResult> UploadProfileImage([FromForm] Photo profileImage, Guid userId)
     {
         if (profileImage is null)
         {
@@ -37,7 +36,7 @@ public class ProfileImageController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpPost(IdentityApiEndpoints.ProfileImagesEndpoints.Get)]
+    [HttpGet(IdentityApiEndpoints.ProfileImagesEndpoints.Get)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetProfileImage([FromRoute] Guid userId)
@@ -66,4 +65,9 @@ public class ProfileImageController : ControllerBase
             _ => NotFound()
         };
     }
+}
+
+public class Photo
+{
+    public IFormFile formFile { get; set; }
 }

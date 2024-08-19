@@ -2,7 +2,6 @@
 using System.Security.Claims;
 using System.Text;
 using Authentication.Configuration.Configurations;
-using Authentication.Extensions.Configurations;
 using IdentityService.Entities;
 using Microsoft.IdentityModel.Tokens;
 
