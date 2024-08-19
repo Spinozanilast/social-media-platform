@@ -1,14 +1,10 @@
 ﻿using System.Net;
-using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
-using AwsConfigurators;
 using IdentityService.Entities;
 using Microsoft.Extensions.Options;
 
 namespace IdentityService.Services;
-
-public class
 
 public class ProfileImageService : IProfileImageService
 {

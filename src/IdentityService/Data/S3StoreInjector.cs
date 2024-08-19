@@ -12,10 +12,10 @@ public static class S3StoreInjector
     {
         services.AddSingleton<IAmazonS3>(opt =>
         {
-            var configurator = new AwsS3ServiceConfigurer();
+            var configurator = new AwsS3ServiceConfigurator();
             var credentials = configurator.AwsCredentials;
             var config = configurator.GetServiceConfig(serviceUrl: ServiceUrl);
-            return new AmazonS3Client(credentials, config);
+            return new AmazonS3Client(credentials, (AmazonS3Config)config);
         });
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Authentication.Configuration.Configurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -9,6 +10,8 @@ public static class JwtExtensions
 {
     public static void AddJwtConfiguration(this IServiceCollection serviceCollection)
     {
+        var secretKey = ConfigurationsManager.GetInstance().TokenConfiguration.SecretKey;
+
         serviceCollection.AddAuthentication(x =>
         {
             x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -19,7 +22,7 @@ public static class JwtExtensions
             x.TokenValidationParameters = new TokenValidationParameters
             {
                 IssuerSigningKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(config["Jwt:SecretKey"]!)),
+                    Encoding.UTF8.GetBytes(secretKey)),
                 ValidateIssuerSigningKey = true,
                 ValidateLifetime = true,
                 ValidateIssuer = false,
