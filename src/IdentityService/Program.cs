@@ -1,40 +1,62 @@
-using System.Text;
+using Authentication.Extensions;
+using IdentityService;
 using IdentityService.Data;
 using IdentityService.Entities;
 using IdentityService.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.AddUsersDbContext(builder);
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(option =>
+{
+    option.SwaggerDoc("v1", new OpenApiInfo { Title = "Identity Api", Version = "v1" });
+    option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter a valid token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+    option.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] { }
+        }
+    });
+});
+
+builder.Services.AddS3Client();
 builder.Services.AddScoped<TokenService>();
+builder.Services.AddUsersDbContext(builder);
 builder.Services.AddIdentity<User, Role>()
     .AddEntityFrameworkStores<IdentityDbContext>();
+builder.Services.AddScoped<IProfileImageService, ProfileImageService>();
+builder.Services.Configure<ProfileImageStorageConfig>(builder.Configuration.GetSection("ProfileImageStorage"));
 
-var config = builder.Configuration;
-builder.Services.AddAuthentication(x =>
-{
-    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(x =>
-{
-    x.TokenValidationParameters = new TokenValidationParameters
-    {
-        IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(config["Jwt:SecretKey"]!)),
-        ValidateIssuerSigningKey = true,
-        ValidateLifetime = true,
-        ValidateIssuer = false,
-        ValidateAudience = false
-    };
-});
+builder.Services.AddJwtConfiguration();
+
 builder.Services.AddAuthentication();
 
 var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.UseAuthentication();
 app.UseAuthorization();

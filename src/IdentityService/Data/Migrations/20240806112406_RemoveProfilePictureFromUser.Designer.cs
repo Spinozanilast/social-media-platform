@@ -3,6 +3,7 @@ using System;
 using IdentityService.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace IdentityService.Data.Migrations
 {
     [DbContext(typeof(IdentityDbContext))]
-    partial class IdentityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240806112406_RemoveProfilePictureFromUser")]
+    partial class RemoveProfilePictureFromUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,7 +24,7 @@ namespace IdentityService.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
+                
             modelBuilder.Entity("IdentityService.Entities.Role", b =>
                 {
                     b.Property<Guid>("Id")
@@ -106,6 +109,9 @@ namespace IdentityService.Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
 
+                    b.Property<Guid?>("ProfilePictureId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
 
@@ -124,6 +130,8 @@ namespace IdentityService.Data.Migrations
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
+
+                    b.HasIndex("ProfilePictureId");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -230,7 +238,7 @@ namespace IdentityService.Data.Migrations
 
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
-
+            
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("IdentityService.Entities.Role", null)

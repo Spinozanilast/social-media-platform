@@ -67,17 +67,13 @@ export default class UserApi {
             "POST"
         );
 
-        let response: AxiosResponse;
         try {
-            response = await this.request<T, R, D>(config);
-            if (response.status >= 400) {
-                return { isSuccesfully: false } as UserApiResponse;
-            }
-            return response.data as LoginResponse;
+            const response = await this.request<T, R, D>(config);
+            return response.data;
         } catch (error) {
             console.error(error);
+            return { isSuccesfully: false } as UserApiResponse;
         }
-        return { isSuccesfully: false } as UserApiResponse;
     }
 
     public request<T = any, R = AxiosResponse<T>, D = any>(

@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace IdentityService.Contracts.Authentication;
+namespace IdentityService.Contracts.Login;
 
 public class LoginRequest
 {
-    public required string Email { get; set; }
-
-    public required string Password { get; set; }
+    [Required] public required string Email { get; init; }
+    [Required] public required string Password { get; init; }
 }

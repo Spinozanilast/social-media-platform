@@ -1,3 +1,4 @@
+using IdentityService.Contracts;
 using IdentityService.Contracts.Login;
 using IdentityService.Contracts.Registration;
 using IdentityService.Entities;
@@ -17,14 +18,36 @@ public static class UserMapping
         };
     }
 
-    public static LoginResponse ToLoginResponse(this User user, string tokenString)
+    public static LoginResponse ToLoginResponse(this User user)
     {
         return new LoginResponse(
             Id: user.Id,
             FirstName: user.FirstName,
             LastName: user.LastName,
-            UserName: user.UserName ?? string.Empty,
-            Token: tokenString
+            UserName: user.UserName!
         );
+    }
+
+    public static UserToGet ToUserGetModel(this User user)
+    {
+        return new UserToGet(
+            Id: user.Id,
+            Email: user.Email!,
+            LastName: user.LastName,
+            FirstName: user.FirstName,
+            PhoneNumber: user.PhoneNumber,
+            Username: user.UserName!
+        );
+    }
+
+    public static User UpdateUser(this User user, UserUpdateDto userUpdateDto)
+    {
+        user.FirstName = userUpdateDto.FirstName;
+        user.LastName = userUpdateDto.LastName;
+        user.UserName = userUpdateDto.Username;
+        user.PhoneNumber = userUpdateDto.PhoneNumber;
+        user.Email = userUpdateDto.Email;
+
+        return user;
     }
 }

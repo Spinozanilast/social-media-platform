@@ -1,6 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Authentication.Configuration.Configurations;
 using IdentityService.Entities;
 using Microsoft.IdentityModel.Tokens;
 
@@ -19,13 +20,13 @@ public class TokenService
 
     public string GenerateToken(User user)
     {
-        var jwtSettings = _configuration.GetSection("Jwt");
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]!));
-        var expiryDays = int.Parse(jwtSettings["ExpiryDays"]!);
+        var tokenConfig = ConfigurationsManager.GetInstance().TokenConfiguration;
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenConfig.SecretKey));
+        var expiryDays = tokenConfig.ExpiryDays;
         
         var claims = GetClaims(user);
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
-
+        
         var tokenOptions = new JwtSecurityToken(
             issuer: null,
             audience: null,
