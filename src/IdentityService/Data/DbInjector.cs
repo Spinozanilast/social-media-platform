@@ -12,4 +12,13 @@ public static class DbInjector
             options.UseNpgsql(builder.Configuration.GetConnectionString(ConfigurationName));
         });
     }
+
+    public static void ApplyMigrations(this IApplicationBuilder app)
+    {
+        using var scope = app.ApplicationServices.CreateScope();
+
+        var dbcontext = scope.ServiceProvider.GetRequiredService<IdentityDbContext>();
+
+        dbcontext.Database.Migrate();
+    }
 }
