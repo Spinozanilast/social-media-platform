@@ -26,11 +26,12 @@ public class ConfigurationsManager
 
     private void InitTokenConfiguration()
     {
-        var configRoot = new ConfigurationBuilder().AddUserSecrets<ConfigurationsManager>().Build();
-        
+        var configRoot = new ConfigurationBuilder().AddUserSecrets<ConfigurationsManager>().AddEnvironmentVariables()
+            .Build();
+
         var secretKey = configRoot["jwt:SecretKey"];
         var expiryDays = configRoot["jwt:ExpiryDays"];
-        
+
         if (string.IsNullOrEmpty(secretKey) || !int.TryParse(expiryDays, out var expiryDaysParsed))
         {
             throw new Exception("User Secrets were not configured");

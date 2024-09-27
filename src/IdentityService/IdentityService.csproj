@@ -5,6 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>e359d3cd-43be-45d6-a76b-3b2e02dc4e61</UserSecretsId>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
@@ -28,6 +29,12 @@
     <ItemGroup>
         <ProjectReference Include="..\Authentication\Authentication.Extensions\Authentication.Extensions.csproj"/>
         <ProjectReference Include="..\AwsConfigurators\AwsConfigurators.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 
 </Project>
