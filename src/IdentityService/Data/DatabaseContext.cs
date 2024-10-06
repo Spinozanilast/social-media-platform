@@ -4,5 +4,5 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IdentityService.Data;
 
-public class IdentityDbContext(DbContextOptions<IdentityDbContext> options)
+public class IdentityAppContext(DbContextOptions<IdentityAppContext> options)
     : IdentityDbContext<User, Role, Guid>(options);

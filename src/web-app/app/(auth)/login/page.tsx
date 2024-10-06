@@ -1,43 +1,42 @@
-"use client";
-import * as React from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Container from "@mui/material/Container";
-import { ThemeProvider, Typography } from "@mui/material";
-import { AuthTextField } from "@themes/mui-components/AuthTextField";
-import { theme } from "@themes/main-dark";
-import "@fontsource/share-tech-mono";
-import UserApi from "@/app/api/userApi";
-import { getUserApi } from "@/app/api/apiManagement";
+'use client';
+import * as React from 'react';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Link from '@mui/material/Link';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Container from '@mui/material/Container';
+import { FormHelperText, ThemeProvider, Typography } from '@mui/material';
+import { AuthTextField } from '@themes/mui-components/AuthTextField';
+import { theme } from '@themes/main-dark';
+import '@fontsource/share-tech-mono';
 import {
     LoginErrorResult,
     LoginRequest,
     LoginResponse,
-} from "@/app/models/user/login";
-import { ErrorOption, SubmitHandler, useForm } from "react-hook-form";
-import isEmailValid from "@/app/helpers/email-validation";
-import { UserApiResponse } from "@models/user/util";
-import { useRouter } from "next/navigation";
+} from '@/app/models/user/login';
+import { ErrorOption, SubmitHandler, useForm } from 'react-hook-form';
+import isEmailValid from '@/app/helpers/email-validation';
+import { UserApiResponse } from '@models/user/util';
+import { useRouter } from 'next/navigation';
+import UserService from '@/app/api/services/user';
+import { useState } from 'react';
+import { User } from '@/app/models/user/user';
 
 const handleLogin: SubmitHandler<LoginRequest> = async (
     data: LoginRequest
 ): Promise<LoginErrorResult | LoginResponse> => {
-    const api: UserApi = getUserApi();
-    const response: UserApiResponse | LoginResponse = await api.loginUser(
-        data as LoginRequest
-    );
-    if ((response as UserApiResponse).isSuccesfully !== undefined) {
+    const response: UserApiResponse | LoginResponse =
+        await UserService.loginUser(data as LoginRequest);
+    if ((response as UserApiResponse).isSuccess !== undefined) {
         const formError: LoginErrorResult = {
             isError: true,
-            type: "server",
-            message: "Email or Password Incorrect",
+            type: 'server',
+            message: 'Email or Password Incorrect',
         };
 
         return formError;
@@ -47,6 +46,8 @@ const handleLogin: SubmitHandler<LoginRequest> = async (
 };
 
 export default function LoginPage() {
+    const [rememberUserState, setRememberUserState] = useState(false);
+
     const router = useRouter();
     const {
         register,
@@ -55,18 +56,28 @@ export default function LoginPage() {
         setError,
     } = useForm<LoginRequest>();
 
+    const handleCheckboxChange = (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        setRememberUserState(event.target.checked);
+    };
+
     const onSubmit: SubmitHandler<LoginRequest> = async (
         data: LoginRequest
     ) => {
         const result = await handleLogin(data);
         if ((result as LoginErrorResult).isError) {
             const errorOption = result as ErrorOption;
-            setError("email", errorOption);
-            setError("password", errorOption);
+            setError('password', errorOption);
+            setError('email', {});
             return;
         }
 
         const response = result as LoginResponse;
+
+        if (rememberUserState) {
+            UserService.saveUserLocally(response as User);
+        }
         router.push(`/${response.userName ?? response.id}`);
     };
 
@@ -77,9 +88,9 @@ export default function LoginPage() {
                 <Box
                     sx={{
                         marginTop: 4,
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
                     }}
                 >
                     <Avatar
@@ -111,17 +122,17 @@ export default function LoginPage() {
                                 id="email"
                                 label="Email Address"
                                 autoComplete="email"
-                                error={!!errors["email"]}
+                                error={!!errors['email']}
                                 helperText={
-                                    errors["email"] && errors["email"]!.message
+                                    errors['email'] && errors['email']!.message
                                 }
-                                {...register("email", {
+                                {...register('email', {
                                     validate: (value) => {
                                         const isValid = isEmailValid(value);
                                         if (!isValid) {
-                                            setError("email", {
-                                                type: "validate",
-                                                message: "Email is not valid",
+                                            setError('email', {
+                                                type: 'validate',
+                                                message: 'Email is not valid',
                                             });
                                         }
                                         return isValid;
@@ -135,17 +146,22 @@ export default function LoginPage() {
                                 type="password"
                                 id="password"
                                 autoComplete="current-password"
-                                error={!!errors["password"]}
+                                error={!!errors['password']}
                                 helperText={
-                                    errors["password"] &&
-                                    errors["password"]!.message
+                                    errors['password'] &&
+                                    errors['password']!.message
                                 }
-                                {...register("password")}
+                                {...register('password')}
                             />
                         </Grid>
                         <FormControlLabel
                             control={
-                                <Checkbox value="remember" color="primary" />
+                                <Checkbox
+                                    value="remember"
+                                    color="primary"
+                                    onChange={handleCheckboxChange}
+                                    defaultChecked={false}
+                                />
                             }
                             label="Remember me"
                         />

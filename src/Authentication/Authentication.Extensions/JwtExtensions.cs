@@ -4,30 +4,49 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Authentication.Extensions;
+namespace Authentication.Configuration;
 
 public static class JwtExtensions
 {
+    
     public static void AddJwtConfiguration(this IServiceCollection serviceCollection)
     {
-        var secretKey = ConfigurationsManager.GetInstance().TokenConfiguration.SecretKey;
-
         serviceCollection.AddAuthentication(x =>
         {
             x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(x =>
+        }).AddJwtBearer(options =>
         {
-            x.TokenValidationParameters = new TokenValidationParameters
+            options.TokenValidationParameters = GetTokenValidationParameters();
+            options.Events = new JwtBearerEvents()
             {
-                IssuerSigningKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(secretKey)),
-                ValidateIssuerSigningKey = true,
-                ValidateLifetime = true,
-                ValidateIssuer = false,
-                ValidateAudience = false
+                OnMessageReceived = context =>
+                {
+                    context.Request.Cookies.TryGetValue(TokensConstants.JwtCookieKey, out var accessToken);
+                    if (!string.IsNullOrEmpty(accessToken))
+                    {
+                        context.Token = accessToken;
+                    }
+                    return Task.CompletedTask;
+                }
             };
         });
+    }
+
+    public static TokenValidationParameters GetTokenValidationParameters()
+    {
+        var secretKey = ConfigurationsManager.GetInstance().TokenConfiguration.SecretKey;
+        return new TokenValidationParameters
+        {
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(secretKey)),
+            ValidIssuer = TokensConstants.JwtIssuer,
+            ValidAudience = TokensConstants.JwtAudience,
+            ValidateIssuerSigningKey = true,
+            ValidateLifetime = true,
+            ValidateIssuer = true,
+            ValidateAudience = true
+        };
     }
 }

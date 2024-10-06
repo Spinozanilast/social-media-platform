@@ -1,4 +1,4 @@
-import { ErrorOption } from "react-hook-form";
+import { ErrorOption } from 'react-hook-form';
 
 export type LoginRequest = {
     email: string;
@@ -10,6 +10,7 @@ export type LoginResponse = {
     firstName: string;
     lastName: string;
     userName: string;
+    roles?: string[];
 };
 
 export type IsErrorResult = {

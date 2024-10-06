@@ -1,4 +1,4 @@
-﻿namespace Authentication.Extensions.Configurations;
+﻿namespace Authentication.Configuration.Configurations;
 
 public class TokenConfiguration
 {

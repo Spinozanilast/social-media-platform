@@ -18,9 +18,9 @@ services:
     image: identity-service
     container_name: identity-api
     ports:
-      - "8081:8080"
+      - "5171:8080"
     volumes:
-      - $APPDATA/Microsoft/UserSecrets/${USER_SECRETS_ID}:/root/.microsoft/UserSecrets:ro
+      - $APPDATA\Microsoft\UserSecrets:/root/.microsoft/UserSecrets:ro
     depends_on:
       - users-postgres
   users-postgres:

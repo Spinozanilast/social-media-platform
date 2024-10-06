@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace IdentityService.Data.Migrations
 {
     [DbContext(typeof(IdentityAppContext))]
-    [Migration("20240715142025_InitDb")]
-    partial class InitDb
+    [Migration("20241006103626_AddRefreshTokens")]
+    partial class AddRefreshTokens
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,26 +24,6 @@ namespace IdentityService.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("IdentityService.Entities.ProfilePicture", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("ContentType")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)");
-
-                    b.Property<byte[]>("ImageData")
-                        .IsRequired()
-                        .HasColumnType("bytea");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ProfilePicture");
-                });
 
             modelBuilder.Entity("IdentityService.Entities.Role", b =>
                 {
@@ -129,9 +109,6 @@ namespace IdentityService.Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
 
-                    b.Property<Guid?>("ProfilePictureId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
 
@@ -150,8 +127,6 @@ namespace IdentityService.Data.Migrations
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
-
-                    b.HasIndex("ProfilePictureId");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -261,11 +236,39 @@ namespace IdentityService.Data.Migrations
 
             modelBuilder.Entity("IdentityService.Entities.User", b =>
                 {
-                    b.HasOne("IdentityService.Entities.ProfilePicture", "ProfilePicture")
-                        .WithMany()
-                        .HasForeignKey("ProfilePictureId");
+                    b.OwnsMany("IdentityService.Entities.RefreshToken", "RefreshTokens", b1 =>
+                        {
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uuid");
 
-                    b.Navigation("ProfilePicture");
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
+
+                            b1.Property<DateTime>("Created")
+                                .HasColumnType("timestamp with time zone");
+
+                            b1.Property<DateTime>("ExpiryDate")
+                                .HasColumnType("timestamp with time zone");
+
+                            b1.Property<DateTime?>("Revoked")
+                                .HasColumnType("timestamp with time zone");
+
+                            b1.Property<string>("TokenValue")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.HasKey("UserId", "Id");
+
+                            b1.ToTable("RefreshToken");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
+
+                    b.Navigation("RefreshTokens");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>

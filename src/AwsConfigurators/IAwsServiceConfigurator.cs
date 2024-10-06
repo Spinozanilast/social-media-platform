@@ -1,5 +1,4 @@
 ﻿using Amazon.Runtime;
-using Amazon.S3;
 
 namespace AwsConfigurators;
 
