@@ -7,7 +7,7 @@ public static class DbInjector
     private const string ConfigurationName = "UsersDbConnection";
     public static void AddUsersDbContext(this IServiceCollection services, WebApplicationBuilder builder)
     {
-        services.AddDbContext<IdentityDbContext>(options =>
+        services.AddDbContext<IdentityAppContext>(options =>
         {
             options.UseNpgsql(builder.Configuration.GetConnectionString(ConfigurationName));
         });
@@ -17,7 +17,7 @@ public static class DbInjector
     {
         using var scope = app.ApplicationServices.CreateScope();
 
-        var dbcontext = scope.ServiceProvider.GetRequiredService<IdentityDbContext>();
+        var dbcontext = scope.ServiceProvider.GetRequiredService<IdentityAppContext>();
 
         dbcontext.Database.Migrate();
     }

@@ -3,19 +3,19 @@ import axios, {
     AxiosInstance,
     AxiosRequestConfig,
     AxiosResponse,
-} from "axios";
-import { ApiConfig } from "./types/apiConfig";
-import { RegisterRequest } from "@models/user/register";
-import { UserApiResponse } from "@models/user/util";
-import { LoginRequest, LoginResponse } from "@models/user/login";
+} from 'axios';
+import { ApiConfig } from './types/apiConfig';
+import { RegisterRequest } from '@models/user/register';
+import { UserApiResponse } from '@models/user/util';
+import { LoginRequest, LoginResponse } from '@models/user/login';
 
 export default class UserApi {
     public config: ApiConfig;
     private apiClient: AxiosInstance;
 
     private readonly Endpoints = {
-        register: "user/register",
-        login: "user/login",
+        register: 'user/register',
+        login: 'user/login',
     };
 
     constructor(config: ApiConfig) {
@@ -23,7 +23,7 @@ export default class UserApi {
         this.apiClient = axios.create({
             ...config,
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
             },
         });
     }
@@ -37,7 +37,7 @@ export default class UserApi {
             config,
             data,
             this.Endpoints.register,
-            "POST"
+            'POST'
         );
 
         let response: AxiosResponse;
@@ -49,7 +49,7 @@ export default class UserApi {
         } catch (error) {
             console.error(error);
         }
-        return { isSuccesfully: true } as UserApiResponse;
+        return { isSuccess: true } as UserApiResponse;
     }
 
     public async loginUser<
@@ -64,7 +64,7 @@ export default class UserApi {
             config,
             data,
             this.Endpoints.login,
-            "POST"
+            'POST'
         );
 
         try {
@@ -72,7 +72,7 @@ export default class UserApi {
             return response.data;
         } catch (error) {
             console.error(error);
-            return { isSuccesfully: false } as UserApiResponse;
+            return { isSuccess: false } as UserApiResponse;
         }
     }
 

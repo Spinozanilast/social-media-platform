@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace IdentityService.Data.Migrations
 {
-    [DbContext(typeof(IdentityDbContext))]
+    [DbContext(typeof(IdentityAppContext))]
     [Migration("20240806112406_RemoveProfilePictureFromUser")]
     partial class RemoveProfilePictureFromUser
     {

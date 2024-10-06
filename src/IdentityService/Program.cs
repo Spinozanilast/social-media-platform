@@ -1,14 +1,14 @@
-using Authentication.Extensions;
+using Authentication.Configuration;
 using IdentityService;
 using IdentityService.Data;
 using IdentityService.Entities;
 using IdentityService.Services;
+using IdentityService.Utilities;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option =>
 {
@@ -39,15 +39,22 @@ builder.Services.AddSwaggerGen(option =>
 });
 
 builder.Services.AddS3Client();
-builder.Services.AddScoped<TokenService>();
+builder.Services.AddTransient<ITokenService, TokenService>();
+builder.Services.AddScoped<UserUtilities>();
 builder.Services.AddUsersDbContext(builder);
-builder.Services.AddIdentity<User, Role>()
-    .AddEntityFrameworkStores<IdentityDbContext>();
+builder.Services
+    .AddIdentity<User, Role>(options =>
+    {
+        options.User.RequireUniqueEmail = true;
+        options.Password.RequireDigit = true;
+        options.Password.RequireLowercase = true;
+        options.Password.RequireUppercase = true;
+    })
+    .AddEntityFrameworkStores<IdentityAppContext>();
 builder.Services.AddScoped<IProfileImageService, ProfileImageService>();
 builder.Services.Configure<ProfileImageStorageConfig>(builder.Configuration.GetSection("ProfileImageStorage"));
 
 builder.Services.AddJwtConfiguration();
-
 builder.Services.AddAuthentication();
 
 var app = builder.Build();
@@ -59,8 +66,10 @@ if (app.Environment.IsDevelopment())
     app.ApplyMigrations();
 }
 
+await app.Services.SeedRoles();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseCors(corsBuilder => corsBuilder.AllowAnyOrigin());
 app.MapControllers();
 
 app.Run();

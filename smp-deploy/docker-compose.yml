@@ -6,17 +6,21 @@ services:
       context: ../.
       dockerfile: ./src/GatewayService/Dockerfile
     image: gateway-service
+    ports:
+      - "5098:8081"
     container_name: gateway
   identity-api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
     build:        
       context: ../.
       dockerfile: ./src/IdentityService/Dockerfile
     image: identity-service
     container_name: identity-api
     ports:
-      - "8081:8080"
+      - "5171:8080"
     volumes:
-      - users_secrets:/root/.microsoft/UserSecrets/${USER_SECRETS_ID}:ro
+      - $APPDATA\Microsoft\UserSecrets:/root/.microsoft/UserSecrets:ro
     depends_on:
       - users-postgres
   users-postgres:
@@ -32,11 +36,5 @@ services:
 
 volumes:
   users_data:
-  users_secrets:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ${APPDATA}/Microsoft/UserSecrets/${USER_SECRETS_ID}
   
     

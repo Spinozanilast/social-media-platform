@@ -1,5 +1,4 @@
-﻿using Authentication.Extensions.Configurations;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 
 namespace Authentication.Configuration.Configurations;
 
