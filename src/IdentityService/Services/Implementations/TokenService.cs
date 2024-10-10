@@ -6,10 +6,11 @@ using Authentication.Configuration;
 using Authentication.Configuration.Configurations;
 using IdentityService.Data;
 using IdentityService.Entities;
+using IdentityService.Entities.Tokens;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
-namespace IdentityService.Services;
+namespace IdentityService.Services.Implementations;
 
 public class TokenService : ITokenService
 {
@@ -22,18 +23,8 @@ public class TokenService : ITokenService
         _userManager = userManager;
     }
 
-    public async Task<(string newRefreshToken, string newJwtToken)?> TryRefreshToken(string refreshTokenValue)
+    public async Task<TokenPair?> TryRefreshToken(User user, string refreshTokenValue)
     {
-        var user = _identityContext
-            .Users
-            .SingleOrDefault(u => u.RefreshTokens
-                .Any(t => t.TokenValue == refreshTokenValue));
-
-        if (user is null)
-        {
-            return null;
-        }
-
         var refreshToken = user.RefreshTokens.Single(x => x.TokenValue == refreshTokenValue);
 
         if (!refreshToken.IsActive)
@@ -47,7 +38,9 @@ public class TokenService : ITokenService
         await SaveRefreshTokenAsync(user, newRefreshToken);
 
         var newjwtToken = await GenerateJwtToken(user);
-        return new ValueTuple<string, string>(newRefreshToken.TokenValue, newjwtToken.TokenValue);
+        return new TokenPair(
+            JwtToken: newjwtToken, 
+            RefreshToken: newRefreshToken);
     }
 
     public async Task<Token> GenerateJwtToken(User user)
@@ -134,13 +127,4 @@ public class TokenService : ITokenService
             }
             .Union(userClaims).Union(roleClaims);
     }
-}
-
-public interface ITokenService
-{
-    Task<(string newRefreshToken, string newJwtToken)?> TryRefreshToken(string refreshTokenValue);
-    Task<Token> GenerateJwtToken(User user);
-    RefreshToken GenerateRefreshToken();
-    Task<RefreshToken> GenerateRefreshTokenWithSave(User user);
-    ClaimsPrincipal GetClaimsFromExpiredToken(string token);
 }

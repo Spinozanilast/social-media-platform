@@ -14,12 +14,12 @@ public static class IdentityApiEndpoints
 
         public const string UpdateUser = $"{Base}/" + "{id}/update";
 
-        public const string Authenticate = $"{Base}/" + "{id}/update";
+        public const string Authenticate = $"{Base}/" + "{idOrUsername}/update";
     }
 
     public static class ProfileImagesEndpoints
     {
-        private const string Base = $"{IdentityApiEndpoints.Base}/" + "{userId}" + "/profile-image";
+        private const string Base = $"{IdentityApiEndpoints.Base}/" + "{idOrUsername}" + "/profile-image";
 
         public const string Upload = $"{Base}/upload";
         public const string Remove = $"{Base}/remove";
@@ -28,7 +28,7 @@ public static class IdentityApiEndpoints
 
     public static class TokensEndpoints
     {
-        private const string Base = $"{IdentityApiEndpoints.Base}/" + "{userId}";
+        private const string Base = $"{IdentityApiEndpoints.Base}/" + "{idOrUsername}";
 
         public const string GetRefreshTokens = $"{Base}/tokens";
         public const string RefreshToken = $"{Base}/refresh-token";

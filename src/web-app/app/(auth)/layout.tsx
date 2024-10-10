@@ -1,5 +1,5 @@
-import Copyright from "../themes/mui-components/Copyright";
-import Logo from "@app/components/nav/Logo";
+import Copyright from '../themes/mui-components/Copyright';
+import Logo from '@app/components/nav/Logo';
 
 export default function Layout({
     children,

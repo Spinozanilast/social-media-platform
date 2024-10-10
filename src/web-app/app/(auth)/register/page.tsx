@@ -19,7 +19,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 import { FieldId } from '@models/user/util';
 import { UserApiResponse } from '@models/user/util';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import UserService from '@/app/api/services/user';
 
 const registerSchema = object({
@@ -90,6 +90,13 @@ const pageTextFieldsData: TextFieldData[] = [
         type: 'password',
     },
 ];
+
+const redirectHandler = () => {
+    const localUser = UserService.getCurrentUser();
+    if (localUser) {
+        redirect(`/${localUser.userName}`);
+    }
+};
 
 type RegisterInput = TypeOf<typeof registerSchema>;
 

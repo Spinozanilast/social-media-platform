@@ -3,6 +3,7 @@ using IdentityService;
 using IdentityService.Data;
 using IdentityService.Entities;
 using IdentityService.Services;
+using IdentityService.Services.Implementations;
 using IdentityService.Utilities;
 using Microsoft.OpenApi.Models;
 
@@ -39,8 +40,11 @@ builder.Services.AddSwaggerGen(option =>
 });
 
 builder.Services.AddS3Client();
-builder.Services.AddTransient<ITokenService, TokenService>();
-builder.Services.AddScoped<UserUtilities>();
+
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IProfileImageService, ProfileImageService>();
+
 builder.Services.AddUsersDbContext(builder);
 builder.Services
     .AddIdentity<User, Role>(options =>
@@ -51,7 +55,6 @@ builder.Services
         options.Password.RequireUppercase = true;
     })
     .AddEntityFrameworkStores<IdentityAppContext>();
-builder.Services.AddScoped<IProfileImageService, ProfileImageService>();
 builder.Services.Configure<ProfileImageStorageConfig>(builder.Configuration.GetSection("ProfileImageStorage"));
 
 builder.Services.AddJwtConfiguration();

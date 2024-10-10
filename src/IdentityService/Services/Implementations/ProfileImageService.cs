@@ -5,7 +5,7 @@ using IdentityService.Controllers;
 using IdentityService.Entities;
 using Microsoft.Extensions.Options;
 
-namespace IdentityService.Services;
+namespace IdentityService.Services.Implementations;
 
 public class ProfileImageService : IProfileImageService
 {

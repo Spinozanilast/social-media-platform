@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using IdentityService.Entities.Tokens;
 using Microsoft.AspNetCore.Identity;
 using TypeGen.Core.TypeAnnotations;
 
