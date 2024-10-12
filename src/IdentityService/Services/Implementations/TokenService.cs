@@ -7,6 +7,7 @@ using Authentication.Configuration.Configurations;
 using IdentityService.Data;
 using IdentityService.Entities;
 using IdentityService.Entities.Tokens;
+using IdentityService.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
@@ -16,20 +17,41 @@ public class TokenService : ITokenService
 {
     private readonly IdentityAppContext _identityContext;
     private readonly UserManager<User> _userManager;
+    private readonly ITokenService _tokenService;
 
-    public TokenService(IdentityAppContext context, UserManager<User> userManager)
+    public TokenService(IdentityAppContext context, UserManager<User> userManager, ITokenService tokenService)
     {
         _identityContext = context;
         _userManager = userManager;
+        _tokenService = tokenService;
     }
 
-    public async Task<TokenPair?> TryRefreshToken(User user, string refreshTokenValue)
+    public bool TryRevokeToken(User user, string refreshToken)
+    {
+        var usersToken = user.RefreshTokens.FirstOrDefault(token => token.TokenValue.Equals(refreshToken));
+        if (usersToken is null)
+        {
+            return false;
+        }
+        
+        usersToken.Revoked = DateTime.UtcNow;
+        return true;
+    }
+
+    public bool GetUsersRefreshTokenActivityStatus(User user, string refreshToken)
+    {
+        var usersToken = user.RefreshTokens.FirstOrDefault(token => token.TokenValue.Equals(refreshToken));
+
+        return usersToken?.IsActive ?? false;
+    }
+
+    public async Task<Result<TokenPair>> TryRefreshToken(User user, string refreshTokenValue)
     {
         var refreshToken = user.RefreshTokens.Single(x => x.TokenValue == refreshTokenValue);
 
         if (!refreshToken.IsActive)
         {
-            return null;
+            return Result<TokenPair>.Failure("Refresh token you have was expired or not exists");
         }
 
         refreshToken.Revoked = DateTime.UtcNow;
@@ -38,9 +60,11 @@ public class TokenService : ITokenService
         await SaveRefreshTokenAsync(user, newRefreshToken);
 
         var newjwtToken = await GenerateJwtToken(user);
-        return new TokenPair(
-            JwtToken: newjwtToken, 
-            RefreshToken: newRefreshToken);
+        return Result<TokenPair>.Success(new TokenPair
+        (
+            JwtToken: newjwtToken,
+            RefreshToken: newRefreshToken
+        ));
     }
 
     public async Task<Token> GenerateJwtToken(User user)

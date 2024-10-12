@@ -4,7 +4,6 @@ using IdentityService.Data;
 using IdentityService.Entities;
 using IdentityService.Services;
 using IdentityService.Services.Implementations;
-using IdentityService.Utilities;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);

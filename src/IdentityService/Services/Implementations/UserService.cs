@@ -1,15 +1,15 @@
-﻿using System.Collections;
-using Authentication.Configuration;
+﻿using Authentication.Configuration;
 using IdentityService.Contracts;
 using IdentityService.Contracts.Login;
 using IdentityService.Contracts.Registration;
 using IdentityService.Entities;
+using IdentityService.Helpers;
 using IdentityService.Mapping;
 using IdentityService.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace IdentityService.Services;
+namespace IdentityService.Services.Implementations;
 
 public class UserService : IUserService
 {
@@ -61,24 +61,24 @@ public class UserService : IUserService
     {
         Result<(LoginResponse loginResponse, User? user)> loginResultWithUser = await LoginUserAsync(loginRequest);
 
-        if (loginResultWithUser.IsSuccess && loginResultWithUser.Value.user is not null)
-        {
-            var user = loginResultWithUser.Value.user;
-            var jwtToken = await _tokenService.GenerateJwtToken(user);
-            var refreshToken = _tokenService.GenerateRefreshToken();
+        if (!loginResultWithUser.IsSuccess || loginResultWithUser.Value.user is null)
+            return Result<LoginResponse>.Failure(loginResultWithUser.Error);
 
-            response.Cookies.AppendHttpOnlyCookie(TokensConstants.JwtCookieKey, jwtToken.TokenValue,
-                jwtToken.ExpiryDate);
-            response.Cookies.AppendHttpOnlyCookie(TokensConstants.RefreshCookieKey, refreshToken.TokenValue,
-                refreshToken.ExpiryDate);
-        }
+        var user = loginResultWithUser.Value.user;
+        var jwtToken = await _tokenService.GenerateJwtToken(user);
+        var refreshToken = _tokenService.GenerateRefreshToken();
+
+        response.Cookies.AppendHttpOnlyCookie(TokensConstants.JwtCookieKey, jwtToken.TokenValue,
+            jwtToken.ExpiryDate);
+        response.Cookies.AppendHttpOnlyCookie(TokensConstants.RefreshCookieKey, refreshToken.TokenValue,
+            refreshToken.ExpiryDate);
 
         return Result<LoginResponse>.Success(loginResultWithUser.Value.loginResponse);
     }
 
     public async Task<Result<UserToGet>> GetUserByIdOrUsernameAsync(string idOrUsername)
     {
-        var user = await GetUserByIdOrUsername(idOrUsername);
+        var user = await _userManager.FindUserByUserNameThenId(idOrUsername);
 
         return user is null
             ? Result<UserToGet>.Failure("User with such id or username was not found")
@@ -108,13 +108,5 @@ public class UserService : IUserService
         return result.Succeeded
             ? Result<string>.Success()
             : Result<string>.Failure(result.Errors.Select(e => e.Description).FirstOrDefault());
-    }
-
-    private async Task<User?> GetUserByIdOrUsername(string idOrUsername)
-    {
-        var user = Guid.TryParse(idOrUsername, out _)
-            ? await _userManager.FindByIdAsync(idOrUsername)
-            : await _userManager.FindByNameAsync(idOrUsername);
-        return user;
     }
 }

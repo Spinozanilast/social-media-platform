@@ -1,7 +1,6 @@
 ﻿using IdentityService.Contracts;
 using IdentityService.Contracts.Login;
 using IdentityService.Contracts.Registration;
-using IdentityService.Entities;
 using IdentityService.Utilities;
 
 namespace IdentityService.Services;

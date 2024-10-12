@@ -1,5 +1,7 @@
 ﻿using Authentication.Configuration;
 using IdentityService.Entities;
+using IdentityService.Entities.Tokens;
+using IdentityService.Helpers;
 using IdentityService.Services;
 using IdentityService.Utilities;
 using Microsoft.AspNetCore.Authorization;
@@ -24,6 +26,7 @@ public class TokensController : ControllerBase
     [Authorize]
     [HttpPost(IdentityApiEndpoints.TokensEndpoints.GetRefreshTokens)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetRefreshTokens([FromRoute] string userId)
     {
@@ -34,7 +37,13 @@ public class TokensController : ControllerBase
             return NotFound();
         }
 
-        return Ok(user.RefreshTokens);
+        if (Request.Cookies.TryGetValue(TokensConstants.RefreshCookieKey, out var refreshToken) &&
+            _tokenService.GetUsersRefreshTokenActivityStatus(user, refreshToken))
+        {
+            return Ok(user.RefreshTokens);
+        }
+
+        return BadRequest("Those user refresh tokens are not yours. Go AWAY!");
     }
 
     [AllowAnonymous]
@@ -44,7 +53,7 @@ public class TokensController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> RefreshToken([FromRoute] string idOrUsername)
     {
-        var user = await _userUtilities.GetUserByIdOrUsername(idOrUsername);
+        var user = await _userManager.FindUserByUserNameThenId(idOrUsername);
 
         if (user is null)
         {
@@ -54,21 +63,47 @@ public class TokensController : ControllerBase
         if (!Request.Cookies.TryGetValue(TokensConstants.RefreshCookieKey, out var currentRefreshToken) ||
             string.IsNullOrEmpty(currentRefreshToken)) return Unauthorized();
 
-        var tokenPair = await _tokenService.TryRefreshToken(user, currentRefreshToken);
+        var tokenPairResult = await _tokenService.TryRefreshToken(user, currentRefreshToken);
 
-        if (tokenPair is null)
+        if (!tokenPairResult.IsSuccess)
         {
-            return Unauthorized("Refresh token was expired");
+            return Unauthorized(tokenPairResult.Error);
         }
 
-        var httpOnlyOption = new CookieOptions
-        {
-            HttpOnly = true,
-        };
+        var (jwtToken, refreshToken) = tokenPairResult.Value;
 
-        Response.Cookies.Append(TokensConstants.JwtCookieKey, tokenPair.JwtToken.TokenValue, httpOnlyOption);
-        Response.Cookies.Append(TokensConstants.RefreshCookieKey, tokenPair.RefreshToken.TokenValue, httpOnlyOption);
+        Response.Cookies.AppendHttpOnlyCookie(TokensConstants.JwtCookieKey, jwtToken.TokenValue,
+            jwtToken.ExpiryDate);
+        Response.Cookies.AppendHttpOnlyCookie(TokensConstants.RefreshCookieKey, refreshToken.TokenValue,
+            refreshToken.ExpiryDate);
 
         return Ok();
+    }
+
+    [AllowAnonymous]
+    [HttpPost(IdentityApiEndpoints.TokensEndpoints.RefreshToken)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> RevokeToken([FromRoute] string idOrUsername)
+    {
+        var user = await _userManager.FindUserByUserNameThenId(idOrUsername);
+
+        if (user is null)
+        {
+            return NotFound("Such user was not found");
+        }
+
+        var tokenAvailable = Request.Cookies.TryGetValue(TokensConstants.RefreshCookieKey, out var refreshToken);
+
+        if (tokenAvailable || string.IsNullOrEmpty(refreshToken))
+            return BadRequest(new { message = "Token is required" });
+        
+        var response = _tokenService.TryRevokeToken(user, refreshToken);
+
+        if (!response)
+            return NotFound("Token not found");
+
+        return Ok("Token revoked");
     }
 }
