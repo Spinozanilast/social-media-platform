@@ -17,13 +17,13 @@ public class TokenService : ITokenService
 {
     private readonly IdentityAppContext _identityContext;
     private readonly UserManager<User> _userManager;
-    private readonly ITokenService _tokenService;
+    private readonly ICookiesService _cookiesService;
 
-    public TokenService(IdentityAppContext context, UserManager<User> userManager, ITokenService tokenService)
+    public TokenService(IdentityAppContext context, UserManager<User> userManager, ICookiesService cookiesService)
     {
         _identityContext = context;
         _userManager = userManager;
-        _tokenService = tokenService;
+        _cookiesService = cookiesService;
     }
 
     public bool TryRevokeToken(User user, string refreshToken)
@@ -33,9 +33,22 @@ public class TokenService : ITokenService
         {
             return false;
         }
-        
+
         usersToken.Revoked = DateTime.UtcNow;
         return true;
+    }
+
+    public void SetTokensInCookies(Token jwtToken, RefreshToken refreshToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetTokensInCookies(HttpResponse response, Token jwtToken, RefreshToken refreshToken)
+    {
+        _cookiesService.SetHttpOnlyCookies(response, TokensConstants.JwtCookieKey, jwtToken.TokenValue,
+            jwtToken.ExpiryDate);
+        _cookiesService.SetHttpOnlyCookies(response, TokensConstants.RefreshCookieKey, refreshToken.TokenValue,
+            refreshToken.ExpiryDate);
     }
 
     public bool GetUsersRefreshTokenActivityStatus(User user, string refreshToken)

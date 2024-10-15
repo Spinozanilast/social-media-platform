@@ -16,15 +16,18 @@ public class UserService : IUserService
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
     private readonly ITokenService _tokenService;
+    private readonly ICookiesService _cookiesService;
 
-    public UserService(UserManager<User> userManager, SignInManager<User> signInManager, ITokenService tokenService)
+    public UserService(UserManager<User> userManager, SignInManager<User> signInManager, ITokenService tokenService,
+        ICookiesService cookiesService)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _tokenService = tokenService;
+        _cookiesService = cookiesService;
     }
 
-    public async Task<DefaultResponse> RegisterUserAsync(UserForRegistration userForRegistration)
+    public async ValueTask<DefaultResponse> RegisterUserAsync(UserForRegistration userForRegistration)
     {
         var user = userForRegistration.ToUserWithoutHashPassword();
         user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, userForRegistration.Password);
@@ -32,8 +35,15 @@ public class UserService : IUserService
         var result = await _userManager.CreateAsync(user);
 
         return result.Succeeded
-            ? new DefaultResponse(true, null, null)
+            ? DefaultResponse.DefaultSuccessResponse()
             : result.ToDefaultErrorResponse();
+    }
+
+    public async ValueTask<DefaultResponse> SignOut(HttpRequest request, HttpResponse response)
+    {
+        _cookiesService.ExpireAuthHttpOnlyCookies(request, response);
+        await _signInManager.SignOutAsync();
+        return DefaultResponse.DefaultSuccessResponse();
     }
 
     private async Task<Result<(LoginResponse, User?)>> LoginUserAsync(LoginRequest loginRequest)
@@ -45,7 +55,8 @@ public class UserService : IUserService
             return Result<(LoginResponse, User?)>.Failure("User with such email was not found");
         }
 
-        var loginResult = await _signInManager.CheckPasswordSignInAsync(user, loginRequest.Password, false);
+        var loginResult =
+            await _signInManager.PasswordSignInAsync(user, loginRequest.Password, loginRequest.RememberMe, false);
 
         if (!loginResult.Succeeded)
         {
@@ -66,12 +77,9 @@ public class UserService : IUserService
 
         var user = loginResultWithUser.Value.user;
         var jwtToken = await _tokenService.GenerateJwtToken(user);
-        var refreshToken = _tokenService.GenerateRefreshToken();
+        var refreshToken = await _tokenService.GenerateRefreshTokenWithSave(user);
 
-        response.Cookies.AppendHttpOnlyCookie(TokensConstants.JwtCookieKey, jwtToken.TokenValue,
-            jwtToken.ExpiryDate);
-        response.Cookies.AppendHttpOnlyCookie(TokensConstants.RefreshCookieKey, refreshToken.TokenValue,
-            refreshToken.ExpiryDate);
+        _tokenService.SetTokensInCookies(response, jwtToken, refreshToken);
 
         return Result<LoginResponse>.Success(loginResultWithUser.Value.loginResponse);
     }

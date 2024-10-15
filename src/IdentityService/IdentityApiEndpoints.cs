@@ -8,13 +8,12 @@ public static class IdentityApiEndpoints
     {
         public const string Register = $"{Base}/register";
         public const string Login = $"{Base}/login";
+        public const string SignOut = $"{Base}/signout";
 
         public const string GetUserByIdOrUsername = $"{Base}s/" + "{idOrUsername}";
         public const string GetAll = $"{Base}s/get";
 
         public const string UpdateUser = $"{Base}/" + "{id}/update";
-
-        public const string Authenticate = $"{Base}/" + "{idOrUsername}/update";
     }
 
     public static class ProfileImagesEndpoints
@@ -30,7 +29,8 @@ public static class IdentityApiEndpoints
     {
         private const string Base = $"{IdentityApiEndpoints.Base}/" + "{idOrUsername}";
 
-        public const string GetRefreshTokens = $"{Base}/tokens";
+        public const string GetRefreshTokens = $"{IdentityApiEndpoints.Base}/" + "{userId}" + "/tokens";
         public const string RefreshToken = $"{Base}/refresh-token";
+        public const string RevokeToken = $"{Base}/revoke-token";
     }
 }

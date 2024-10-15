@@ -43,6 +43,7 @@ builder.Services.AddS3Client();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IProfileImageService, ProfileImageService>();
+builder.Services.AddTransient<ICookiesService, CookiesService>();
 
 builder.Services.AddUsersDbContext(builder);
 builder.Services

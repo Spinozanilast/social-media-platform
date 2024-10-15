@@ -16,11 +16,13 @@ public class TokensController : ControllerBase
 {
     private readonly UserManager<User> _userManager;
     private readonly ITokenService _tokenService;
+    private readonly ICookiesService _cookiesService;
 
-    public TokensController(UserManager<User> userManager, ITokenService tokenService)
+    public TokensController(UserManager<User> userManager, ITokenService tokenService, ICookiesService cookiesService)
     {
         _userManager = userManager;
         _tokenService = tokenService;
+        _cookiesService = cookiesService;
     }
 
     [Authorize]
@@ -71,17 +73,13 @@ public class TokensController : ControllerBase
         }
 
         var (jwtToken, refreshToken) = tokenPairResult.Value;
-
-        Response.Cookies.AppendHttpOnlyCookie(TokensConstants.JwtCookieKey, jwtToken.TokenValue,
-            jwtToken.ExpiryDate);
-        Response.Cookies.AppendHttpOnlyCookie(TokensConstants.RefreshCookieKey, refreshToken.TokenValue,
-            refreshToken.ExpiryDate);
+        _tokenService.SetTokensInCookies(Response, jwtToken, refreshToken);
 
         return Ok();
     }
 
     [AllowAnonymous]
-    [HttpPost(IdentityApiEndpoints.TokensEndpoints.RefreshToken)]
+    [HttpPost(IdentityApiEndpoints.TokensEndpoints.RevokeToken)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -98,7 +96,7 @@ public class TokensController : ControllerBase
 
         if (tokenAvailable || string.IsNullOrEmpty(refreshToken))
             return BadRequest(new { message = "Token is required" });
-        
+
         var response = _tokenService.TryRevokeToken(user, refreshToken);
 
         if (!response)

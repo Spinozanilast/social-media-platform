@@ -39,6 +39,15 @@ public class AccountsController : ControllerBase
         return result.IsSuccess ? Ok(result.Value) : NotFound(result.Error);
     }
 
+    [Authorize]
+    [HttpPost(IdentityApiEndpoints.AccountEndpoints.SignOut)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public new async Task<IActionResult> SignOut()
+    {
+        var response = await _userService.SignOut(Request, Response);
+        return Ok(response);
+    }
+
     [AllowAnonymous]
     [HttpGet(IdentityApiEndpoints.AccountEndpoints.GetUserByIdOrUsername)]
     [ProducesResponseType(StatusCodes.Status200OK)]

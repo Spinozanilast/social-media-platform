@@ -1,3 +1,3 @@
 ﻿namespace IdentityService.Entities.Tokens;
 
-public record TokenPair(Token JwtToken, Token RefreshToken);
+public record TokenPair(Token JwtToken, RefreshToken RefreshToken);
