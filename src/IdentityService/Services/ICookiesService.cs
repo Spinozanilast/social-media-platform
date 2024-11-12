@@ -1,7 +1,11 @@
-﻿namespace IdentityService.Services;
+﻿using Authentication.Configuration;
+
+namespace IdentityService.Services;
 
 public interface ICookiesService
 {
-    void ExpireAuthHttpOnlyCookies(HttpRequest request, HttpResponse response);
-    void SetHttpOnlyCookies(HttpResponse response, string key, string value, DateTime expiredTime);
+    void ExpireAuthHttpOnlyCookies(IRequestCookieCollection requestCookies, IResponseCookies responseCookies);
+    void SetHttpOnlyCookies(IResponseCookies requestCookies, string key, string value, DateTime expiredTime);
+    bool JwtTokenExistsInRequest(IRequestCookieCollection requestCookies, AuthCookieTypes authCookieType);
+    bool TryGetCookie(IRequestCookieCollection requestCookies, AuthCookieTypes authCookieType, out string? cookie);
 }

@@ -1,9 +1,7 @@
 ﻿using Authentication.Configuration;
 using IdentityService.Entities;
-using IdentityService.Entities.Tokens;
 using IdentityService.Helpers;
 using IdentityService.Services;
-using IdentityService.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +23,20 @@ public class TokensController : ControllerBase
         _cookiesService = cookiesService;
     }
 
+    [HttpPost(IdentityApiEndpoints.TokensEndpoints.CheckToken)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> CheckJwtTokenAvailability()
+    {
+        if (_cookiesService.JwtTokenExistsInRequest(Request.Cookies, AuthCookieTypes.JwtCookie))
+        {
+            return Ok();
+        }
+
+        return Unauthorized();
+    }
+
+
     [Authorize]
     [HttpPost(IdentityApiEndpoints.TokensEndpoints.GetRefreshTokens)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -39,7 +51,8 @@ public class TokensController : ControllerBase
             return NotFound();
         }
 
-        if (Request.Cookies.TryGetValue(TokensConstants.RefreshCookieKey, out var refreshToken) &&
+        if (Request.Cookies.TryGetValue(TokensConstants.GetCookieKey(AuthCookieTypes.RefreshCookie),
+                out var refreshToken) &&
             _tokenService.GetUsersRefreshTokenActivityStatus(user, refreshToken))
         {
             return Ok(user.RefreshTokens);
@@ -62,7 +75,8 @@ public class TokensController : ControllerBase
             return NotFound("Such user was not found");
         }
 
-        if (!Request.Cookies.TryGetValue(TokensConstants.RefreshCookieKey, out var currentRefreshToken) ||
+        if (!_cookiesService.TryGetCookie(Request.Cookies, AuthCookieTypes.RefreshCookie,
+                out var currentRefreshToken) ||
             string.IsNullOrEmpty(currentRefreshToken)) return Unauthorized();
 
         var tokenPairResult = await _tokenService.TryRefreshToken(user, currentRefreshToken);
@@ -92,7 +106,8 @@ public class TokensController : ControllerBase
             return NotFound("Such user was not found");
         }
 
-        var tokenAvailable = Request.Cookies.TryGetValue(TokensConstants.RefreshCookieKey, out var refreshToken);
+        var tokenAvailable =
+            _cookiesService.TryGetCookie(Request.Cookies, AuthCookieTypes.RefreshCookie, out var refreshToken);
 
         if (tokenAvailable || string.IsNullOrEmpty(refreshToken))
             return BadRequest(new { message = "Token is required" });

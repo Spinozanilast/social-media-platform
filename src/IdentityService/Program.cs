@@ -5,8 +5,15 @@ using IdentityService.Entities;
 using IdentityService.Services;
 using IdentityService.Services.Implementations;
 using Microsoft.OpenApi.Models;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSerilog((cfg, loggerConfig) =>
+{
+    loggerConfig.WriteTo.Console();
+    loggerConfig.ReadFrom.Configuration(builder.Configuration);
+});
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

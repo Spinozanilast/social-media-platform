@@ -115,10 +115,13 @@ export default function RegisterPage() {
     const router = useRouter();
 
     useEffect(() => {
+        redirectHandler();
+
         if (isSubmitSuccessful) {
             reset();
             router.push('/login');
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isSubmitSuccessful, reset]);
 
     const onSubmit: SubmitHandler<RegisterInput> = async (

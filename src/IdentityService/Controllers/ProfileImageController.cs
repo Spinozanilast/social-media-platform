@@ -21,11 +21,6 @@ public class ProfileImageController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> UploadProfileImage([FromForm] Photo profileImage, Guid userId)
     {
-        if (profileImage is null)
-        {
-            return BadRequest();
-        }
-
         var result = await _imageService.UploadProfileImageAsync(profileImage, userId);
 
         return result switch
@@ -39,9 +34,9 @@ public class ProfileImageController : ControllerBase
     [HttpGet(IdentityApiEndpoints.ProfileImagesEndpoints.Get)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetProfileImage([FromRoute] Guid userId)
+    public async Task<IActionResult> GetProfileImage([FromRoute] Guid idOrUsername)
     {
-        var result = await _imageService.GetProfileImageAsync(userId);
+        var result = await _imageService.GetProfileImageAsync(idOrUsername);
 
         if (result is null)
         {

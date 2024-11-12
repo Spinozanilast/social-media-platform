@@ -41,7 +41,7 @@ public class UserService : IUserService
 
     public async ValueTask<DefaultResponse> SignOut(HttpRequest request, HttpResponse response)
     {
-        _cookiesService.ExpireAuthHttpOnlyCookies(request, response);
+        _cookiesService.ExpireAuthHttpOnlyCookies(request.Cookies, response.Cookies);
         await _signInManager.SignOutAsync();
         return DefaultResponse.DefaultSuccessResponse();
     }

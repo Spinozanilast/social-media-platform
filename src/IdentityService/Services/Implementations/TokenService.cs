@@ -38,16 +38,13 @@ public class TokenService : ITokenService
         return true;
     }
 
-    public void SetTokensInCookies(Token jwtToken, RefreshToken refreshToken)
-    {
-        throw new NotImplementedException();
-    }
-
     public void SetTokensInCookies(HttpResponse response, Token jwtToken, RefreshToken refreshToken)
     {
-        _cookiesService.SetHttpOnlyCookies(response, TokensConstants.JwtCookieKey, jwtToken.TokenValue,
+        _cookiesService.SetHttpOnlyCookies(response.Cookies, TokensConstants.GetCookieKey(AuthCookieTypes.JwtCookie),
+            jwtToken.TokenValue,
             jwtToken.ExpiryDate);
-        _cookiesService.SetHttpOnlyCookies(response, TokensConstants.RefreshCookieKey, refreshToken.TokenValue,
+        _cookiesService.SetHttpOnlyCookies(response.Cookies,
+            TokensConstants.GetCookieKey(AuthCookieTypes.RefreshCookie), refreshToken.TokenValue,
             refreshToken.ExpiryDate);
     }
 

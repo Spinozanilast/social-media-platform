@@ -8,7 +8,6 @@ namespace Authentication.Configuration;
 
 public static class JwtExtensions
 {
-    
     public static void AddJwtConfiguration(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddAuthentication(x =>
@@ -23,11 +22,13 @@ public static class JwtExtensions
             {
                 OnMessageReceived = context =>
                 {
-                    context.Request.Cookies.TryGetValue(TokensConstants.JwtCookieKey, out var accessToken);
+                    context.Request.Cookies.TryGetValue(TokensConstants.GetCookieKey(AuthCookieTypes.JwtCookie),
+                        out var accessToken);
                     if (!string.IsNullOrEmpty(accessToken))
                     {
                         context.Token = accessToken;
                     }
+
                     return Task.CompletedTask;
                 }
             };

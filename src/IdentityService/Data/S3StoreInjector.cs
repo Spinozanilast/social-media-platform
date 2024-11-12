@@ -5,11 +5,11 @@ namespace IdentityService.Data;
 
 public static class S3StoreInjector
 {
-    private static readonly string ServiceUrl = "https://s3.yandexcloud.net";
+    private const string ServiceUrl = "https://s3.yandexcloud.net";
 
     public static void AddS3Client(this IServiceCollection services)
     {
-        services.AddSingleton<IAmazonS3>(opt =>
+        services.AddSingleton<IAmazonS3>(_ =>
         {
             var configurator = new AwsS3ServiceConfigurator();
             var credentials = configurator.AwsCredentials;
