@@ -1,4 +1,4 @@
-﻿namespace IdentityService;
+﻿namespace ProfileService.Data;
 
 public class ProfileImageStorageConfig
 {

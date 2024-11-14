@@ -4,14 +4,15 @@ using System.Security.Cryptography;
 using System.Text;
 using Authentication.Configuration;
 using Authentication.Configuration.Configurations;
+using IdentityService.Common.Services;
 using IdentityService.Data;
 using IdentityService.Entities;
 using IdentityService.Entities.Tokens;
-using IdentityService.Utilities;
+using IdentityService.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
-namespace IdentityService.Services.Implementations;
+namespace IdentityService.Services;
 
 public class TokenService : ITokenService
 {

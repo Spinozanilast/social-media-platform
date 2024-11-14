@@ -1,9 +1,9 @@
 ﻿using IdentityService.Contracts;
 using IdentityService.Contracts.Login;
 using IdentityService.Contracts.Registration;
-using IdentityService.Utilities;
+using IdentityService.Helpers;
 
-namespace IdentityService.Services;
+namespace IdentityService.Common.Services;
 
 public interface IUserService
 {

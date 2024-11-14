@@ -1,7 +1,8 @@
 ﻿using Authentication.Configuration;
-using IdentityService.Utilities;
+using IdentityService.Common.Services;
+using IdentityService.Helpers;
 
-namespace IdentityService.Services.Implementations;
+namespace IdentityService.Services;
 
 public class CookiesService : ICookiesService
 {

@@ -33,6 +33,5 @@ public static class IdentityApiEndpoints
         public const string RefreshToken = $"{TokensBase}/refresh-token";
         public const string RevokeToken = $"{TokensBase}/revoke-token";
         public const string CheckToken = $"{TokensBase}/check-token";
-        
     }
 }

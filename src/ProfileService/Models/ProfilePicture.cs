@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace IdentityService.Entities;
+namespace ProfileService.Models;
 
 public class ProfilePicture
 {

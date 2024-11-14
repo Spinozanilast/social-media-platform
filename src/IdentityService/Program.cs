@@ -1,19 +1,15 @@
 using Authentication.Configuration;
-using IdentityService;
+using IdentityService.Common.Services;
 using IdentityService.Data;
 using IdentityService.Entities;
 using IdentityService.Services;
-using IdentityService.Services.Implementations;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using Shared.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSerilog((cfg, loggerConfig) =>
-{
-    loggerConfig.WriteTo.Console();
-    loggerConfig.ReadFrom.Configuration(builder.Configuration);
-});
+builder.Services.AddConfiguredSerilog(builder.Configuration);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -45,11 +41,9 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
-builder.Services.AddS3Client();
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<IProfileImageService, ProfileImageService>();
 builder.Services.AddTransient<ICookiesService, CookiesService>();
 
 builder.Services.AddUsersDbContext(builder);
@@ -62,7 +56,6 @@ builder.Services
         options.Password.RequireUppercase = true;
     })
     .AddEntityFrameworkStores<IdentityAppContext>();
-builder.Services.Configure<ProfileImageStorageConfig>(builder.Configuration.GetSection("ProfileImageStorage"));
 
 builder.Services.AddJwtConfiguration();
 builder.Services.AddAuthentication();

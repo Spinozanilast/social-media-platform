@@ -1,11 +1,12 @@
 ﻿using System.Net;
 using Amazon.S3;
 using Amazon.S3.Model;
-using IdentityService.Controllers;
-using IdentityService.Entities;
 using Microsoft.Extensions.Options;
+using ProfileService.Common.Services;
+using ProfileService.Data;
+using ProfileService.Models;
 
-namespace IdentityService.Services.Implementations;
+namespace ProfileService.Services;
 
 public class ProfileImageService : IProfileImageService
 {
@@ -52,7 +53,7 @@ public class ProfileImageService : IProfileImageService
         return default;
     }
 
-    public async Task<bool> UploadProfileImageAsync(Photo image, Guid id)
+    public async Task<bool> UploadProfileImageAsync(Image image, Guid id)
     {
         try
         {
@@ -65,12 +66,12 @@ public class ProfileImageService : IProfileImageService
             {
                 BucketName = _bucketName,
                 Key = GetImageKey(id),
-                InputStream = image.formFile.OpenReadStream(),
-                ContentType = image.formFile.ContentType,
+                InputStream = image.FormFile.OpenReadStream(),
+                ContentType = image.FormFile.ContentType,
                 Metadata =
                 {
-                    ["x-amz-meta-original-file-name"] = image.formFile.FileName,
-                    ["x-amz-meta-original-file-extension"] = Path.GetExtension(image.formFile.FileName),
+                    ["x-amz-meta-original-file-name"] = image.FormFile.FileName,
+                    ["x-amz-meta-original-file-extension"] = Path.GetExtension(image.FormFile.FileName),
                 }
             };
 

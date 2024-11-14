@@ -1,9 +1,9 @@
 ﻿using System.Security.Claims;
 using IdentityService.Entities;
 using IdentityService.Entities.Tokens;
-using IdentityService.Utilities;
+using IdentityService.Helpers;
 
-namespace IdentityService.Services;
+namespace IdentityService.Common.Services;
 
 public interface ITokenService
 {

@@ -1,7 +1,7 @@
 ﻿using Authentication.Configuration;
+using IdentityService.Common.Services;
 using IdentityService.Entities;
 using IdentityService.Helpers;
-using IdentityService.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

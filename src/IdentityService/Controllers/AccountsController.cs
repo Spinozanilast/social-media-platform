@@ -1,7 +1,7 @@
+using IdentityService.Common.Services;
 using IdentityService.Contracts;
 using IdentityService.Contracts.Login;
 using IdentityService.Contracts.Registration;
-using IdentityService.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

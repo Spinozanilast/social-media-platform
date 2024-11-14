@@ -1,4 +1,4 @@
-﻿namespace IdentityService.Utilities;
+﻿namespace IdentityService.Helpers;
 
 public static class HttpOnlyCookieAppender
 {

@@ -1,6 +1,6 @@
 ﻿using Authentication.Configuration;
 
-namespace IdentityService.Services;
+namespace IdentityService.Common.Services;
 
 public interface ICookiesService
 {

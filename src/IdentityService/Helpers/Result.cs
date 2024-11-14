@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace IdentityService.Utilities;
+namespace IdentityService.Helpers;
 
 public class Result<T>
 {

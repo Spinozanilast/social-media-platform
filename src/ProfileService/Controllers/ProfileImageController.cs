@@ -1,8 +1,9 @@
-﻿using IdentityService.Services;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ProfileService.Common.Services;
+using ProfileService.Models;
 
-namespace IdentityService.Controllers;
+namespace ProfileService.Controllers;
 
 [Authorize]
 [ApiController]
@@ -10,16 +11,16 @@ public class ProfileImageController : ControllerBase
 {
     private readonly IProfileImageService _imageService;
 
-    public ProfileImageController(IProfileImageService imageService)
+    public ProfileImageController(IProfileImageService imageService, ILogger<ProfileImageController> logger)
     {
         _imageService = imageService;
     }
 
     [Authorize]
-    [HttpPost(IdentityApiEndpoints.ProfileImagesEndpoints.Upload)]
+    [HttpPost(ProfileImagesEndpoints.Upload)]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> UploadProfileImage([FromForm] Photo profileImage, Guid userId)
+    public async Task<IActionResult> UploadProfileImage([FromForm] Image profileImage, Guid userId)
     {
         var result = await _imageService.UploadProfileImageAsync(profileImage, userId);
 
@@ -31,7 +32,7 @@ public class ProfileImageController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpGet(IdentityApiEndpoints.ProfileImagesEndpoints.Get)]
+    [HttpGet(ProfileImagesEndpoints.Get)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetProfileImage([FromRoute] Guid idOrUsername)
@@ -47,7 +48,7 @@ public class ProfileImageController : ControllerBase
     }
 
     [Authorize]
-    [HttpPost(IdentityApiEndpoints.ProfileImagesEndpoints.Remove)]
+    [HttpPost(ProfileImagesEndpoints.Remove)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> RemoveProfileImage([FromRoute] Guid userId)
@@ -60,9 +61,4 @@ public class ProfileImageController : ControllerBase
             _ => NotFound()
         };
     }
-}
-
-public class Photo
-{
-    public IFormFile formFile { get; set; }
 }

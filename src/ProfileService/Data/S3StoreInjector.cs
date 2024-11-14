@@ -1,7 +1,7 @@
 ﻿using Amazon.S3;
 using AwsConfigurators;
 
-namespace IdentityService.Data;
+namespace ProfileService.Data;
 
 public static class S3StoreInjector
 {

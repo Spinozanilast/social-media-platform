@@ -1,15 +1,14 @@
-﻿using Authentication.Configuration;
+﻿using IdentityService.Common.Services;
 using IdentityService.Contracts;
 using IdentityService.Contracts.Login;
 using IdentityService.Contracts.Registration;
 using IdentityService.Entities;
 using IdentityService.Helpers;
 using IdentityService.Mapping;
-using IdentityService.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace IdentityService.Services.Implementations;
+namespace IdentityService.Services;
 
 public class UserService : IUserService
 {
