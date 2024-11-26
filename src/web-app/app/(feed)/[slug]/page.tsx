@@ -1,10 +1,55 @@
-export default function RegisterPage({ params }: { params: { slug: string } }) {
+import ProfileService from '@services/profile';
+import { Profile, User } from '@models/user/user';
+import UserService from '@services/user';
+import UserProfile from '@/app/components/UserProfile';
+import { Roboto } from 'next/font/google';
+
+async function getProfileImage(userId: string): Promise<Blob | null> {
+    const profileImage: Blob = await ProfileService.getProfileImage(userId);
+
+    if (profileImage.size === 0) {
+        return null;
+    }
+
+    return profileImage;
+}
+
+const getUser = async (userIdOrUsername: string): Promise<User> =>
+    await UserService.getUser(userIdOrUsername);
+const getProfileData = async (userId: string): Promise<Profile> =>
+    await ProfileService.getProfileData(userId);
+
+const roboto = Roboto({
+    subsets: ['latin'],
+    weight: '100',
+});
+
+interface UserPageProps {
+    params: { slug: string };
+}
+
+export default async function Page({ params }: UserPageProps) {
+    const userId = params.slug;
+
+    const user: User = await getUser(userId);
+    const [profileInfo, profileImage] = await Promise.all([
+        getProfileData(user.id),
+        getProfileImage(user.id),
+    ]);
+
+    console.log(profileInfo);
+
     return (
-        <div>
-            <h1>Username: {params.slug}</h1>
-            <section className="bg-background-secondary">
-                <h1></h1>
-            </section>
+        <div className="bg-background-secondary rounded-md grid grid-cols-3 grid-rows-1 max-w-full mx-page-part">
+            <aside style={{ fontFamily: 'Share Tech Mono' }}>
+                <UserProfile
+                    profileImage={profileImage}
+                    user={user}
+                    profileInfo={profileInfo}
+                ></UserProfile>
+            </aside>
+            <main className="page-column"></main>
+            <aside className="page-column"></aside>
         </div>
     );
 }

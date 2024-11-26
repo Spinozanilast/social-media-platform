@@ -1,9 +1,9 @@
-﻿name: Code Analysis
-
-on:
-  push:
-    branches:
-      - main
-
-jobs:
-  analyze:
+﻿#name: Code Analysis
+#
+#on:
+#  push:
+#    branches:
+#      - main
+#
+#jobs:
+#  analyze:

@@ -20,7 +20,7 @@ import { useEffect } from 'react';
 import { FieldId } from '@models/user/util';
 import { UserApiResponse } from '@models/user/util';
 import { redirect, useRouter } from 'next/navigation';
-import UserService from '@/app/api/services/user';
+import UserService from '@services/user';
 
 const registerSchema = object({
     username: string()
@@ -94,7 +94,7 @@ const pageTextFieldsData: TextFieldData[] = [
 const redirectHandler = () => {
     const localUser = UserService.getCurrentUser();
     if (localUser) {
-        redirect(`/${localUser.userName}`);
+        redirect(`/${localUser.username}`);
     }
 };
 
@@ -128,8 +128,7 @@ export default function RegisterPage() {
         data: RegisterInput
     ) => {
         const response: UserApiResponse = await UserService.registerUser(data);
-        if (!response.isSuccess && response.errors.length !== 0) {
-            console.log(response);
+        if (!response.isSuccess && response.errors.length === 0) {
             response.errorFields.forEach((errorField: FieldId, idx) => {
                 setError(
                     errorField,

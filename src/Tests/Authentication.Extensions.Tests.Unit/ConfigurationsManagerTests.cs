@@ -1,10 +1,11 @@
 using Authentication.Configuration.Configurations;
+using Xunit;
 
 namespace Authentication.Extensions.Tests;
 
 public class ConfigurationsManagerTests
 {
-    [Test]
+    [Fact]
     public void Test_ConfigAttributesAreCorrect_WhenUserSecretsExists()
     {
         //Arrange 
@@ -15,7 +16,7 @@ public class ConfigurationsManagerTests
         var isCorrectNumber = jwtConfig.ExpiryDays > 0;
 
         //Assert
-        Assert.IsTrue(isStringExists);
-        Assert.IsTrue(isCorrectNumber);
+        Assert.True(isStringExists);
+        Assert.True(isCorrectNumber);
     }
 }

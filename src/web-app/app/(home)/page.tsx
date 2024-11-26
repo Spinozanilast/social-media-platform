@@ -1,4 +1,4 @@
-import "@fontsource/share-tech-mono";
+import '@fontsource/share-tech-mono';
 
 export default function Home() {
     return (
@@ -6,11 +6,11 @@ export default function Home() {
             <aside className="page-column"></aside>
             <main className="page-column"></main>
             <aside
-                style={{ fontFamily: "Share Tech Mono" }}
+                style={{ fontFamily: 'Share Tech Mono' }}
                 className="page-column flex flex-row gap-8 items-center"
             >
                 <button>
-                    <img className=" rounded-full" alt="profileImage" />
+                    {/* <Image alt="profile image" width={100}/> */}
                 </button>
                 <h2 className="text-lg">Budchanin Vadim Alexandrovich</h2>
                 <h2 className="text-base text-gray-400">

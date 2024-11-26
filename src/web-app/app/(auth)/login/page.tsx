@@ -10,7 +10,7 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Container from '@mui/material/Container';
-import { FormHelperText, ThemeProvider, Typography } from '@mui/material';
+import { ThemeProvider, Typography } from '@mui/material';
 import { AuthTextField } from '@themes/mui-components/AuthTextField';
 import { theme } from '@themes/main-dark';
 import '@fontsource/share-tech-mono';
@@ -78,7 +78,7 @@ export default function LoginPage() {
         if (rememberUserState) {
             UserService.saveUserLocally(response as User);
         }
-        router.push(`/${response.userName ?? response.id}`);
+        router.push(`/${response.username ?? response.id}`);
     };
 
     return (
@@ -159,6 +159,7 @@ export default function LoginPage() {
                                 <Checkbox
                                     value="remember"
                                     color="primary"
+                                    {...register('rememberMe')}
                                     onChange={handleCheckboxChange}
                                     defaultChecked={false}
                                 />

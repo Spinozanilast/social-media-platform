@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import axios, { AxiosError } from 'axios';
 import ApiConfigManager from '../util/configManager';
 import { UserApiResponse } from '@models/user/util';
 import { RegisterRequest } from '@models/user/register';
@@ -6,8 +6,8 @@ import { LoginRequest, LoginResponse } from '@models/user/login';
 import { User } from '@models/user/user';
 
 const USER_API_KEYWORD = 'user';
-const USER_API_URL: string = ApiConfigManager.getUserApiConfig().baseURL!;
-const USER_API_BASE_URL = USER_API_URL + `/${USER_API_KEYWORD}`;
+const GATEWAY_URL: string = ApiConfigManager.getUserApiConfig().baseURL!;
+const USER_API_BASE_URL = GATEWAY_URL + `/${USER_API_KEYWORD}`;
 
 const axiosInstance = axios.create({
     baseURL: USER_API_BASE_URL,
@@ -26,10 +26,12 @@ const userApiEndpoints = {
 const registerUser = (values: RegisterRequest) => {
     return axiosInstance
         .post<UserApiResponse>(userApiEndpoints.register, values)
-        .then(() => {
+        .then((response) => {
+            console.log(response);
             return { isSuccess: true } as UserApiResponse;
         })
         .catch((error: AxiosError) => {
+            console.log(error);
             return error.response?.data as UserApiResponse;
         });
 };
@@ -59,6 +61,14 @@ const logOut = () => {
         });
 };
 
+const getUser = async (userIdOrUsername: string): Promise<User> => {
+    const response = await fetch(`${USER_API_BASE_URL}/${userIdOrUsername}`, {
+        cache: 'force-cache',
+    });
+    const user: User = await response.json();
+    return user;
+};
+
 const getCurrentUser = (): User | undefined => {
     if (localStorage.getItem(USER_API_KEYWORD)) {
         return JSON.parse(
@@ -85,6 +95,7 @@ const UserService = {
     loginUser,
     logOut,
     getCurrentUser,
+    getUser,
     saveUserLocally,
     removeLocalUser,
 };

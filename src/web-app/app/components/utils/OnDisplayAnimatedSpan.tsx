@@ -1,9 +1,9 @@
-"use client";
-import React, { useEffect, useState, useRef } from "react";
+'use client';
+import React, { useEffect, useState, useRef } from 'react';
 
 type AnimatedSpanProps = {
     children: string;
-    animationType: "backward" | "forward";
+    animationType: 'backward' | 'forward';
     classname: string;
     duration: number;
     isHovered: boolean;
@@ -11,7 +11,7 @@ type AnimatedSpanProps = {
 
 export default function OnDisplayAnimatedSpan({
     children,
-    animationType = "forward",
+    animationType = 'forward',
     classname,
     isHovered,
     duration = 2,
@@ -19,22 +19,22 @@ export default function OnDisplayAnimatedSpan({
     const spanRef = useRef<HTMLSpanElement>(null);
     const timers = useRef<NodeJS.Timeout[]>([]);
     const [currentText, setCurrentText] = useState(
-        animationType === "forward" ? "" : children
+        animationType === 'forward' ? '' : children
     );
 
     const singleCharacterAppearTime = (duration / children.length) * 1000;
 
-    const handleAnimation = (direction: "forward" | "backward") => {
-        let newText = "";
-        if (direction === "forward") {
-            newText = "";
+    const handleAnimation = (direction: 'forward' | 'backward') => {
+        let newText = '';
+        if (direction === 'forward') {
+            newText = '';
         } else {
             newText = children;
         }
 
-        children.split("").map((char, index) => {
+        children.split('').map((char, index) => {
             const timer = setTimeout(() => {
-                if (direction === "forward") {
+                if (direction === 'forward') {
                     setCurrentText((prevText) => prevText + char);
                 } else {
                     setCurrentText((prevText) =>
@@ -50,8 +50,8 @@ export default function OnDisplayAnimatedSpan({
         if (isHovered) {
             handleAnimation(animationType);
         } else {
-            animationType === "forward"
-                ? setCurrentText("")
+            animationType === 'forward'
+                ? setCurrentText('')
                 : setCurrentText(children);
             timers.current.forEach((timer) => clearTimeout(timer));
             timers.current = [];
@@ -61,7 +61,7 @@ export default function OnDisplayAnimatedSpan({
 
     return (
         <span ref={spanRef} className={`${classname}`}>
-            {currentText.split("").map((char, index) => (
+            {currentText.split('').map((char, index) => (
                 <span className="animated-span" key={index}>
                     {char}
                 </span>

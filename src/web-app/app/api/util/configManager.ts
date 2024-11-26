@@ -1,4 +1,4 @@
-import { ApiConfig } from "../types/apiConfig";
+import { ApiConfig } from '../types/apiConfig';
 
 export default class ApiConfigManager {
     static getUserApiConfig(): ApiConfig {

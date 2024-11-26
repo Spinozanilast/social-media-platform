@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
-import "@app/globals.css";
-import Navbar from "./../components/nav/Navbar";
+import type { Metadata } from 'next';
+import '@app/globals.css';
+import Navbar from '../components/nav/Navbar';
 
 export const metadata: Metadata = {
-    title: "Platform",
-    description: "Social media platform",
+    title: 'Platform',
+    description: 'Social media platform',
 };
 
 export default function Layout({

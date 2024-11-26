@@ -1,6 +1,5 @@
-import SearchBar from "../components/nav/SearchBar";
-import Copyright from "../themes/mui-components/Copyright";
-import Logo from "@app/components/nav/Logo";
+import Navbar from '../components/nav/Navbar';
+import Copyright from '@themes/mui-components/Copyright';
 
 export default function Layout({
     children,
@@ -8,10 +7,12 @@ export default function Layout({
     children: React.ReactNode;
 }>) {
     return (
-        <section className="selection:bg-cyan-500 flex items-center flex-col min-h-[inherit]">
-            <SearchBar placeholderText="Search..." className="mt-page-part" />
-            <div className="">{children}</div>
+        <div className="selection:bg-cyan-500 flex items-center flex-col min-h-[inherit]">
+            <div className="logo-container mt-page-part flex justify-center m-2">
+                <Navbar />
+            </div>
+            {children}
             <Copyright sx={{ mt: 6, mb: 4 }} />
-        </section>
+        </div>
     );
 }
