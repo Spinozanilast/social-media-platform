@@ -3,9 +3,10 @@ using IdentityService.Common.Services;
 using IdentityService.Data;
 using IdentityService.Entities;
 using IdentityService.Services;
+using MassTransit;
 using Microsoft.OpenApi.Models;
-using Serilog;
 using Shared.Infrastructure;
+using Shared.Infrastructure.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,17 +37,17 @@ builder.Services.AddSwaggerGen(option =>
                     Id = "Bearer"
                 }
             },
-            new string[] { }
+            []
         }
     });
 });
 
 
+builder.Services.AddUsersDbContext(builder.Configuration);
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddTransient<ICookiesService, CookiesService>();
 
-builder.Services.AddUsersDbContext(builder);
 builder.Services
     .AddIdentity<User, Role>(options =>
     {
@@ -56,6 +57,10 @@ builder.Services
         options.Password.RequireUppercase = true;
     })
     .AddEntityFrameworkStores<IdentityAppContext>();
+
+var rabbitMqConfig = new RabbitMqConfiguration();
+builder.Configuration.GetSection(RabbitMqConfiguration.SectionName).Bind(rabbitMqConfig);
+builder.Services.AddMassTransitConfigured(rabbitMqConfig);
 
 builder.Services.AddJwtConfiguration();
 builder.Services.AddAuthentication();

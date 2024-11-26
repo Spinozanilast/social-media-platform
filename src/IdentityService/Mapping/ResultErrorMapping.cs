@@ -1,14 +1,13 @@
-﻿using IdentityService.Contracts;
+﻿using IdentityService.Contracts.Registration;
 using Microsoft.AspNetCore.Identity;
 
 namespace IdentityService.Mapping;
 
 public static class ResultErrorMapping
 {
-    public static DefaultResponse ToDefaultErrorResponse(this IdentityResult identityResult)
+    public static RegistrationResponse ToDefaultErrorResponse(this IdentityResult identityResult)
     {
-        return new DefaultResponse(
-            isSuccess: false,
+        return RegistrationResponse.CreateErrorResponse(
             errorFields: identityResult.Errors.Select(error => ExtractFieldName(error.Description)),
             errors: identityResult.Errors.Select(error => error.Description)
         );

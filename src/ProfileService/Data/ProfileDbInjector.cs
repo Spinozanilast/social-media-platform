@@ -1,13 +1,14 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace IdentityService.Data;
+namespace ProfileService.Data;
 
-public static class DbInjector
+public static class ProfileDbInjector
 {
     private const string ConfigurationName = "PostgresConnection";
-    public static void AddUsersDbContext(this IServiceCollection services, IConfiguration configuration)
+
+    public static void AddProfileDbContext(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddDbContext<IdentityAppContext>(options =>
+        services.AddDbContext<ProfileDbContext>(options =>
         {
             options.UseNpgsql(configuration.GetConnectionString(ConfigurationName));
         });
@@ -17,13 +18,13 @@ public static class DbInjector
     {
         using var scope = app.ApplicationServices.CreateScope();
 
-        var dbcontext = scope.ServiceProvider.GetRequiredService<IdentityAppContext>();
+        var dbcontext = scope.ServiceProvider.GetRequiredService<ProfileDbContext>();
 
         if (dbcontext.Database.GetPendingMigrations().Any())
         {
             return;
         }
-        
+
         dbcontext.Database.Migrate();
     }
 }

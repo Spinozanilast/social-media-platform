@@ -26,7 +26,7 @@ public class UserService : IUserService
         _cookiesService = cookiesService;
     }
 
-    public async ValueTask<DefaultResponse> RegisterUserAsync(UserForRegistration userForRegistration)
+    public async ValueTask<Result<RegistrationResponse>> RegisterUserAsync(UserForRegistration userForRegistration)
     {
         var user = userForRegistration.ToUserWithoutHashPassword();
         user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, userForRegistration.Password);
@@ -34,15 +34,14 @@ public class UserService : IUserService
         var result = await _userManager.CreateAsync(user);
 
         return result.Succeeded
-            ? DefaultResponse.DefaultSuccessResponse()
-            : result.ToDefaultErrorResponse();
+            ? Result<RegistrationResponse>.Success(RegistrationResponse.CreateSuccessResponse(user.Id))
+            : Result<RegistrationResponse>.Failure("Request has some issues", result.ToDefaultErrorResponse());
     }
 
-    public async ValueTask<DefaultResponse> SignOut(HttpRequest request, HttpResponse response)
+    public async ValueTask SignOut(HttpRequest request, HttpResponse response)
     {
         _cookiesService.ExpireAuthHttpOnlyCookies(request.Cookies, response.Cookies);
         await _signInManager.SignOutAsync();
-        return DefaultResponse.DefaultSuccessResponse();
     }
 
     private async Task<Result<(LoginResponse, User?)>> LoginUserAsync(LoginRequest loginRequest)

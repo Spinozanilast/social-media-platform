@@ -7,17 +7,12 @@ namespace ProfileService.Controllers;
 
 [Authorize]
 [ApiController]
-public class ProfileImageController : ControllerBase
+public class ProfileImageController(IProfileImageService imageService) : ControllerBase
 {
-    private readonly IProfileImageService _imageService;
-
-    public ProfileImageController(IProfileImageService imageService, ILogger<ProfileImageController> logger)
-    {
-        _imageService = imageService;
-    }
+    private readonly IProfileImageService _imageService = imageService;
 
     [Authorize]
-    [HttpPost(ProfileImagesEndpoints.Upload)]
+    [HttpPost(ProfileApiEndpoints.ProfileImagesEndpoints.Upload)]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> UploadProfileImage([FromForm] Image profileImage, Guid userId)
@@ -32,12 +27,12 @@ public class ProfileImageController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpGet(ProfileImagesEndpoints.Get)]
+    [HttpGet(ProfileApiEndpoints.ProfileImagesEndpoints.Get)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetProfileImage([FromRoute] Guid idOrUsername)
+    public async Task<IActionResult> GetProfileImage([FromRoute] Guid userId)
     {
-        var result = await _imageService.GetProfileImageAsync(idOrUsername);
+        var result = await _imageService.GetProfileImageAsync(userId);
 
         if (result is null)
         {
@@ -48,7 +43,7 @@ public class ProfileImageController : ControllerBase
     }
 
     [Authorize]
-    [HttpPost(ProfileImagesEndpoints.Remove)]
+    [HttpPost(ProfileApiEndpoints.ProfileImagesEndpoints.Remove)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> RemoveProfileImage([FromRoute] Guid userId)

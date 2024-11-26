@@ -7,8 +7,8 @@ namespace IdentityService.Common.Services;
 
 public interface IUserService
 {
-    ValueTask<DefaultResponse> RegisterUserAsync(UserForRegistration userForRegistration);
-    ValueTask<DefaultResponse> SignOut(HttpRequest request, HttpResponse response);
+    ValueTask<Result<RegistrationResponse>> RegisterUserAsync(UserForRegistration userForRegistration);
+    ValueTask SignOut(HttpRequest request, HttpResponse response);
     Task<Result<LoginResponse>> LoginUserAsyncWithCookiesSet(LoginRequest loginRequest, HttpResponse response);
     Task<Result<UserToGet>> GetUserByIdOrUsernameAsync(string idOrUsername);
     Task<Result<IEnumerable<UserToGet>>> GetAllUserAsync();

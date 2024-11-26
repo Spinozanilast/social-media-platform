@@ -2,9 +2,11 @@ using IdentityService.Common.Services;
 using IdentityService.Contracts;
 using IdentityService.Contracts.Login;
 using IdentityService.Contracts.Registration;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Models;
 
 namespace IdentityService.Controllers;
 
@@ -13,10 +15,12 @@ namespace IdentityService.Controllers;
 public class AccountsController : ControllerBase
 {
     private readonly IUserService _userService;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public AccountsController(IUserService userService)
+    public AccountsController(IUserService userService, IPublishEndpoint publishEndpoint)
     {
         _userService = userService;
+        _publishEndpoint = publishEndpoint;
     }
 
     [AllowAnonymous]
@@ -26,7 +30,12 @@ public class AccountsController : ControllerBase
     public async Task<IActionResult> RegisterUser([FromBody] UserForRegistration userForRegistration)
     {
         var responseResult = await _userService.RegisterUserAsync(userForRegistration);
-        return responseResult.IsSuccess ? Created() : BadRequest(responseResult);
+
+        if (!responseResult.IsSuccess) return BadRequest(responseResult.ErrorValue);
+
+        var registeredUser = new UserRegistered(responseResult.Value.UserId);
+        await _publishEndpoint.Publish(registeredUser);
+        return Created();
     }
 
     [AllowAnonymous]
@@ -44,8 +53,8 @@ public class AccountsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public new async Task<IActionResult> SignOut()
     {
-        var response = await _userService.SignOut(Request, Response);
-        return Ok(response);
+        await _userService.SignOut(Request, Response);
+        return Ok();
     }
 
     [AllowAnonymous]

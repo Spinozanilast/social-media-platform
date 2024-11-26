@@ -1,13 +1,18 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+﻿FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 USER $APP_UID
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
+EXPOSE 80
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ENV ASPNETCORE_ENVIRONMENT=Development
+
+
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["src/ProfileService/ProfileService.csproj", "src/ProfileService/"]
+COPY ["src/AwsConfigurators/AwsConfigurators.csproj", "src/AwsConfigurators/"]
+COPY ["src/Shared/Shared.Infrastructure/Shared.Infrastructure.csproj", "src/Shared/Shared.Infrastructure/"]
+COPY ["src/Shared/Shared.Models/Shared.Models.csproj", "src/Shared/Shared.Models/"]
 RUN dotnet restore "src/ProfileService/ProfileService.csproj"
 COPY . .
 WORKDIR "/src/src/ProfileService"

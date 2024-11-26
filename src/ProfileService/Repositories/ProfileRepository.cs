@@ -14,7 +14,7 @@ public class ProfileRepository(ProfileDbContext context) : IProfileRepository
         await context.SaveChangesAsync();
     }
 
-    public async Task SaveProfileAsync(Profile? profile)
+    public async Task SaveProfileAsync(Profile profile)
     {
         context.Profiles.Attach(profile);
         var entry = context.Entry(profile);
@@ -24,11 +24,19 @@ public class ProfileRepository(ProfileDbContext context) : IProfileRepository
 
     public async Task<Profile?> GetProfileAsync(Guid userId)
     {
-        return await context.Profiles.FindAsync(userId);
+        return await context
+            .Profiles
+            .Include(p => p.Interests)
+            .FirstOrDefaultAsync(p => p.UserId == userId);
     }
 
     public async Task DeleteProfileAsync(Guid userId)
     {
-        await context.Profiles.Where(p => p.UserId == userId).ExecuteDeleteAsync();
+        var profile = await GetProfileAsync(userId);
+        if (profile is not null)
+        {
+            context.Profiles.Remove(profile);
+            await context.SaveChangesAsync();
+        }
     }
 }

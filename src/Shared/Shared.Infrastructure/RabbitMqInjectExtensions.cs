@@ -8,7 +8,7 @@ public static class RabbitMqInjectExtensions
 {
     public static void AddMassTransitConfigured(
         this IServiceCollection services,
-        RabbitMqConfiguration rabbitMqConfig,
+        RabbitMqConfiguration? rabbitMqConfig = null,
         Action<IBusRegistrationConfigurator>? configureBus = null,
         Action<IBusRegistrationContext, IRabbitMqBusFactoryConfigurator>? configureRabbitMq = null)
     {
@@ -37,10 +37,22 @@ public static class RabbitMqInjectExtensions
     private static void GetRabbitMqHostConfiguration(
         this IRabbitMqBusFactoryConfigurator configurator, RabbitMqConfiguration rabbitMqCfg)
     {
+        var areCfgPropsSetted = rabbitMqCfg.Username.Length > 0 && rabbitMqCfg.Password.Length > 0;
+
+        if (areCfgPropsSetted)
+        {
+            configurator.Host(rabbitMqCfg.Host, "/", host =>
+            {
+                host.Username(rabbitMqCfg.Username);
+                host.Password(rabbitMqCfg.Password);
+            });
+            return;
+        }
+
         configurator.Host(rabbitMqCfg.Host, "/", host =>
         {
-            host.Username(rabbitMqCfg.Username);
-            host.Password(rabbitMqCfg.Password);
+            host.Username("guest");
+            host.Password("guest");
         });
     }
 }
