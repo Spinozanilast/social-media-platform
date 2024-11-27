@@ -44,13 +44,13 @@ body {
         animation: appear 0.5s forwards;
     }
 
-    h2.semi-transparent {
-        @apply text-xl font-bold;
-        opacity: 0.5;
+    .profile-header {
+        @apply text-base;
+        opacity: 0.6;
     }
 
     .category-pill {
-        @apply rounded-md bg-accent-orange text-white px-2 py-1 font-bold;
+        @apply rounded-md border-spacing-1 border-solid border-2 border-accent-orange text-white px-2 py-1 font-bold;
     }
 
     .ref-pill {

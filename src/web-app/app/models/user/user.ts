@@ -9,7 +9,7 @@ export interface User {
 }
 
 export interface Profile {
-    about: string;
+    about?: string;
     anything?: string;
     birthDate?: Date;
     country?: string;

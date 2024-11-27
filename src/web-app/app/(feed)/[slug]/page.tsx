@@ -2,7 +2,6 @@ import ProfileService from '@services/profile';
 import { Profile, User } from '@models/user/user';
 import UserService from '@services/user';
 import UserProfile from '@/app/components/UserProfile';
-import { Roboto } from 'next/font/google';
 
 async function getProfileImage(userId: string): Promise<Blob | null> {
     const profileImage: Blob = await ProfileService.getProfileImage(userId);
@@ -18,12 +17,6 @@ const getUser = async (userIdOrUsername: string): Promise<User> =>
     await UserService.getUser(userIdOrUsername);
 const getProfileData = async (userId: string): Promise<Profile> =>
     await ProfileService.getProfileData(userId);
-
-const roboto = Roboto({
-    subsets: ['latin'],
-    weight: '100',
-});
-
 interface UserPageProps {
     params: { slug: string };
 }
@@ -40,7 +33,7 @@ export default async function Page({ params }: UserPageProps) {
     console.log(profileInfo);
 
     return (
-        <div className="bg-background-secondary rounded-md grid grid-cols-3 grid-rows-1 max-w-full mx-page-part">
+        <div className="bg-background-secondary rounded-md grid grid-cols-3 max-w-full mx-page-part">
             <aside style={{ fontFamily: 'Share Tech Mono' }}>
                 <UserProfile
                     profileImage={profileImage}
@@ -48,8 +41,8 @@ export default async function Page({ params }: UserPageProps) {
                     profileInfo={profileInfo}
                 ></UserProfile>
             </aside>
-            <main className="page-column"></main>
-            <aside className="page-column"></aside>
+            <main className="page-column "></main>
+            <aside className="page-column "></aside>
         </div>
     );
 }
