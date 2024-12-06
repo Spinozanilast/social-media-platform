@@ -1,15 +1,12 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { getLocale, getMessages } from 'next-intl/server';
 import { NextIntlClientProvider } from 'next-intl';
-import { cookies, headers } from 'next/headers';
+import { Providers } from './providers';
 
 export const metadata: Metadata = {
     title: 'Platform',
     description: 'Social media platform',
 };
-
-const StandardLocale = 'en-US';
 
 export default async function RootLayout({
     children,
@@ -18,8 +15,10 @@ export default async function RootLayout({
 }>) {
     return (
         <html>
-            <body className="min-h-[100vh]">
-                <NextIntlClientProvider>{children}</NextIntlClientProvider>
+            <body className="dark">
+                <NextIntlClientProvider>
+                    <Providers>{children}</Providers>
+                </NextIntlClientProvider>
             </body>
         </html>
     );

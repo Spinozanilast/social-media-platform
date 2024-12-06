@@ -28,7 +28,7 @@ body {
     }
 
     .rounded-button {
-        @apply rounded-full h-full;
+        @apply rounded-full bg-background-inline-button h-full transition-all duration-300 hover:bg-accent-orange;
     }
 
     .page-column {
@@ -61,7 +61,6 @@ body {
     input:-webkit-autofill:hover,
     input:-webkit-autofill:focus,
     input:-webkit-autofill:active {
-        -webkit-box-shadow: 0 0 0 1000px rgb(255, 15, 15) inset !important;
         -webkit-background-clip: text !important;
         background-clip: text !important;
     }

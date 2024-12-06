@@ -1,37 +1,28 @@
 'use client';
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { ThemeProvider } from '@mui/material/styles';
-import { theme } from '@app/themes/main-dark';
-import { AuthTextField } from '@themes/mui-components/AuthTextField';
-import '@fontsource/share-tech';
+
+import React, { useEffect, useState } from 'react';
+import { Button, Input, Spacer, Link } from '@nextui-org/react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { object, string, TypeOf } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect } from 'react';
-import { FieldId } from '@models/user/util';
-import { UserApiResponse } from '@models/user/util';
 import { redirect, useRouter } from 'next/navigation';
-import UserService from '@services/user';
+import UserService from '@/app/api/services/user';
+import { UserApiResponse, FieldId } from '@/app/models/user/util';
+import { FaLock } from 'react-icons/fa';
+import '@fontsource/share-tech';
+import { GoEye, GoEyeClosed } from 'react-icons/go';
+import ShowPasswordButton from '@/app/components/utils/ShowPasswordButton';
 
 const registerSchema = object({
     username: string()
         .min(1, 'Username is required')
         .max(64, 'Username must be less than 64 characters'),
     firstName: string()
-        .min(1, 'Email is required')
-        .max(32, 'Password ust be less 32 than characters'),
+        .min(1, 'First name is required')
+        .max(32, 'First name must be less than 32 characters'),
     lastName: string()
-        .min(1, 'Email is required')
-        .max(32, 'Password ust be less 32 than characters'),
+        .min(1, 'Last name is required')
+        .max(32, 'Last name must be less than 32 characters'),
     email: string().min(1, 'Email is required').email('Email is invalid'),
     password: string()
         .min(8, 'Password must be more than 8 characters')
@@ -47,8 +38,13 @@ type TextFieldData = {
     label: string;
     autoComplete: string;
     type: 'text' | 'password' | string;
-    parentSm?: number;
+    inputWidth?: FieldWidth;
 };
+
+enum FieldWidth {
+    Full = 1,
+    Half = 2,
+}
 
 const pageTextFieldsData: TextFieldData[] = [
     {
@@ -56,38 +52,42 @@ const pageTextFieldsData: TextFieldData[] = [
         label: 'Username',
         autoComplete: 'username',
         type: 'text',
+        inputWidth: FieldWidth.Full,
     },
     {
         id: FieldId.FirstName,
         label: 'First Name',
         autoComplete: 'given-name',
         type: 'text',
-        parentSm: 6,
+        inputWidth: FieldWidth.Half,
     },
     {
         id: FieldId.LastName,
         label: 'Last Name',
         autoComplete: 'family-name',
         type: 'text',
-        parentSm: 6,
+        inputWidth: FieldWidth.Half,
     },
     {
         id: FieldId.Email,
         label: 'Email Address',
         autoComplete: 'email',
         type: 'text',
+        inputWidth: FieldWidth.Full,
     },
     {
         id: FieldId.Password,
         label: 'Password',
         autoComplete: 'new-password',
         type: 'password',
+        inputWidth: FieldWidth.Full,
     },
     {
         id: FieldId.ConfirmPassword,
         label: 'Confirm Password',
         autoComplete: '',
         type: 'password',
+        inputWidth: FieldWidth.Full,
     },
 ];
 
@@ -112,6 +112,9 @@ export default function RegisterPage() {
         reValidateMode: 'onChange',
     });
 
+    const [isPasswordVisible, setPasswordVisibility] = useState(false);
+    const [isConfirmPasswordVisible, setConfirmPasswordVisibility] = useState(false);
+
     const router = useRouter();
 
     useEffect(() => {
@@ -121,12 +124,9 @@ export default function RegisterPage() {
             reset();
             router.push('/login');
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isSubmitSuccessful, reset]);
+    }, [isSubmitSuccessful, reset, router]);
 
-    const onSubmit: SubmitHandler<RegisterInput> = async (
-        data: RegisterInput
-    ) => {
+    const onSubmit: SubmitHandler<RegisterInput> = async (data) => {
         const response: UserApiResponse = await UserService.registerUser(data);
         if (!response.isSuccess && response.errors.length === 0) {
             response.errorFields.forEach((errorField: FieldId, idx) => {
@@ -145,81 +145,82 @@ export default function RegisterPage() {
     };
 
     return (
-        <ThemeProvider theme={theme}>
-            <Container component="main" maxWidth="xs">
-                <CssBaseline />
-                <Box
-                    sx={{
-                        marginTop: 2,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                    }}
-                >
-                    <Avatar
-                        sx={{
-                            m: 1,
-                            bgcolor: theme.palette.secondary.main,
-                            color: theme.palette.text.primary,
-                        }}
-                    >
-                        <LockOutlinedIcon />
-                    </Avatar>
-                    <Typography
-                        className="text-3xl my-2"
-                        fontFamily="Share Tech"
-                        color={theme.palette.text.primary}
+        <div className="flex flex-col items-center justify-center min-h-screen py-2">
+            <div className="w-full max-w-md p-8 space-y-8 rounded-lg shadow-md">
+                <div className="flex flex-col items-center justify-center space-y-2">
+                    <div className="p-4 text-white bg-accent-orange rounded-full">
+                        <FaLock size={32} />
+                    </div>
+                    <h2
+                        className="text-3xl font-extrabold text-center"
+                        style={{ fontFamily: 'Share Tech Mono' }}
                     >
                         Register
-                    </Typography>
-                    <Box
-                        className="bg-background-secondary p-8 rounded-xl "
-                        component="form"
-                        onSubmit={handleSubmit(onSubmit)}
-                        sx={{ mt: 3 }}
-                    >
-                        <Grid container spacing={2}>
-                            {pageTextFieldsData.map((fieldData) => (
-                                <Grid
-                                    item
-                                    xs={12}
-                                    sm={fieldData.parentSm === 6 ? 6 : 12}
-                                    key={fieldData.id}
-                                >
-                                    <AuthTextField
-                                        required
-                                        fullWidth
-                                        id={fieldData.id}
-                                        label={fieldData.label}
-                                        type={fieldData.type}
-                                        error={!!errors[fieldData.id]}
-                                        helperText={
-                                            errors[fieldData.id] &&
-                                            errors[fieldData.id]!.message
-                                        }
-                                        {...register(fieldData.id)}
-                                    />
-                                </Grid>
-                            ))}
-                        </Grid>
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                        >
-                            Sign up
-                        </Button>
-                        <Grid container justifyContent="flex-end">
-                            <Grid item>
-                                <Link href="/login" variant="body2">
-                                    Already have an account? Sign in
-                                </Link>
-                            </Grid>
-                        </Grid>
-                    </Box>
-                </Box>
-            </Container>
-        </ThemeProvider>
+                    </h2>
+                </div>
+                <form className="mt-8" onSubmit={handleSubmit(onSubmit)}>
+                    <div className="grid grid-cols-2 space-y-2 gap-x-2">
+                        {pageTextFieldsData.map((fieldData) => (
+                            <div
+                                key={fieldData.id}
+                                className={`${
+                                    fieldData.type === 'password' || fieldData.id === 'confirmPassword'
+                                        ? 'col-span-2'
+                                        : 'col-span-1'
+                                }`}
+                            >
+                                <Input
+                                    isRequired
+                                    isClearable
+                                    fullWidth
+                                    variant="bordered"
+                                    label={fieldData.label}
+                                    placeholder={fieldData.label}
+                                    type={
+                                        fieldData.id === 'password'
+                                            ? isPasswordVisible ? 'text' : 'password'
+                                            : fieldData.id === 'confirmPassword'
+                                            ? isConfirmPasswordVisible ? 'text' : 'password'
+                                            : fieldData.type
+                                    }
+                                    className={`${
+                                        errors[fieldData.id] ? 'border-red-500' : ''
+                                    }`}
+                                    {...register(fieldData.id)}
+                                    endContent={
+                                        (fieldData.id === 'password' && (
+                                            <ShowPasswordButton
+                                                isVisible={isPasswordVisible}
+                                                onClick={setPasswordVisibility}
+                                            />
+                                        )) ||
+                                        (fieldData.id === 'confirmPassword' && (
+                                            <ShowPasswordButton
+                                                isVisible={isConfirmPasswordVisible}
+                                                onClick={setConfirmPasswordVisibility}
+                                            />
+                                        ))
+                                    }
+                                />
+                                {errors[fieldData.id] && (
+                                    <p className="mt-2 text-sm text-red-600">
+                                        {errors[fieldData.id]?.message}
+                                    </p>
+                                )}
+                                <Spacer y={0.5} />
+                            </div>
+                        ))}
+                    </div>
+                    <Button type="submit" className="mt-4" fullWidth color="primary">
+                        Sign up
+                    </Button>
+                </form>
+                <div className="flex justify-end mt-2">
+                    <Link href="/login" className="text-sm text-blue-600 hover:text-blue-500">
+                        Already have an account? Sign in
+                    </Link>
+                </div>
+            </div>
+        </div>
     );
 }

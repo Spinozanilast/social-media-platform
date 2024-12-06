@@ -1,31 +1,23 @@
 'use client';
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Container from '@mui/material/Container';
-import { ThemeProvider, Typography } from '@mui/material';
-import { AuthTextField } from '@themes/mui-components/AuthTextField';
-import { theme } from '@themes/main-dark';
-import '@fontsource/share-tech-mono';
+
+import React from 'react';
+import { Button, Input, Checkbox, Link } from '@nextui-org/react';
+import { FaLockOpen } from 'react-icons/fa';
+
 import {
-    LoginErrorResult,
     LoginRequest,
     LoginResponse,
+    LoginErrorResult,
 } from '@/app/models/user/login';
-import { ErrorOption, SubmitHandler, useForm } from 'react-hook-form';
-import isEmailValid from '@/app/helpers/email-validation';
 import { UserApiResponse } from '@models/user/util';
 import { useRouter } from 'next/navigation';
-import UserService from '@/app/api/services/user';
 import { useState } from 'react';
+import UserService from '@/app/api/services/user';
+import { ErrorOption, SubmitHandler, useForm } from 'react-hook-form';
 import { User } from '@/app/models/user/user';
+import isEmailValid from '@/app/helpers/email-validation';
+import { GoEyeClosed } from 'react-icons/go';
+import { GoEye } from 'react-icons/go';
 
 const handleLogin: SubmitHandler<LoginRequest> = async (
     data: LoginRequest
@@ -47,7 +39,7 @@ const handleLogin: SubmitHandler<LoginRequest> = async (
 
 export default function LoginPage() {
     const [rememberUserState, setRememberUserState] = useState(false);
-
+    const [isPasswordVisible, setPasswordVisibility] = useState(false);
     const router = useRouter();
     const {
         register,
@@ -61,6 +53,9 @@ export default function LoginPage() {
     ) => {
         setRememberUserState(event.target.checked);
     };
+
+    const togglePasswordVisibility = () =>
+        setPasswordVisibility(!isPasswordVisible);
 
     const onSubmit: SubmitHandler<LoginRequest> = async (
         data: LoginRequest
@@ -82,113 +77,103 @@ export default function LoginPage() {
     };
 
     return (
-        <ThemeProvider theme={theme}>
-            <Container component="main" maxWidth="xs">
-                <CssBaseline />
-                <Box
-                    sx={{
-                        marginTop: 4,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                    }}
-                >
-                    <Avatar
-                        sx={{
-                            m: 1,
-                            bgcolor: theme.palette.secondary.main,
-                            color: theme.palette.text.primary,
-                        }}
-                    >
-                        <LockOutlinedIcon />
-                    </Avatar>
-                    <Typography
+        <div className="flex items-center justify-center">
+            <div className="flex items-center justify-center max-w-sm flex-col gap-4 rounded-large px-8 pb-10 pt-6">
+                <div className="flex flex-col items-center justify-center">
+                    <FaLockOpen width={48} />
+                    <h1
                         className="text-3xl my-2"
-                        fontFamily="Share Tech"
-                        color={theme.palette.text.primary}
+                        style={{ fontFamily: 'Share Tech Mono' }}
                     >
                         Log in
-                    </Typography>
-                    <Box
-                        className="bg-background-secondary p-8 rounded-xl "
-                        component="form"
-                        onSubmit={handleSubmit(onSubmit)}
-                        sx={{ mt: 1 }}
-                    >
-                        <Grid container gap={1}>
-                            <AuthTextField
-                                required
-                                fullWidth
-                                id="email"
-                                label="Email Address"
-                                autoComplete="email"
-                                error={!!errors['email']}
-                                helperText={
-                                    errors['email'] && errors['email']!.message
-                                }
-                                {...register('email', {
-                                    validate: (value) => {
-                                        const isValid = isEmailValid(value);
-                                        if (!isValid) {
-                                            setError('email', {
-                                                type: 'validate',
-                                                message: 'Email is not valid',
-                                            });
-                                        }
-                                        return isValid;
-                                    },
-                                })}
-                            />
-                            <AuthTextField
-                                required
-                                fullWidth
-                                label="Password"
-                                type="password"
-                                id="password"
-                                autoComplete="current-password"
-                                error={!!errors['password']}
-                                helperText={
-                                    errors['password'] &&
-                                    errors['password']!.message
-                                }
-                                {...register('password')}
-                            />
-                        </Grid>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    value="remember"
-                                    color="primary"
-                                    {...register('rememberMe')}
-                                    onChange={handleCheckboxChange}
-                                    defaultChecked={false}
-                                />
-                            }
-                            label="Remember me"
+                    </h1>
+                </div>
+                <form
+                    className="flex flex-col gap-4"
+                    onSubmit={handleSubmit(onSubmit)}
+                >
+                    <div className="flex flex-col gap-1">
+                        <Input
+                            label="Email"
+                            labelPlacement="outside"
+                            placeholder="Enter your email"
+                            type="email"
+                            variant="bordered"
+                            className={`${
+                                errors.email ? 'border-red-500' : ''
+                            }`}
+                            {...register('email', {
+                                validate: (value) => {
+                                    const isValid = isEmailValid(value);
+                                    if (!isValid) {
+                                        return 'Email is not valid';
+                                    }
+                                    return isValid;
+                                },
+                                required: 'Email is required',
+                            })}
                         />
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
+                        {errors.email && (
+                            <p className="text-red-500 font-bold text-sm">
+                                {errors.email.message}
+                            </p>
+                        )}
+                    </div>
+                    <div className="flex flex-col gap-1">
+                        <Input
+                            endContent={
+                                <button
+                                    type="button"
+                                    onClick={togglePasswordVisibility}
+                                >
+                                    {isPasswordVisible ? (
+                                        <GoEyeClosed className="pointer-events-none text-2xl text-default-400" />
+                                    ) : (
+                                        <GoEye className="pointer-events-none text-2xl text-default-400" />
+                                    )}
+                                </button>
+                            }
+                            label="Password"
+                            labelPlacement="outside"
+                            placeholder="Enter your password"
+                            type={isPasswordVisible ? 'text' : 'password'}
+                            variant="bordered"
+                            className={`${
+                                errors.password ? 'border-red-500' : ''
+                            }`}
+                            {...register('password', {
+                                required: 'Password is required',
+                            })}
+                        />
+                        {errors.password && (
+                            <p className="text-red-500 font-bold text-sm">
+                                {errors.password.message}
+                            </p>
+                        )}
+                    </div>
+                    <div className="flex items-center justify-between px-1 py-2 gap-3">
+                        <Checkbox
+                            defaultSelected
+                            name="remember"
+                            size="sm"
+                            onChange={handleCheckboxChange}
                         >
-                            Log in
-                        </Button>
-                        <Grid container>
-                            <Grid item xs>
-                                <Link href="#" variant="body2">
-                                    Forgot password?
-                                </Link>
-                            </Grid>
-                            <Grid item>
-                                <Link href="/register" variant="body2">
-                                    {"Don't have an account? Sign Up"}
-                                </Link>
-                            </Grid>
-                        </Grid>
-                    </Box>
-                </Box>
-            </Container>
-        </ThemeProvider>
+                            Remember me
+                        </Checkbox>
+                        <Link className="text-default-500" href="#" size="sm">
+                            Forgot password?
+                        </Link>
+                    </div>
+                    <Button color="primary" type="submit">
+                        Log In
+                    </Button>
+                </form>
+                <p className="text-center text-small">
+                    <Link href="#" size="sm">
+                        Create an account
+                    </Link>
+                </p>
+            </div>
+        </div>
     );
 }
