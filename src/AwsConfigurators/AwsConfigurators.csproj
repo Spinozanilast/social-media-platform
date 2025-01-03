@@ -8,5 +8,6 @@
 
     <ItemGroup>
         <PackageReference Include="AWSSDK.S3" Version="3.7.405.14" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.0" />
     </ItemGroup>
 </Project>

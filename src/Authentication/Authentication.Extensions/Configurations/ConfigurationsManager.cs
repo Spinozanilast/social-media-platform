@@ -4,7 +4,7 @@ namespace Authentication.Configuration.Configurations;
 
 public class ConfigurationsManager
 {
-    public TokenConfiguration TokenConfiguration { get; set; }
+    public TokenConfiguration TokenConfiguration { get; private set; }
 
     private ConfigurationsManager()
     {
@@ -15,12 +15,7 @@ public class ConfigurationsManager
 
     public static ConfigurationsManager GetInstance()
     {
-        if (_instance is null)
-        {
-            _instance = new ConfigurationsManager();
-        }
-
-        return _instance;
+        return _instance ??= new ConfigurationsManager();
     }
 
     private void InitTokenConfiguration()
@@ -28,15 +23,15 @@ public class ConfigurationsManager
         var configRoot = new ConfigurationBuilder().AddUserSecrets<ConfigurationsManager>().AddEnvironmentVariables()
             .Build();
 
-        var secretKey = configRoot["jwt:SecretKey"];
-        var expiryDays = configRoot["jwt:ExpiryDays"];
+        var secretKey = configRoot["JWT:SecretKey"];
+        var expiryDays = configRoot["JWT:ExpiryDays"];
 
         if (string.IsNullOrEmpty(secretKey) || !int.TryParse(expiryDays, out var expiryDaysParsed))
         {
             throw new Exception("User Secrets were not configured");
         }
 
-        TokenConfiguration = new TokenConfiguration()
+        TokenConfiguration = new TokenConfiguration
         {
             ExpiryDays = expiryDaysParsed,
             SecretKey = secretKey

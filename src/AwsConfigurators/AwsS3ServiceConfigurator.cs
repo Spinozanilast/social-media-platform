@@ -1,38 +1,48 @@
 ﻿using Amazon.Runtime;
 using Amazon.Runtime.CredentialManagement;
 using Amazon.S3;
+using Microsoft.Extensions.Configuration;
 
 namespace AwsConfigurators;
 
 public class AwsS3ServiceConfigurator : IAwsServiceConfigurator
 {
     public AWSCredentials AwsCredentials { get; set; }
+    private readonly IConfiguration _configuration;
 
-    public AwsS3ServiceConfigurator(string profileName = "default")
+    public AwsS3ServiceConfigurator(IConfiguration configuration)
     {
-        InitCredentials(profileName);
+        _configuration = configuration;
+        InitCredentials();
     }
 
-    private void InitCredentials(string profileName)
+    private void InitCredentials()
     {
-        var profileStoreChain = new CredentialProfileStoreChain();
-        
-        if (!profileStoreChain.TryGetProfile(profileName, out var credentials))
+        var profileName = _configuration["AWS:ProfileName"];
+        var accessKey = _configuration["AWS:AccessKey"];
+        var secretKey = _configuration["AWS:SecretKey"];
+
+        if ((string.IsNullOrEmpty(accessKey) || string.IsNullOrEmpty(secretKey)) && !string.IsNullOrEmpty(profileName))
         {
-            throw new Exception($"Failed to find the {profileName} profile");
+            var profileStoreChain = new CredentialProfileStoreChain();
+            if (profileStoreChain.TryGetProfile(profileName, out var credentials))
+            {
+                AwsCredentials = new BasicAWSCredentials(credentials.Options.AccessKey, credentials.Options.SecretKey);
+            }
+            else
+            {
+                throw new Exception($"Failed to find the {profileName} profile");
+            }
         }
-
-        var accessKey = credentials.Options.AccessKey;
-        var secretKey = credentials.Options.SecretKey;
-
-        AwsCredentials = new BasicAWSCredentials(accessKey, secretKey);
+        else
+        {
+            AwsCredentials = new BasicAWSCredentials(accessKey, secretKey);
+        }
     }
 
-    public IClientConfig GetServiceConfig(string serviceUrl)
+    public IClientConfig GetServiceConfig()
     {
-        return new AmazonS3Config()
-        {
-            ServiceURL = serviceUrl
-        };
+        var serviceUrl = _configuration["AWS:ServiceUrl"];
+        return new AmazonS3Config { ServiceURL = serviceUrl };
     }
 }

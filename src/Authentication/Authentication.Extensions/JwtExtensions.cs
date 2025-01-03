@@ -18,17 +18,32 @@ public static class JwtExtensions
         }).AddJwtBearer(options =>
         {
             options.TokenValidationParameters = GetTokenValidationParameters();
-            options.Events = new JwtBearerEvents()
+            options.Events = new JwtBearerEvents
             {
                 OnMessageReceived = context =>
                 {
-                    context.Request.Cookies.TryGetValue(TokensConstants.GetCookieKey(AuthCookieTypes.JwtCookie),
-                        out var accessToken);
-                    if (!string.IsNullOrEmpty(accessToken))
+                    if (context.Request.Cookies.TryGetValue(TokensConstants.GetCookieKey(AuthCookieTypes.JwtCookie),
+                            out var accessToken))
                     {
-                        context.Token = accessToken;
+                        if (!string.IsNullOrEmpty(accessToken))
+                        {
+                            context.Token = accessToken;
+                        }
+                        else
+                        {
+                            context.Response.Headers["Token-Error"] = "Token is empty";
+                        }
+                    }
+                    else
+                    {
+                        context.Response.Headers["Token-Error"] = "Token not found";
                     }
 
+                    return Task.CompletedTask;
+                },
+                OnAuthenticationFailed = context =>
+                {
+                    context.Response.Headers["Token-Error"] = "Authentication failed: " + context.Exception.Message;
                     return Task.CompletedTask;
                 }
             };
@@ -42,12 +57,10 @@ public static class JwtExtensions
         {
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(secretKey)),
-            ValidIssuer = TokensConstants.JwtIssuer,
-            ValidAudience = TokensConstants.JwtAudience,
             ValidateIssuerSigningKey = true,
             ValidateLifetime = true,
-            ValidateIssuer = true,
-            ValidateAudience = true
+            ValidateIssuer = false,
+            ValidateAudience = false,
         };
     }
 }

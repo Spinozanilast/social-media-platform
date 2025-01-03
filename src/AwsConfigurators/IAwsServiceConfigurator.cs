@@ -5,5 +5,5 @@ namespace AwsConfigurators;
 public interface IAwsServiceConfigurator
 {
     AWSCredentials AwsCredentials { get; set; }
-    IClientConfig GetServiceConfig(string serviceUrl);
+    IClientConfig GetServiceConfig();
 }
