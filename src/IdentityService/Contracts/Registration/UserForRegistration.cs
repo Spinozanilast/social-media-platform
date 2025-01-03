@@ -9,7 +9,7 @@ public class UserForRegistration
     [Required]
     public required string LastName { get; set; }
     [Required]
-    public required string Username { get; set; }
+    public required string UserName { get; set; }
 
     [Required]
     [EmailAddress]

@@ -25,4 +25,9 @@ public static class IdentityApiEndpoints
         public const string RevokeToken = $"{TokensBase}/revoke-token";
         public const string CheckToken = $"{TokensBase}/check-token";
     }
+
+    public static class AuthenticationEndpoints
+    {
+        public const string ValidateTokenRelation = $"{IdentityBase}/" + "validate-token-relation/" + "{idOrUsername}";
+    }
 }

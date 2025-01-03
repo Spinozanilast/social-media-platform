@@ -12,16 +12,10 @@ namespace IdentityService.Controllers;
 
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 [ApiController]
-public class AccountsController : ControllerBase
+public class AccountsController(IUserService userService, IPublishEndpoint publishEndpoint) : ControllerBase
 {
-    private readonly IUserService _userService;
-    private readonly IPublishEndpoint _publishEndpoint;
-
-    public AccountsController(IUserService userService, IPublishEndpoint publishEndpoint)
-    {
-        _userService = userService;
-        _publishEndpoint = publishEndpoint;
-    }
+    private readonly IUserService _userService = userService;
+    private readonly IPublishEndpoint _publishEndpoint = publishEndpoint;
 
     [AllowAnonymous]
     [HttpPost(IdentityApiEndpoints.AccountEndpoints.Register)]
@@ -44,7 +38,7 @@ public class AccountsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> LoginUser([FromBody] LoginRequest loginRequest)
     {
-        var result = await _userService.LoginUserAsyncWithCookiesSet(loginRequest, response: Response);
+        var result = await _userService.LoginUserAsyncWithCookiesSetAsync(loginRequest, response: Response);
         return result.IsSuccess ? Ok(result.Value) : NotFound(result.Error);
     }
 

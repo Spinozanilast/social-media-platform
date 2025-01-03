@@ -1,3 +1,3 @@
 ﻿namespace IdentityService.Contracts;
 
-public record UserUpdateDto(string? Username, string? FirstName, string? LastName, string? Email, string? PhoneNumber);
+public record UserUpdateDto(string? UserName, string? FirstName, string? LastName, string? Email, string? PhoneNumber);

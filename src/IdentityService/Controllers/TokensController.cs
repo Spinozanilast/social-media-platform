@@ -2,26 +2,21 @@
 using IdentityService.Common.Services;
 using IdentityService.Entities;
 using IdentityService.Helpers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityService.Controllers;
 
-[Authorize]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 [ApiController]
-public class TokensController : ControllerBase
-{
-    private readonly UserManager<User> _userManager;
-    private readonly ITokenService _tokenService;
-    private readonly ICookiesService _cookiesService;
-
-    public TokensController(UserManager<User> userManager, ITokenService tokenService, ICookiesService cookiesService)
-    {
-        _userManager = userManager;
-        _tokenService = tokenService;
-        _cookiesService = cookiesService;
-    }
+public class TokensController(UserManager<User> userManager, ITokenService tokenService, ICookiesService cookiesService)
+    : ControllerBase
+{ 
+    private readonly UserManager<User> _userManager = userManager;
+    private readonly ITokenService _tokenService = tokenService;
+    private readonly ICookiesService _cookiesService = cookiesService;
 
     [HttpPost(IdentityApiEndpoints.TokensEndpoints.CheckToken)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -68,7 +63,7 @@ public class TokensController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> RefreshToken([FromRoute] string idOrUsername)
     {
-        var user = await _userManager.FindUserByUserNameThenId(idOrUsername);
+        var user = await _userManager.FindUserByUserNameThenIdAsync(idOrUsername);
 
         if (user is null)
         {
@@ -99,7 +94,7 @@ public class TokensController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> RevokeToken([FromRoute] string idOrUsername)
     {
-        var user = await _userManager.FindUserByUserNameThenId(idOrUsername);
+        var user = await _userManager.FindUserByUserNameThenIdAsync(idOrUsername);
 
         if (user is null)
         {

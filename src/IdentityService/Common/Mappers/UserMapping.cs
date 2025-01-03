@@ -14,7 +14,7 @@ public static class UserMapping
             FirstName = userForRegistration.FirstName!,
             LastName = userForRegistration.LastName!,
             Email = userForRegistration.Email,
-            UserName = userForRegistration.Username,
+            UserName = userForRegistration.UserName,
         };
     }
 
@@ -37,7 +37,7 @@ public static class UserMapping
             LastName: user.LastName,
             FirstName: user.FirstName,
             PhoneNumber: user.PhoneNumber,
-            Username: user.UserName!
+            UserName: user.UserName!
         );
     }
 
@@ -45,7 +45,7 @@ public static class UserMapping
     {
         user.FirstName = userUpdateDto.FirstName;
         user.LastName = userUpdateDto.LastName;
-        user.UserName = userUpdateDto.Username;
+        user.UserName = userUpdateDto.UserName;
         user.PhoneNumber = userUpdateDto.PhoneNumber;
         user.Email = userUpdateDto.Email;
 

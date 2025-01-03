@@ -89,10 +89,10 @@ public class TokenService : ITokenService
 
         var expires = DateTime.UtcNow.AddMinutes(expiryMinutes);
         var tokenOptions = new JwtSecurityToken(
-            issuer: TokensConstants.JwtIssuer,
-            audience: TokensConstants.JwtAudience,
+            issuer: null,
+            audience: null,
             claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(expiryMinutes),
+            expires: DateTime.UtcNow.AddDays(expiryMinutes),
             signingCredentials: credentials
         );
 
@@ -122,7 +122,12 @@ public class TokenService : ITokenService
         return refreshToken;
     }
 
-    public ClaimsPrincipal GetClaimsFromExpiredToken(string token)
+    public ClaimsPrincipal? GetClaimsFromToken(string token)
+    {
+        return GetClaimsPrincipalFromToken(token);
+    }
+
+    private ClaimsPrincipal? GetClaimsPrincipalFromToken(string token)
     {
         var jwtTokenParameters = JwtExtensions.GetTokenValidationParameters();
 
@@ -156,7 +161,7 @@ public class TokenService : ITokenService
 
         return new List<Claim>
             {
-                new(JwtRegisteredClaimNames.Sub, user.UserName!),
+                new(JwtRegisteredClaimNames.UniqueName, user.UserName!),
                 new(JwtRegisteredClaimNames.Email, user.Email!),
                 new("uid", user.Id.ToString()),
             }

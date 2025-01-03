@@ -3,7 +3,6 @@ using IdentityService.Common.Services;
 using IdentityService.Data;
 using IdentityService.Entities;
 using IdentityService.Services;
-using MassTransit;
 using Microsoft.OpenApi.Models;
 using Shared.Infrastructure;
 using Shared.Infrastructure.Configurations;

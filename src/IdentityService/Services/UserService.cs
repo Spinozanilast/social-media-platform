@@ -7,24 +7,22 @@ using IdentityService.Helpers;
 using IdentityService.Mapping;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using UserWithSlugType =
+    (IdentityService.Contracts.UserToGet user, IdentityService.Entities.Enums.UserSlugTypes userSlugType);
 
 namespace IdentityService.Services;
 
-public class UserService : IUserService
+public class UserService(
+    UserManager<User> userManager,
+    SignInManager<User> signInManager,
+    ITokenService tokenService,
+    ICookiesService cookiesService)
+    : IUserService
 {
-    private readonly UserManager<User> _userManager;
-    private readonly SignInManager<User> _signInManager;
-    private readonly ITokenService _tokenService;
-    private readonly ICookiesService _cookiesService;
-
-    public UserService(UserManager<User> userManager, SignInManager<User> signInManager, ITokenService tokenService,
-        ICookiesService cookiesService)
-    {
-        _userManager = userManager;
-        _signInManager = signInManager;
-        _tokenService = tokenService;
-        _cookiesService = cookiesService;
-    }
+    private readonly UserManager<User> _userManager = userManager;
+    private readonly SignInManager<User> _signInManager = signInManager;
+    private readonly ITokenService _tokenService = tokenService;
+    private readonly ICookiesService _cookiesService = cookiesService;
 
     public async ValueTask<Result<RegistrationResponse>> RegisterUserAsync(UserForRegistration userForRegistration)
     {
@@ -65,7 +63,7 @@ public class UserService : IUserService
         return Result<(LoginResponse, User?)>.Success((user.ToLoginResponse(rolesList), user));
     }
 
-    public async Task<Result<LoginResponse>> LoginUserAsyncWithCookiesSet(LoginRequest loginRequest,
+    public async Task<Result<LoginResponse>> LoginUserAsyncWithCookiesSetAsync(LoginRequest loginRequest,
         HttpResponse response)
     {
         Result<(LoginResponse loginResponse, User? user)> loginResultWithUser = await LoginUserAsync(loginRequest);
@@ -82,14 +80,29 @@ public class UserService : IUserService
         return Result<LoginResponse>.Success(loginResultWithUser.Value.loginResponse);
     }
 
-    public async Task<Result<UserToGet>> GetUserByIdOrUsernameAsync(string idOrUsername)
+    public async ValueTask<Result<UserToGet>> GetUserByIdOrUsernameAsync(
+        string idOrUsername)
     {
-        var user = await _userManager.FindUserByUserNameThenId(idOrUsername);
+        var user = await _userManager.FindUserByUserNameThenIdAsync(idOrUsername);
 
         return user is null
             ? Result<UserToGet>.Failure("User with such id or username was not found")
             : Result<UserToGet>.Success(user.ToUserGetModel());
     }
+
+    public async ValueTask<Result<UserWithSlugType>>
+        GetUserByIdOrUsernameWithSlugTypeAsync(
+            string idOrUsername)
+    {
+        var userSlugSearchReult = await _userManager.FindUserByUserNameThenIdWithSlugTypeAsync(idOrUsername);
+
+        return userSlugSearchReult.user is null
+            ? Result<UserWithSlugType>.Failure(
+                "User with such id or username was not found")
+            : Result<UserWithSlugType>.Success((
+                userSlugSearchReult.user.ToUserGetModel(), userSlugSearchReult.slugType));
+    }
+
 
     public async Task<Result<IEnumerable<UserToGet>>> GetAllUserAsync()
     {
@@ -112,7 +125,7 @@ public class UserService : IUserService
         var result = await _userManager.UpdateAsync(user.UpdateUser(updatedUser));
 
         return result.Succeeded
-            ? Result<string>.Success()
+            ? Result<string>.Success("Successfully updated user")
             : Result<string>.Failure(result.Errors.Select(e => e.Description).FirstOrDefault());
     }
 }

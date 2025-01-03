@@ -14,5 +14,5 @@ public interface ITokenService
     Task<Token> GenerateJwtToken(User user);
     RefreshToken GenerateRefreshToken();
     Task<RefreshToken> GenerateRefreshTokenWithSave(User user);
-    ClaimsPrincipal GetClaimsFromExpiredToken(string token);
+    ClaimsPrincipal? GetClaimsFromToken(string token);
 }

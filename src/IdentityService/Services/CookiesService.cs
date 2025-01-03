@@ -31,8 +31,8 @@ public class CookiesService : ICookiesService
     }
 
     public bool TryGetCookie(IRequestCookieCollection requestCookies, AuthCookieTypes authCookieType,
-        out string? cookie)
+        out string cookie)
     {
-        return requestCookies.TryGetValue(TokensConstants.GetCookieKey(authCookieType), out cookie);
+        return requestCookies.TryGetValue(TokensConstants.GetCookieKey(authCookieType), out cookie!);
     }
 }

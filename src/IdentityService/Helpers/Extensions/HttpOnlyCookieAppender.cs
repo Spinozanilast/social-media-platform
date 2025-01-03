@@ -9,15 +9,17 @@ public static class HttpOnlyCookieAppender
         {
             HttpOnly = true
         };
-        
+
         if (expires.HasValue)
         {
             httpOnlyCookieOptions.Expires = expires.Value;
         }
-        
+
         responseCookies.Append(key, value, new CookieOptions
         {
-            HttpOnly = true
+            HttpOnly = true,
+            SameSite = SameSiteMode.None,
+            Secure = true
         });
     }
 }
