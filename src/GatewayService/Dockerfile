@@ -8,6 +8,7 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["src/GatewayService/GatewayService.csproj", "src/GatewayService/"]
 COPY ["src/Shared/Shared.Infrastructure/Shared.Infrastructure.csproj", "src/Shared/Shared.Infrastructure/"]
+COPY ["src/Authentication/Authentication.Extensions/Authentication.Extensions.csproj", "src/Authentication/Authentication.Extensions/"]
 RUN dotnet restore "src/GatewayService/GatewayService.csproj"
 COPY . .
 WORKDIR "/src/src/GatewayService"

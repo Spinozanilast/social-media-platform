@@ -1,3 +1,4 @@
+using Authentication.Configuration;
 using Shared.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,6 +7,8 @@ builder.Services.AddConfiguredSerilog(builder.Configuration);
 
 builder.Services.AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+
+builder.Services.AddJwtConfiguration();
 
 builder.Services.AddCors(options =>
 {
@@ -17,6 +20,8 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
-app.UseCors();
+app.UseCors("customPolicy");
 app.MapReverseProxy();
+app.UseAuthentication();
+app.UseAuthorization();
 app.Run();
