@@ -9,4 +9,6 @@ obj/
 bin/
 node-modules/
 
+**/.env
+
 *.user

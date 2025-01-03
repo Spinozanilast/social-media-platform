@@ -21,6 +21,8 @@ services:
     environment:
       - ASPNETCORE_URLS=http://+:80
       - ASPNETCORE_ENVIRONMENT=Docker
+      - JWT__SecretKey=${JWT_SECRET_KEY}
+      - JWT__ExpiryDays=${JWT_EXPIRY_DAYS}
     build:
       context: ../.
       dockerfile: ./src/GatewayService/Dockerfile
@@ -32,8 +34,10 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - "RabbitMq__Host=rabbitmq"
-      - "ConnectionStrings:PostgresConnection=Server=smp-postgres:5432;User Id=postgres;Password=password;Database=users"
+      - RabbitMq__Host=rabbitmq
+      - JWT__SecretKey=${JWT_SECRET_KEY}
+      - JWT__ExpiryDays=${JWT_EXPIRY_DAYS}
+      - ConnectionStrings__PostgresConnection=Server=smp-postgres:5432;User Id=postgres;Password=password;Database=users
     build:
       context: ../.
       dockerfile: ./src/IdentityService/Dockerfile
@@ -41,8 +45,6 @@ services:
     container_name: identity-service
     ports:
       - "5171:80"
-    volumes:
-      - $APPDATA\Microsoft\UserSecrets:/root/.microsoft/UserSecrets:ro
     depends_on:
       - smp-postgres
       - rabbitmq
@@ -50,8 +52,12 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - "RabbitMq__Host=rabbitmq"
-      - "ConnectionStrings:PostgresConnection=Server=smp-postgres:5432;User Id=postgres;Password=password;Database=profiles"
+      - RabbitMq__Host=rabbitmq
+      - JWT__SecretKey=${JWT_SECRET_KEY}
+      - JWT__ExpiryDays=${JWT_EXPIRY_DAYS}
+      - AWS__AccessKey=${AWS_ACCESS_KEY_ID}
+      - AWS__SecretKey=${AWS_SECRET_ACCESS_KEY}
+      - ConnectionStrings__PostgresConnection=Server=smp-postgres:5432;User Id=postgres;Password=password;Database=profiles
     build:
       context: ../.
       dockerfile: ./src/ProfileService/Dockerfile
@@ -62,7 +68,23 @@ services:
     depends_on:
       - rabbitmq
       - smp-postgres
+  stories-service:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - JWT__SecretKey=${JWT_SECRET_KEY}
+      - JWT__ExpiryDays=${JWT_EXPIRY_DAYS}
+      - ConnectionStrings__PostgresConnection=Server=smp-postgres:5432;User Id=postgres;Password=password;Database=stories
+    build:
+      context: ../.
+      dockerfile: ./src/StoriesService/Dockerfile
+    image: stories-service
+    container_name: stories-service
+    ports:
+      - "5173:80"
+    depends_on:
+      - smp-postgres
+
 
 volumes:
   postgres_data:
-    
