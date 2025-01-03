@@ -12,6 +12,10 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Profile>
             .HasKey(p => p.UserId)
             .HasName("Id");
 
+        builder.HasOne(p => p.Country)
+            .WithMany(p => p.Profiles)
+            .HasForeignKey("CountryId");
+
         builder
             .Property(p => p.References)
             .HasColumnType("varchar(80)[]");

@@ -3,6 +3,8 @@
 public static class ProfileApiEndpoints
 {
     private const string BaseEndpoint = "profile/" + "{userId:guid}";
+    
+    public const string GetCountries = "profiles/countries";
 
     public static class ProfileImagesEndpoints
     {
@@ -19,6 +21,6 @@ public static class ProfileApiEndpoints
         public const string Get = ProfileEndpointBase;
         public const string Init = $"{ProfileEndpointBase}/initialize";
         public const string Update = $"{ProfileEndpointBase}/update";
-        public const string Delete = $"{ProfileEndpointBase}/update";
+        public const string Delete = $"{ProfileEndpointBase}/delete";
     }
 }

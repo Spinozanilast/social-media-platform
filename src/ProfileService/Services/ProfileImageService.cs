@@ -4,56 +4,32 @@ using Amazon.S3.Model;
 using Microsoft.Extensions.Options;
 using ProfileService.Common.Services;
 using ProfileService.Data;
-using ProfileService.Models;
 
 namespace ProfileService.Services;
 
-public class ProfileImageService : IProfileImageService
+public class ProfileImageService(
+    IAmazonS3 s3Client,
+    ILogger<ProfileImageService> logger,
+    IOptions<ProfileImageStorageConfig> storageOptions)
+    : IProfileImageService
 {
-    private readonly IAmazonS3 _s3Client;
-    private readonly ILogger<ProfileImageService> _logger;
+    private readonly IAmazonS3 _s3Client = s3Client;
+    private readonly ILogger<ProfileImageService> _logger = logger;
 
-    private readonly string _bucketName;
+    private readonly string _bucketName = storageOptions.Value.BucketName;
 
-    public ProfileImageService(IAmazonS3 s3Client, ILogger<ProfileImageService> logger,
-        IOptions<ProfileImageStorageConfig> storageOptions)
+    public async Task<GetObjectResponse> GetProfileImageAsync(Guid id)
     {
-        _s3Client = s3Client;
-        _logger = logger;
+        var getImageRequest = new GetObjectRequest
+        {
+            BucketName = _bucketName,
+            Key = GetImageKey(id),
+        };
 
-        _bucketName = storageOptions.Value.BucketName;
+        return await _s3Client.GetObjectAsync(getImageRequest);
     }
 
-    public async Task<ProfilePicture?> GetProfileImageAsync(Guid id)
-    {
-        try
-        {
-            var getImageRequest = new GetObjectRequest()
-            {
-                BucketName = _bucketName,
-                Key = GetImageKey(id)
-            };
-
-            var response = await _s3Client.GetObjectAsync(getImageRequest);
-
-            if (response.HttpStatusCode == HttpStatusCode.OK)
-            {
-                return new ProfilePicture
-                {
-                    ImageData = response.ResponseStream,
-                    ContentType = response.Headers.ContentType
-                };
-            }
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, nameof(UploadProfileImageAsync));
-        }
-
-        return default;
-    }
-
-    public async Task<bool> UploadProfileImageAsync(Image image, Guid id)
+    public async Task<bool> UploadProfileImageAsync(IFormFile image, Guid id)
     {
         try
         {
@@ -62,16 +38,16 @@ public class ProfileImageService : IProfileImageService
                 throw new ArgumentNullException(nameof(image), "Image was not found");
             }
 
-            var putImageRequest = new PutObjectRequest()
+            var putImageRequest = new PutObjectRequest
             {
                 BucketName = _bucketName,
                 Key = GetImageKey(id),
-                InputStream = image.FormFile.OpenReadStream(),
-                ContentType = image.FormFile.ContentType,
+                InputStream = image.OpenReadStream(),
+                ContentType = image.ContentType,
                 Metadata =
                 {
-                    ["x-amz-meta-original-file-name"] = image.FormFile.FileName,
-                    ["x-amz-meta-original-file-extension"] = Path.GetExtension(image.FormFile.FileName),
+                    ["x-amz-meta-original-file-name"] = image.FileName,
+                    ["x-amz-meta-original-file-extension"] = Path.GetExtension(image.FileName),
                 }
             };
 
@@ -100,7 +76,7 @@ public class ProfileImageService : IProfileImageService
             };
 
             var response = await _s3Client.DeleteObjectAsync(deleteObjectRequest);
-            if (response.HttpStatusCode == HttpStatusCode.OK)
+            if (response.HttpStatusCode == HttpStatusCode.NoContent)
             {
                 return true;
             }

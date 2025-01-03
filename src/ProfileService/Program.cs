@@ -1,3 +1,4 @@
+using Authentication.Configuration;
 using MassTransit;
 using ProfileService.Common.Repositories;
 using ProfileService.Common.Services;
@@ -17,7 +18,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddProfileDbContext(builder.Configuration);
-builder.Services.AddS3Client();
+builder.Services.AddS3Client(builder.Configuration);
 builder.Services.AddScoped<IProfileImageService, ProfileImageService>();
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.Configure<ProfileImageStorageConfig>(builder.Configuration.GetSection("ProfileImageStorage"));
@@ -32,6 +33,9 @@ builder.Services.AddMassTransitConfigured(rabbitMqConfig,
     }
 );
 
+builder.Services.AddJwtConfiguration();
+builder.Services.AddAuthentication();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -42,9 +46,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

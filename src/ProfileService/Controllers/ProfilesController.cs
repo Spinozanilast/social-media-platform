@@ -1,16 +1,16 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ProfileService.Common.Extensions;
 using ProfileService.Common.Repositories;
 using ProfileService.Entities;
-using ProfileService.Models;
 
 namespace ProfileService.Controllers;
 
 [ApiController]
-public class ProfilesController(IProfileRepository profileRepository) : ControllerBase
+public class ProfilesController(IProfileRepository profileRepository, ICountriesRepository countriesRepository)
+    : ControllerBase
 {
     private readonly IProfileRepository _profileRepository = profileRepository;
+    private readonly ICountriesRepository _countriesRepository = countriesRepository;
 
     [Authorize]
     [HttpPost(ProfileApiEndpoints.ProfileEndpoints.Init)]
@@ -52,7 +52,7 @@ public class ProfilesController(IProfileRepository profileRepository) : Controll
             return NotFound();
         }
 
-        return Ok(profile.GetProfileWithStringifiedInterests());
+        return Ok(profile);
     }
 
     [Authorize]
@@ -64,5 +64,13 @@ public class ProfilesController(IProfileRepository profileRepository) : Controll
     {
         await _profileRepository.DeleteProfileAsync(userId);
         return NoContent();
+    }
+
+    [HttpGet(ProfileApiEndpoints.GetCountries)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async ValueTask<IActionResult> DeleteProfile()
+    {
+        var countries = await _countriesRepository.GetAll();
+        return Ok(countries);
     }
 }

@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Amazon.S3;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProfileService.Common.Services;
-using ProfileService.Models;
 
 namespace ProfileService.Controllers;
 
@@ -15,13 +15,13 @@ public class ProfileImageController(IProfileImageService imageService) : Control
     [HttpPost(ProfileApiEndpoints.ProfileImagesEndpoints.Upload)]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> UploadProfileImage([FromForm] Image profileImage, Guid userId)
+    public async Task<IActionResult> UploadProfileImage([FromRoute] Guid userId, IFormFile profileImage)
     {
         var result = await _imageService.UploadProfileImageAsync(profileImage, userId);
 
         return result switch
         {
-            true => CreatedAtAction(nameof(GetProfileImage), new { userId }),
+            true => StatusCode(201, new { message = "Profile image uploaded successfully" }),
             _ => BadRequest()
         };
     }
@@ -32,18 +32,21 @@ public class ProfileImageController(IProfileImageService imageService) : Control
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetProfileImage([FromRoute] Guid userId)
     {
-        var result = await _imageService.GetProfileImageAsync(userId);
-
-        if (result is null)
+        try
         {
-            return BadRequest();
-        }
+            var result = await _imageService.GetProfileImageAsync(userId);
 
-        return Ok(File(result.ImageData, result.ContentType));
+            return File(result.ResponseStream, result.Headers.ContentType);
+        }
+        catch (AmazonS3Exception ex) when (ex.Message is "There are no such image")
+        {
+            return NotFound();
+        }
     }
 
+
     [Authorize]
-    [HttpPost(ProfileApiEndpoints.ProfileImagesEndpoints.Remove)]
+    [HttpDelete(ProfileApiEndpoints.ProfileImagesEndpoints.Remove)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> RemoveProfileImage([FromRoute] Guid userId)

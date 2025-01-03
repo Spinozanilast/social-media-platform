@@ -4,37 +4,39 @@
         <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>e359d3cd-43be-45d6-a76b-3b2e02dc4e61</UserSecretsId>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-      <UserSecretsId>7b637f9f-1edc-4b4d-907b-89c395114908</UserSecretsId>
-      <LangVersion>13</LangVersion>
-  </PropertyGroup>
+        <LangVersion>13</LangVersion>
+    </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AWSSDK.S3" Version="3.7.405.14" />
-        <PackageReference Include="MassTransit" Version="8.3.1" />
+        <PackageReference Include="AWSSDK.S3" Version="4.0.0-preview.4" />
+        <PackageReference Include="MassTransit" Version="8.3.1"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.0" />
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="7.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.0"/>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.0"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\AwsConfigurators\AwsConfigurators.csproj" />
-      <ProjectReference Include="..\Shared\Shared.Infrastructure\Shared.Infrastructure.csproj" />
-      <ProjectReference Include="..\Shared\Shared.Models\Shared.Models.csproj" />
+        <ProjectReference Include="..\Authentication\Authentication.Extensions\Authentication.Extensions.csproj"/>
+        <ProjectReference Include="..\AwsConfigurators\AwsConfigurators.csproj"/>
+        <ProjectReference Include="..\Shared\Shared.Infrastructure\Shared.Infrastructure.csproj"/>
+        <ProjectReference Include="..\Shared\Shared.Models\Shared.Models.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Data\Migrations\" />
+        <Folder Include="Common\Extensions\" />
+        <Folder Include="Data\Migrations\"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="..\..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
+        <Content Include="..\..\.dockerignore">
+            <Link>.dockerignore</Link>
+        </Content>
     </ItemGroup>
 
 </Project>

@@ -16,9 +16,7 @@ public class ProfileRepository(ProfileDbContext context) : IProfileRepository
 
     public async Task SaveProfileAsync(Profile profile)
     {
-        context.Profiles.Attach(profile);
-        var entry = context.Entry(profile);
-        entry.State = EntityState.Modified;
+        context.Profiles.Update(profile);
         await context.SaveChangesAsync();
     }
 
@@ -26,7 +24,6 @@ public class ProfileRepository(ProfileDbContext context) : IProfileRepository
     {
         return await context
             .Profiles
-            .Include(p => p.Interests)
             .FirstOrDefaultAsync(p => p.UserId == userId);
     }
 
