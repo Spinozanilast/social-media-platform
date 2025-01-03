@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { NextIntlClientProvider } from 'next-intl';
 import { Providers } from './providers';
+import { getLocale, getMessages } from 'next-intl/server';
 
 export const metadata: Metadata = {
     title: 'Platform',
@@ -13,10 +14,13 @@ export default async function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const locale = await getLocale();
+    const messages = await getMessages();
+
     return (
         <html>
             <body className="dark">
-                <NextIntlClientProvider>
+                <NextIntlClientProvider messages={messages}>
                     <Providers>{children}</Providers>
                 </NextIntlClientProvider>
             </body>

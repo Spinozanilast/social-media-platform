@@ -1,8 +1,12 @@
 import { Link } from '@nextui-org/react';
 
-export default function Copyright() {
+type CopyrightProps = {
+    mt?: number;
+};
+
+export default function Copyright({ mt }: CopyrightProps) {
     return (
-        <div className="w-full">
+        <div className={`w-full ${mt ? `mt-${mt}` : ''}`}>
             <p className="text-center text-sm text-gray-300">
                 Copyright © 2024{' '}
                 <Link

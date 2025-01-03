@@ -19,6 +19,10 @@ body {
     background: var(--background-rgb);
 }
 
+.markdown > * {
+    all: revert;
+}
+
 @layer components {
     .search-bar {
         @apply bg-transparent rounded-lg text-base border-transparent focus:outline-none focus:border-solid focus:placeholder:text-transparent transition duration-300;
@@ -37,6 +41,14 @@ body {
 
     .logo {
         text-shadow: -2px -2px white;
+    }
+
+    .story-timestamp {
+        @apply text-xs text-opacity-50;
+    }
+
+    .timestamp-pre-text {
+        @apply text-xs text-opacity-70 font-bold;
     }
 
     .animated-span {

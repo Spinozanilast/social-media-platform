@@ -13,11 +13,11 @@ export default function Layout({
     children: React.ReactNode;
 }>) {
     return (
-        <section>
-            <div className="logo-container mt-page-part flex justify-center">
+        <div>
+            <div className="logo-container flex justify-center">
                 <Navbar />
             </div>
             {children}
-        </section>
+        </div>
     );
 }

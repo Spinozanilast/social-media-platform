@@ -8,13 +8,13 @@ import {
     LoginRequest,
     LoginResponse,
     LoginErrorResult,
-} from '@/app/models/user/login';
-import { UserApiResponse } from '@models/user/util';
+} from '@/app/models/Users/login';
+import { UserApiResponse } from '@/app/models/Users/util';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import UserService from '@/app/api/services/user';
+import Identity from '@/app/api/services/user';
 import { ErrorOption, SubmitHandler, useForm } from 'react-hook-form';
-import { User } from '@/app/models/user/user';
+import { User } from '@/app/models/Users/user';
 import isEmailValid from '@/app/helpers/email-validation';
 import { GoEyeClosed } from 'react-icons/go';
 import { GoEye } from 'react-icons/go';
@@ -22,8 +22,12 @@ import { GoEye } from 'react-icons/go';
 const handleLogin: SubmitHandler<LoginRequest> = async (
     data: LoginRequest
 ): Promise<LoginErrorResult | LoginResponse> => {
-    const response: UserApiResponse | LoginResponse =
-        await UserService.loginUser(data as LoginRequest);
+    console.log(data);
+    const response: UserApiResponse | LoginResponse = await Identity.loginUser({
+        email: data.email,
+        password: data.password,
+        rememberMe: true,
+    } as LoginRequest);
     if ((response as UserApiResponse).isSuccess !== undefined) {
         const formError: LoginErrorResult = {
             isError: true,
@@ -64,16 +68,16 @@ export default function LoginPage() {
         if ((result as LoginErrorResult).isError) {
             const errorOption = result as ErrorOption;
             setError('password', errorOption);
-            setError('email', {});
+            setError('email', errorOption);
             return;
         }
 
         const response = result as LoginResponse;
 
         if (rememberUserState) {
-            UserService.saveUserLocally(response as User);
+            Identity.saveUserLocally(response as User);
         }
-        router.push(`/${response.username ?? response.id}`);
+        router.push(`/${response.userName}`);
     };
 
     return (
@@ -97,6 +101,8 @@ export default function LoginPage() {
                             label="Email"
                             labelPlacement="outside"
                             placeholder="Enter your email"
+                            isInvalid={!!errors.email}
+                            errorMessage={errors.email?.message}
                             type="email"
                             variant="bordered"
                             className={`${
@@ -113,11 +119,6 @@ export default function LoginPage() {
                                 required: 'Email is required',
                             })}
                         />
-                        {errors.email && (
-                            <p className="text-red-500 font-bold text-sm">
-                                {errors.email.message}
-                            </p>
-                        )}
                     </div>
                     <div className="flex flex-col gap-1">
                         <Input
@@ -133,6 +134,8 @@ export default function LoginPage() {
                                     )}
                                 </button>
                             }
+                            isInvalid={!!errors.password}
+                            errorMessage={errors.password?.message}
                             label="Password"
                             labelPlacement="outside"
                             placeholder="Enter your password"
@@ -145,11 +148,6 @@ export default function LoginPage() {
                                 required: 'Password is required',
                             })}
                         />
-                        {errors.password && (
-                            <p className="text-red-500 font-bold text-sm">
-                                {errors.password.message}
-                            </p>
-                        )}
                     </div>
                     <div className="flex items-center justify-between px-1 py-2 gap-3">
                         <Checkbox
@@ -169,7 +167,7 @@ export default function LoginPage() {
                     </Button>
                 </form>
                 <p className="text-center text-small">
-                    <Link href="#" size="sm">
+                    <Link href="/register" size="sm">
                         Create an account
                     </Link>
                 </p>

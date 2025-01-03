@@ -6,11 +6,10 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { object, string, TypeOf } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { redirect, useRouter } from 'next/navigation';
-import UserService from '@/app/api/services/user';
-import { UserApiResponse, FieldId } from '@/app/models/user/util';
+import Identity from '@/app/api/services/user';
+import { UserApiResponse, FieldId } from '@/app/models/Users/util';
 import { FaLock } from 'react-icons/fa';
 import '@fontsource/share-tech';
-import { GoEye, GoEyeClosed } from 'react-icons/go';
 import ShowPasswordButton from '@/app/components/utils/ShowPasswordButton';
 
 const registerSchema = object({
@@ -92,9 +91,9 @@ const pageTextFieldsData: TextFieldData[] = [
 ];
 
 const redirectHandler = () => {
-    const localUser = UserService.getCurrentUser();
+    const localUser = Identity.getCurrentUser();
     if (localUser) {
-        redirect(`/${localUser.username}`);
+        redirect(`/${localUser.userName}`);
     }
 };
 
@@ -113,9 +112,18 @@ export default function RegisterPage() {
     });
 
     const [isPasswordVisible, setPasswordVisibility] = useState(false);
-    const [isConfirmPasswordVisible, setConfirmPasswordVisibility] = useState(false);
+    const [isConfirmPasswordVisible, setConfirmPasswordVisibility] =
+        useState(false);
 
     const router = useRouter();
+
+    function togglePasswordVisibility() {
+        setPasswordVisibility(!isPasswordVisible);
+    }
+
+    function toggleConfirmPasswordVisibility() {
+        setConfirmPasswordVisibility(!isConfirmPasswordVisible);
+    }
 
     useEffect(() => {
         redirectHandler();
@@ -127,7 +135,7 @@ export default function RegisterPage() {
     }, [isSubmitSuccessful, reset, router]);
 
     const onSubmit: SubmitHandler<RegisterInput> = async (data) => {
-        const response: UserApiResponse = await UserService.registerUser(data);
+        const response: UserApiResponse = await Identity.registerUser(data);
         if (!response.isSuccess && response.errors.length === 0) {
             response.errorFields.forEach((errorField: FieldId, idx) => {
                 setError(
@@ -159,45 +167,70 @@ export default function RegisterPage() {
                     </h2>
                 </div>
                 <form className="mt-8" onSubmit={handleSubmit(onSubmit)}>
-                    <div className="grid grid-cols-2 space-y-2 gap-x-2">
+                    <div className="grid grid-cols-2 gap-y-2 gap-x-2">
                         {pageTextFieldsData.map((fieldData) => (
                             <div
                                 key={fieldData.id}
                                 className={`${
-                                    fieldData.type === 'password' || fieldData.id === 'confirmPassword'
+                                    fieldData.type === 'password' ||
+                                    fieldData.id === 'confirmPassword'
                                         ? 'col-span-2'
                                         : 'col-span-1'
                                 }`}
                             >
                                 <Input
                                     isRequired
-                                    isClearable
+                                    isClearable={
+                                        !(
+                                            fieldData.id === FieldId.Password ||
+                                            fieldData.id ===
+                                                FieldId.ConfirmPassword
+                                        )
+                                    }
                                     fullWidth
-                                    variant="bordered"
+                                    variant={
+                                        fieldData.id === FieldId.Password ||
+                                        fieldData.id === FieldId.ConfirmPassword
+                                            ? 'flat'
+                                            : 'bordered'
+                                    }
                                     label={fieldData.label}
                                     placeholder={fieldData.label}
                                     type={
                                         fieldData.id === 'password'
-                                            ? isPasswordVisible ? 'text' : 'password'
+                                            ? isPasswordVisible
+                                                ? 'text'
+                                                : 'password'
                                             : fieldData.id === 'confirmPassword'
-                                            ? isConfirmPasswordVisible ? 'text' : 'password'
+                                            ? isConfirmPasswordVisible
+                                                ? 'text'
+                                                : 'password'
                                             : fieldData.type
                                     }
                                     className={`${
-                                        errors[fieldData.id] ? 'border-red-500' : ''
+                                        errors[fieldData.id]
+                                            ? 'border-red-500'
+                                            : ''
                                     }`}
                                     {...register(fieldData.id)}
                                     endContent={
-                                        (fieldData.id === 'password' && (
+                                        (fieldData.id === FieldId.Password && (
                                             <ShowPasswordButton
                                                 isVisible={isPasswordVisible}
-                                                onClick={setPasswordVisibility}
+                                                onClick={() => {
+                                                    togglePasswordVisibility();
+                                                }}
                                             />
                                         )) ||
-                                        (fieldData.id === 'confirmPassword' && (
+                                        (fieldData.id ===
+                                            FieldId.ConfirmPassword && (
                                             <ShowPasswordButton
-                                                isVisible={isConfirmPasswordVisible}
-                                                onClick={setConfirmPasswordVisibility}
+                                                isVisible={
+                                                    isConfirmPasswordVisible
+                                                }
+                                                onClick={() => {
+                                                    toggleConfirmPasswordVisibility();
+                                                }}
                                             />
                                         ))
                                     }
@@ -211,12 +244,20 @@ export default function RegisterPage() {
                             </div>
                         ))}
                     </div>
-                    <Button type="submit" className="mt-4" fullWidth color="primary">
+                    <Button
+                        type="submit"
+                        className="mt-4"
+                        fullWidth
+                        color="primary"
+                    >
                         Sign up
                     </Button>
                 </form>
                 <div className="flex justify-end mt-2">
-                    <Link href="/login" className="text-sm text-blue-600 hover:text-blue-500">
+                    <Link
+                        href="/login"
+                        className="text-sm text-blue-600 hover:text-blue-500"
+                    >
                         Already have an account? Sign in
                     </Link>
                 </div>

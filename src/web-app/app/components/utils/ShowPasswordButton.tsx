@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { DOMAttributes } from 'react';
 import { GoEye, GoEyeClosed } from 'react-icons/go';
 
 const ShowPasswordButton = ({

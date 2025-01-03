@@ -11,11 +11,13 @@ import { ListItemIcon } from '@mui/material';
 import { FaUser } from 'react-icons/fa';
 import { BsThreeDots } from 'react-icons/bs';
 import { CiLogout } from 'react-icons/ci';
+import { IconContext } from 'react-icons/lib';
+import IdentityService from '../api/services/user';
 
 const CurrentUserTranslationSection: string = 'CurrentUser';
 
 const CurrentUser = () => {
-    const t = useTranslations(CurrentUserTranslationSection);
+    // const t = useTranslations(CurrentUserTranslationSection);
 
     const imageUrl: string = '/profile.svg';
 
@@ -28,6 +30,11 @@ const CurrentUser = () => {
         setAnchorEl(null);
     };
 
+    const handleLogout = async () => {
+        console.log(await IdentityService.logOut());
+        setAnchorEl(null);
+    };
+
     return (
         <React.Fragment>
             <ThemeProvider theme={theme}>
@@ -37,8 +44,8 @@ const CurrentUser = () => {
                         className="rounded-md p-2 shadow-accent-orange shadow-inner hover:shadow-lg hover:border-l-2 hover:border-accent-orange hover:border-solid"
                         src={imageUrl}
                         alt="curret user profile image"
-                        layout="fill"
-                        objectFit="cover"
+                        width={36}
+                        height={36}
                     />
                 </div>
 
@@ -52,26 +59,30 @@ const CurrentUser = () => {
                     transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                     anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
                 >
-                    <MenuItem onClick={handleClose}>
-                        <ListItemIcon className="text-accent-orange">
-                            <FaUser />
-                        </ListItemIcon>
-                        Profile
-                    </MenuItem>
-                    <MenuItem onClick={handleClose}>My account</MenuItem>
-                    <Divider />
-                    <MenuItem onClick={handleClose}>
-                        <ListItemIcon className="text-accent-orange">
-                            <BsThreeDots />
-                        </ListItemIcon>
-                        Settings
-                    </MenuItem>
-                    <MenuItem onClick={handleClose}>
-                        <ListItemIcon className="text-accent-orange">
-                            <CiLogout />
-                        </ListItemIcon>
-                        Logout
-                    </MenuItem>
+                    <IconContext.Provider
+                        value={{ className: 'text-accent-orange' }}
+                    >
+                        <MenuItem onClick={handleClose}>
+                            <ListItemIcon>
+                                <FaUser />
+                            </ListItemIcon>
+                            Profile
+                        </MenuItem>
+                        <MenuItem onClick={handleClose}>My account</MenuItem>
+                        <Divider />
+                        <MenuItem onClick={handleClose}>
+                            <ListItemIcon>
+                                <BsThreeDots />
+                            </ListItemIcon>
+                            Settings
+                        </MenuItem>
+                        <MenuItem onClick={handleLogout}>
+                            <ListItemIcon>
+                                <CiLogout />
+                            </ListItemIcon>
+                            Logout
+                        </MenuItem>
+                    </IconContext.Provider>
                 </Menu>
             </ThemeProvider>
         </React.Fragment>

@@ -14,7 +14,7 @@ export default function Layout({
             <div className="flex flex-col items-center justify-center">
                 <div>{children}</div>
             </div>
-            <Copyright />
+            <Copyright mt={1} />
         </section>
     );
 }

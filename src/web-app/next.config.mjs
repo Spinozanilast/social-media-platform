@@ -3,6 +3,15 @@ const withNextIntl = createNextIntlPlugin();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    images: {
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'profile-images-bucket.s3.yandexcloud.net',
+                port: '',
+            }
+        ]
+    }
 };
 
 export default withNextIntl(nextConfig);

@@ -1,12 +1,12 @@
 import axios, { AxiosError } from 'axios';
 import ApiConfigManager from '../util/configManager';
-import { UserApiResponse } from '@models/user/util';
-import { RegisterRequest } from '@models/user/register';
-import { LoginRequest, LoginResponse } from '@models/user/login';
-import { User } from '@models/user/user';
+import { UserApiResponse } from '@/app/models/Users/util';
+import { RegisterRequest } from '@/app/models/Users/register';
+import { LoginRequest, LoginResponse } from '@/app/models/Users/login';
+import User from '@models/Users/user';
 
 const USER_API_KEYWORD = 'user';
-const GATEWAY_URL: string = ApiConfigManager.getUserApiConfig().baseURL!;
+const GATEWAY_URL: string = ApiConfigManager.getApiConfig().baseURL!;
 const USER_API_BASE_URL = GATEWAY_URL + `/${USER_API_KEYWORD}`;
 
 const axiosInstance = axios.create({
@@ -20,7 +20,7 @@ const axiosInstance = axios.create({
 const userApiEndpoints = {
     login: '/login',
     register: '/register',
-    logout: '/logout',
+    logout: '/signout',
 };
 
 const registerUser = (values: RegisterRequest) => {
@@ -61,12 +61,31 @@ const logOut = () => {
         });
 };
 
-const getUser = async (userIdOrUsername: string): Promise<User> => {
+const getUser = async (userIdOrUsername: string): Promise<User | null> => {
     const response = await fetch(`${USER_API_BASE_URL}/${userIdOrUsername}`, {
         cache: 'force-cache',
     });
-    const user: User = await response.json();
-    return user;
+
+    try {
+        const user: User = await response.json();
+        return user;
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+};
+
+const checkUserIdentity = async (
+    userIdOrUsername: string
+): Promise<boolean> => {
+    const response = await fetch(
+        `${USER_API_BASE_URL}/validate-token-relation/${userIdOrUsername}`,
+        {
+            credentials: 'include',
+            cache: 'no-cache',
+        }
+    );
+    return response.status === 200;
 };
 
 const getCurrentUser = (): User | undefined => {
@@ -90,7 +109,7 @@ const removeLocalUser = (): void => {
     }
 };
 
-const UserService = {
+const IdentityService = {
     registerUser,
     loginUser,
     logOut,
@@ -98,6 +117,7 @@ const UserService = {
     getUser,
     saveUserLocally,
     removeLocalUser,
+    checkUserIdentity,
 };
 
-export default UserService;
+export default IdentityService;

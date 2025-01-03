@@ -1,22 +1,15 @@
 import ProfileService from '@services/profile';
-import { Profile, User } from '@models/user/user';
-import UserService from '@services/user';
-import UserProfile from '@/app/components/UserProfile';
+import User from '@/app/models/Users/user';
+import Identity from '@services/user';
+import Profile from '@models/Profiles/profile';
+import { notFound } from 'next/navigation';
+import UserPage from '@components/pages/UserPage';
 
-async function getProfileImage(userId: string): Promise<Blob | null> {
-    const profileImage: Blob = await ProfileService.getProfileImage(userId);
-
-    if (profileImage.size === 0) {
-        return null;
-    }
-
-    return profileImage;
-}
-
-const getUser = async (userIdOrUsername: string): Promise<User> =>
-    await UserService.getUser(userIdOrUsername);
-const getProfileData = async (userId: string): Promise<Profile> =>
+const getUser = async (userIdOrUsername: string): Promise<User | null> =>
+    await Identity.getUser(userIdOrUsername);
+const getProfileData = async (userId: string): Promise<Profile | null> =>
     await ProfileService.getProfileData(userId);
+
 interface UserPageProps {
     params: { slug: string };
 }
@@ -24,25 +17,17 @@ interface UserPageProps {
 export default async function Page({ params }: UserPageProps) {
     const userId = params.slug;
 
-    const user: User = await getUser(userId);
-    const [profileInfo, profileImage] = await Promise.all([
-        getProfileData(user.id),
-        getProfileImage(user.id),
-    ]);
+    const user = await getUser(userId);
 
-    console.log(profileInfo);
+    if (!user) {
+        return notFound();
+    }
 
-    return (
-        <div className="bg-background-secondary rounded-md grid grid-cols-3 max-w-full mx-page-part">
-            <aside style={{ fontFamily: 'Share Tech Mono' }}>
-                <UserProfile
-                    profileImage={profileImage}
-                    user={user}
-                    profileInfo={profileInfo}
-                ></UserProfile>
-            </aside>
-            <main className="page-column "></main>
-            <aside className="page-column "></aside>
-        </div>
-    );
+    const profileInfo = await getProfileData(user.id);
+
+    if (!profileInfo) {
+        return notFound();
+    }
+
+    return <UserPage user={user} profileInfo={profileInfo} />;
 }
