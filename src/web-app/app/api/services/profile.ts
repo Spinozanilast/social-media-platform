@@ -3,12 +3,12 @@ import ApiConfigManager from '../util/configManager';
 import Profile from '@models/Profiles/profile';
 import Country from '@models/Profiles/country';
 
-const USER_API_KEYWORD = 'profile';
+const USER_API_KEYWORD = 'profiles';
 const GATEWAY_URL: string = ApiConfigManager.getApiConfig().baseURL!;
-const USER_API_BASE_URL = GATEWAY_URL + `/${USER_API_KEYWORD}`;
+const PROFILE_API_BASE_URL = GATEWAY_URL + `/${USER_API_KEYWORD}`;
 
 const axiosInstance = axios.create({
-    baseURL: USER_API_BASE_URL,
+    baseURL: PROFILE_API_BASE_URL,
     headers: {
         'Content-Type': 'application/json',
     },
@@ -26,9 +26,11 @@ const getProfileImage = async (userId: string): Promise<Blob> => {
     const response = await fetch(
         createUserProfileUrl(userId, ProfileApiEndpoints.GetProfileImage)
     );
-    console.log(response);
-    const user: Blob = await response.blob();
-    return user;
+    if (!response.ok) {
+        throw new Error('Failed to fetch profile image');
+    }
+    const imageBlob: Blob = await response.blob();
+    return imageBlob;
 };
 
 const getProfileData = async (userId: string): Promise<Profile | null> => {
@@ -39,7 +41,6 @@ const getProfileData = async (userId: string): Promise<Profile | null> => {
     if (response.status === 404) {
         return null;
     }
-
     return response.json();
 };
 
@@ -70,7 +71,10 @@ const uploadProfileImage = async (
 };
 
 const getCountries = async (): Promise<Country[]> => {
-    const response = await fetch(`${USER_API_BASE_URL}s/countries`);
+    const response = await fetch(`${PROFILE_API_BASE_URL}/countries`, {
+        cache: 'force-cache',
+    });
+    console.log(response);
     return response.json();
 };
 
@@ -79,10 +83,10 @@ const createUserProfileUrl = (
     endpoint?: ProfileApiEndpoints
 ) => {
     if (!endpoint) {
-        return `${USER_API_BASE_URL}/${userId}`;
+        return `${PROFILE_API_BASE_URL}/${userId}`;
     }
 
-    return `${USER_API_BASE_URL}/${userId}/${endpoint}`;
+    return `${PROFILE_API_BASE_URL}/${userId}/${endpoint}`;
 };
 
 const ProfileService = {
@@ -90,6 +94,7 @@ const ProfileService = {
     getProfileData,
     updateProfile,
     uploadProfileImage,
+    getCountries,
 };
 
 export default ProfileService;

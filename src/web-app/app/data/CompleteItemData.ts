@@ -1,10 +1,10 @@
-export default interface UrlCompleteItemData {
+export default interface CompleteItemData {
     id: number;
     name: string;
     url: string;
 }
 
-export const urlCompleteItems: UrlCompleteItemData[] = [
+export const AccountUrlsCompleteItems: CompleteItemData[] = [
     {
         id: 1,
         name: 'Login',

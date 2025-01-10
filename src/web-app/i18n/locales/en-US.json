@@ -3,6 +3,53 @@
         "about_title": "About",
         "anything_title": "Anything",
         "interests_title": "Interests",
-        "references_title": "References"
+        "references_title": "References",
+        "edit": "Edit"
+    },
+    "CurrentUser": {
+        "profile_actions": "Profile Actions",
+        "account_actions": "Account Actions",
+        "logout": "Logout",
+        "settings": "Settings",
+        "profile": "Profile",
+        "logout_description": "Perform a full logout from the account",
+        "profile_description": "Go to your profile page",
+        "settings_description": "Go to your settings page"
+    },
+    "LangSwitcher": {
+        "en-US": "English",
+        "ru-RU": "Russian"
+    },
+    "PagesNavbar": {
+        "messages": "Messages",
+        "stories": "Stories",
+        "board": "Board"
+    },
+    "RegisterPage": {
+        "register": "Register",
+        "username": "Username",
+        "username_placeholder": "Enter your username",
+        "first_name": "First Name",
+        "first_name_placeholder": "Enter your first name",
+        "last_name": "Last Name",
+        "last_name_placeholder": "Enter your last name",
+        "email": "Email",
+        "email_placeholder": "Enter your email",
+        "password": "Password",
+        "password_placeholder": "Enter your password",
+        "confirm_password": "Confirm Password",
+        "confirm_password_placeholder": "Confirm your password",
+        "sign_up": "Sign up"
+    },
+    "LoginPage": {
+        "login": "Log In",
+        "email": "Email",
+        "password": "Password",
+        "remember_me": "Remember me",
+        "sign_in": "Sign in",
+        "forgot_password": "Forgot password?",
+        "email_placeholder": "Enter your email",
+        "password_placeholder": "Enter your password",
+        "create_account": "Create an account"
     }
 }

@@ -14,7 +14,8 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Profile>
 
         builder.HasOne(p => p.Country)
             .WithMany(p => p.Profiles)
-            .HasForeignKey("CountryId");
+            .HasForeignKey("CountryId")
+            .IsRequired(false);
 
         builder
             .Property(p => p.References)

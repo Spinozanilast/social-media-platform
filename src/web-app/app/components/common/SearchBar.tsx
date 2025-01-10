@@ -1,19 +1,13 @@
 'use client';
 import React from 'react';
-import { FaSearch } from 'react-icons/fa';
-import UrlCompleteItemData from '../../data/CompleteItemsData/UrlCompleteItemData';
-import {
-    Autocomplete,
-    AutocompleteItem,
-    AutocompleteSection,
-} from '@nextui-org/react';
-import UrlCompletionItem from './CompleteItems/UrlCompletionItem';
-import { SiCurl } from 'react-icons/si';
+import { FaAngleDown } from 'react-icons/fa';
+import CompleteItemData from '../../data/CompleteItemData';
+import { Select, SelectSection } from '@nextui-org/react';
 import createUrlCompletionItem from './CompleteItems/UrlCompletionItem';
 
 type SearchBarProps = {
     placeholderText: string;
-    urlCompletions: UrlCompleteItemData[];
+    urlCompletions: CompleteItemData[];
 };
 
 export default function SearchBar({
@@ -21,29 +15,21 @@ export default function SearchBar({
     urlCompletions,
 }: SearchBarProps) {
     const headingClasses =
-        'flex w-full sticky top-1 z-20 py-1.5 px-2 bg-default-100 shadow-small rounded-small';
+        'flex w-full sticky z-20 py-1.5 px-2 bg-default-100 shadow-small rounded-small';
 
     return (
-        <Autocomplete
+        <Select
             aria-label={placeholderText}
             classNames={{
-                base: 'max-w-xs',
+                base: 'min-w-[200px]',
                 listboxWrapper: 'max-h-[320px]',
-                selectorButton: 'text-default-500',
-            }}
-            inputProps={{
-                classNames: {
-                    input: 'ml-1',
-                    inputWrapper: 'h-[48px]',
-                },
             }}
             listboxProps={{
                 hideSelectedIcon: true,
                 itemClasses: {
                     base: [
                         'rounded-medium',
-                        'text-default-500',
-                        'transition-opacity',
+                        'text-default-900',
                         'data-[hover=true]:text-foreground',
                         'dark:data-[hover=true]:bg-default-50',
                         'data-[pressed=true]:opacity-70',
@@ -57,22 +43,21 @@ export default function SearchBar({
             popoverProps={{
                 offset: 10,
                 classNames: {
-                    base: 'rounded-large',
-                    content:
-                        'p-1 border-small border-default-100 bg-background',
+                    base: 'rounded-md',
+                    content: 'p-1 border-small border-default-100',
                 },
             }}
-            radius="full"
+            radius="lg"
             startContent={
-                <FaSearch
+                <FaAngleDown
                     className="text-default-400"
                     size={20}
-                    strokeWidth={2.5}
+                    strokeWidth={2}
                 />
             }
             variant="bordered"
         >
-            <AutocompleteSection
+            <SelectSection
                 classNames={{
                     heading: headingClasses,
                 }}
@@ -80,7 +65,7 @@ export default function SearchBar({
                 title="Urls"
             >
                 {urlCompletions.map((item) => createUrlCompletionItem(item))}
-            </AutocompleteSection>
-        </Autocomplete>
+            </SelectSection>
+        </Select>
     );
 }

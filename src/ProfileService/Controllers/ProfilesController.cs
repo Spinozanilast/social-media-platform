@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProfileService.Common.Repositories;
+using ProfileService.Contracts;
+using ProfileService.Contracts.Mappers;
 using ProfileService.Entities;
 
 namespace ProfileService.Controllers;
@@ -34,9 +36,9 @@ public class ProfilesController(IProfileRepository profileRepository, ICountries
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> SaveProfile([FromBody] Profile profile)
+    public async Task<IActionResult> SaveProfile([FromBody] SaveProfileDto dto)
     {
-        await _profileRepository.SaveProfileAsync(profile);
+        await _profileRepository.SaveProfileAsync(dto.ToProfile());
         return Ok();
     }
 
@@ -68,7 +70,7 @@ public class ProfilesController(IProfileRepository profileRepository, ICountries
 
     [HttpGet(ProfileApiEndpoints.GetCountries)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async ValueTask<IActionResult> DeleteProfile()
+    public async Task<IActionResult> GetCountries()
     {
         var countries = await _countriesRepository.GetAll();
         return Ok(countries);

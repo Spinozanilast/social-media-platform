@@ -24,6 +24,7 @@ public class ProfileRepository(ProfileDbContext context) : IProfileRepository
     {
         return await context
             .Profiles
+            .Include(p => p.Country)
             .FirstOrDefaultAsync(p => p.UserId == userId);
     }
 

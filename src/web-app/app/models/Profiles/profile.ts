@@ -1,8 +1,10 @@
+import Country from './country';
+
 export default interface Profile {
     about?: string;
     anything?: string;
     birthDate?: Date | string;
-    country?: string;
+    country?: Country;
     interests: string[];
     references: string[];
 }

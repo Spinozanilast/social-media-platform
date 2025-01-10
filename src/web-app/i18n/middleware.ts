@@ -1,13 +1,13 @@
 // middleware.ts
 
 import createMiddleware from 'next-intl/middleware';
-import { locales } from './i18n.config';
+import { defaultLocale, locales } from './i18n.config';
 
 export default createMiddleware({
     // Use this locale when we can't match
     // another with our user's preferred locales
     // and when no locale is explicitly set.
-    defaultLocale: 'en-US',
+    defaultLocale: defaultLocale,
 
     // List all supported locales (en-us, ar-eg).
     locales,

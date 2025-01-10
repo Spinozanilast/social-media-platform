@@ -10,7 +10,7 @@ public class Profile(Guid userId)
     [MaxLength(200)] public string? Anything { get; set; }
 
     public DateOnly? BirthDate { get; set; }
-    public Country Country { get; set; }
+    public Country? Country { get; set; }
 
     public List<string> Interests { get; set; } = [];
     public List<string> References { get; set; } = [];

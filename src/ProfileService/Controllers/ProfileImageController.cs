@@ -38,9 +38,9 @@ public class ProfileImageController(IProfileImageService imageService) : Control
 
             return File(result.ResponseStream, result.Headers.ContentType);
         }
-        catch (AmazonS3Exception ex) when (ex.Message is "There are no such image")
+        catch (AmazonS3Exception ex)
         {
-            return NotFound();
+            return NotFound("There was an error retrieving the profile image.");
         }
     }
 

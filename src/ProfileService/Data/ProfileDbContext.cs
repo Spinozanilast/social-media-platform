@@ -14,6 +14,7 @@ public class ProfileDbContext(DbContextOptions<ProfileDbContext> options)
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new ProfileConfiguration());
+        modelBuilder.ApplyConfiguration(new CountryConfiguration());
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

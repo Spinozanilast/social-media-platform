@@ -1,12 +1,10 @@
-import { AutocompleteItem, Button, Link } from '@nextui-org/react';
-import UrlCompleteItemData from '@data/CompleteItemsData/UrlCompleteItemData';
+import { AutocompleteItem, Button, Link, SelectItem } from '@nextui-org/react';
+import CompleteItemData from '@/app/data/CompleteItemData';
 import { SiCurl } from 'react-icons/si';
 
-import { redirect } from 'next/navigation';
-
-const createUrlCompletionItem = (urlCompleteItem: UrlCompleteItemData) => {
+const createUrlCompletionItem = (urlCompleteItem: CompleteItemData) => {
     return (
-        <AutocompleteItem
+        <SelectItem
             key={urlCompleteItem.id}
             value={urlCompleteItem.name}
             textValue={urlCompleteItem.name}
@@ -24,7 +22,7 @@ const createUrlCompletionItem = (urlCompleteItem: UrlCompleteItemData) => {
                     </div>
                 </div>
             </div>
-        </AutocompleteItem>
+        </SelectItem>
     );
 };
 

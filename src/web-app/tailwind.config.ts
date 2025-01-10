@@ -3,8 +3,6 @@ import { nextui } from '@nextui-org/react';
 
 const config: Config = {
     content: [
-        './pages/**/*.{js,ts,jsx,tsx,mdx}',
-        './components/**/*.{js,ts,jsx,tsx,mdx}',
         './app/**/*.{js,ts,jsx,tsx,mdx}',
         './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
     ],
@@ -35,7 +33,7 @@ const config: Config = {
     },
     darkMode: 'class',
     plugins: [
-        //Generate with nextui-themegen.netlify.app
+        //Generated with nextui-themegen.netlify.app
         nextui({
             themes: {
                 light: {
@@ -265,7 +263,7 @@ const config: Config = {
                         },
                         focus: '#006FEE',
                         overlay: '#ffffff',
-                        divider: '#3f3f46',
+                        divider: '#333333',
                     },
                 },
             },
@@ -293,7 +291,7 @@ const config: Config = {
                     large: '3px',
                 },
                 disabledOpacity: '0.5',
-                dividerWeight: '2',
+                dividerWeight: '1px',
                 hoverOpacity: '0.9',
             },
         }),

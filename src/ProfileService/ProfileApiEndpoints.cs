@@ -2,7 +2,8 @@
 
 public static class ProfileApiEndpoints
 {
-    private const string BaseEndpoint = "profile/" + "{userId:guid}";
+    
+    private const string BaseEndpoint = "profiles/" + "{userId:guid}";
     
     public const string GetCountries = "profiles/countries";
 

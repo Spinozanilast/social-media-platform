@@ -9,6 +9,7 @@ export enum FieldId {
 
 export type UserApiResponse = {
     isSuccess: boolean;
+    userId: string;
     errorFields: FieldId[];
     errors: string[];
 };

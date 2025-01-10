@@ -11,6 +11,7 @@ import { UserApiResponse, FieldId } from '@/app/models/Users/util';
 import { FaLock } from 'react-icons/fa';
 import '@fontsource/share-tech';
 import ShowPasswordButton from '@/app/components/utils/ShowPasswordButton';
+import { useTranslations } from 'next-intl';
 
 const registerSchema = object({
     username: string()
@@ -48,58 +49,67 @@ enum FieldWidth {
 const pageTextFieldsData: TextFieldData[] = [
     {
         id: FieldId.Username,
-        label: 'Username',
+        label: 'username',
         autoComplete: 'username',
         type: 'text',
         inputWidth: FieldWidth.Full,
     },
     {
         id: FieldId.FirstName,
-        label: 'First Name',
+        label: 'first_name',
         autoComplete: 'given-name',
         type: 'text',
         inputWidth: FieldWidth.Half,
     },
     {
         id: FieldId.LastName,
-        label: 'Last Name',
+        label: 'last_name',
         autoComplete: 'family-name',
         type: 'text',
         inputWidth: FieldWidth.Half,
     },
     {
         id: FieldId.Email,
-        label: 'Email Address',
+        label: 'email',
         autoComplete: 'email',
         type: 'text',
         inputWidth: FieldWidth.Full,
     },
     {
         id: FieldId.Password,
-        label: 'Password',
+        label: 'password',
         autoComplete: 'new-password',
         type: 'password',
         inputWidth: FieldWidth.Full,
     },
     {
         id: FieldId.ConfirmPassword,
-        label: 'Confirm Password',
+        label: 'confirm_password',
         autoComplete: '',
         type: 'password',
         inputWidth: FieldWidth.Full,
     },
 ];
 
-const redirectHandler = () => {
+const redirectHandler = async () => {
     const localUser = Identity.getCurrentUser();
     if (localUser) {
-        redirect(`/${localUser.userName}`);
+        const isUserLoggedIn = await Identity.checkUserIdentity(
+            localUser.userName
+        );
+        if (isUserLoggedIn) {
+            redirect(`/${localUser.userName}`);
+        } else {
+            Identity.removeLocalUser();
+        }
     }
 };
 
 type RegisterInput = TypeOf<typeof registerSchema>;
+const RegisterTranslationSection: string = 'RegisterPage';
 
 export default function RegisterPage() {
+    const t = useTranslations(RegisterTranslationSection);
     const {
         register,
         formState: { errors, isSubmitSuccessful },
@@ -136,7 +146,8 @@ export default function RegisterPage() {
 
     const onSubmit: SubmitHandler<RegisterInput> = async (data) => {
         const response: UserApiResponse = await Identity.registerUser(data);
-        if (!response.isSuccess && response.errors.length === 0) {
+        console.log(response);
+        if (!response.isSuccess && response.errors?.length !== 0) {
             response.errorFields.forEach((errorField: FieldId, idx) => {
                 setError(
                     errorField,
@@ -153,7 +164,7 @@ export default function RegisterPage() {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen py-2">
+        <div className="flex flex-col items-center justify-center py-2">
             <div className="w-full max-w-md p-8 space-y-8 rounded-lg shadow-md">
                 <div className="flex flex-col items-center justify-center space-y-2">
                     <div className="p-4 text-white bg-accent-orange rounded-full">
@@ -163,7 +174,7 @@ export default function RegisterPage() {
                         className="text-3xl font-extrabold text-center"
                         style={{ fontFamily: 'Share Tech Mono' }}
                     >
-                        Register
+                        {t('register')}
                     </h2>
                 </div>
                 <form className="mt-8" onSubmit={handleSubmit(onSubmit)}>
@@ -171,12 +182,23 @@ export default function RegisterPage() {
                         {pageTextFieldsData.map((fieldData) => (
                             <div
                                 key={fieldData.id}
-                                className={`${
-                                    fieldData.type === 'password' ||
-                                    fieldData.id === 'confirmPassword'
-                                        ? 'col-span-2'
-                                        : 'col-span-1'
-                                }`}
+                                className={`
+                                    ${
+                                        fieldData.type === 'password'
+                                            ? 'col-span-2'
+                                            : 'col-span-1'
+                                    }
+                                    ${
+                                        fieldData.id === 'confirmPassword'
+                                            ? 'col-span-2'
+                                            : 'col-span-1'
+                                    }
+                                    ${
+                                        errors[fieldData.id]
+                                            ? 'bg-red-950 rounded-xl'
+                                            : ''
+                                    }
+                                `}
                             >
                                 <Input
                                     isRequired
@@ -194,8 +216,10 @@ export default function RegisterPage() {
                                             ? 'flat'
                                             : 'bordered'
                                     }
-                                    label={fieldData.label}
-                                    placeholder={fieldData.label}
+                                    label={t(fieldData.label)}
+                                    placeholder={t(
+                                        `${fieldData.label}_placeholder`
+                                    )}
                                     type={
                                         fieldData.id === 'password'
                                             ? isPasswordVisible
@@ -236,7 +260,7 @@ export default function RegisterPage() {
                                     }
                                 />
                                 {errors[fieldData.id] && (
-                                    <p className="mt-2 text-sm text-red-600">
+                                    <p className="mt-2 p-2 text-sm text-red-600">
                                         {errors[fieldData.id]?.message}
                                     </p>
                                 )}

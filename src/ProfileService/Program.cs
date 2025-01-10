@@ -21,6 +21,7 @@ builder.Services.AddProfileDbContext(builder.Configuration);
 builder.Services.AddS3Client(builder.Configuration);
 builder.Services.AddScoped<IProfileImageService, ProfileImageService>();
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
+builder.Services.AddScoped<ICountriesRepository, CountriesRepository>();
 builder.Services.Configure<ProfileImageStorageConfig>(builder.Configuration.GetSection("ProfileImageStorage"));
 
 var rabbitMqConfig = new RabbitMqConfiguration();

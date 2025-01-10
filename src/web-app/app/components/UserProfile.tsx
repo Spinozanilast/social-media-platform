@@ -18,6 +18,7 @@ import { FaEdit } from 'react-icons/fa';
 import EditProfileModal from './forms/EditProfileModal';
 import ImageTooltip from './common/ImageTooltip';
 import Profile from '@models/Profiles/profile';
+import { set } from 'date-fns';
 
 const roboto = Roboto({
     subsets: ['latin'],
@@ -52,8 +53,13 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, profileInfo }) => {
     }, [user.userName]);
 
     const fetchProfileImage = useCallback(async () => {
-        const profileImage = await ProfileService.getProfileImage(user.id);
-        setCurrentProfileImage(profileImage);
+        try {
+            const profileImage = await ProfileService.getProfileImage(user.id);
+            setCurrentProfileImage(profileImage);
+        } catch (error) {
+            console.error('Error fetching profile image:', error);
+            setCurrentProfileImage(null);
+        }
     }, [user.id]);
 
     useEffect(() => {
@@ -100,26 +106,34 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, profileInfo }) => {
     return (
         <div className="page-column flex flex-col gap-5 font-thin max-w-full">
             <div className="flex flex-row gap-5 items-center">
-                <ImageTooltip
-                    width={300}
-                    imageUrl={imageUrl}
-                    toolTipProps={{
-                        placement: 'right-start',
-                        delay: 700,
-                        content: <div>{currentProfileImage?.type}</div>,
-                    }}
-                    imageProps={{ isZoomed: true }}
-                >
-                    {currentProfileImage ? (
-                        <Image
-                            className="rounded-md min-w-16 max-w-16 shadow shadow-accent-orange cursor-pointer hover:shadow-lg hover:shadow-accent-orange"
-                            src={imageUrl}
-                            alt="Profile image"
-                        />
-                    ) : (
-                        <Spinner color="primary" size="md" />
-                    )}
-                </ImageTooltip>
+                {imageUrl === '/profile.svg' ? (
+                    <Image
+                        className="rounded-md min-w-16 max-w-16 shadow shadow-accent-orange p-2"
+                        src={imageUrl}
+                        alt="Profile image"
+                    />
+                ) : (
+                    <ImageTooltip
+                        width={300}
+                        imageUrl={imageUrl}
+                        toolTipProps={{
+                            placement: 'right-start',
+                            delay: 700,
+                            content: <div>{currentProfileImage?.type}</div>,
+                        }}
+                        imageProps={{ isZoomed: true }}
+                    >
+                        {currentProfileImage ? (
+                            <Image
+                                className="rounded-md min-w-16 max-w-16 shadow shadow-accent-orange cursor-pointer hover:shadow-lg hover:shadow-accent-orange"
+                                src={imageUrl}
+                                alt="Profile image"
+                            />
+                        ) : (
+                            <Spinner color="primary" size="md" />
+                        )}
+                    </ImageTooltip>
+                )}
                 <div className="flex flex-col gap-1">
                     <div className="flex flex-row justify-between gap-4">
                         <h2 className="text-2xl font-bold">
@@ -133,14 +147,14 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, profileInfo }) => {
                                 onPress={onOpen}
                                 endContent={<FaEdit color="primary" />}
                             >
-                                Edit
+                                {t('edit')}
                             </Button>
                         )}
                     </div>
                     <Snippet
-                        className="w-fit"
-                        symbol="@"
+                        className="w-fit group"
                         variant="bordered"
+                        symbol="@"
                         tooltipProps={{
                             content: 'Copy username',
                             disableAnimation: true,

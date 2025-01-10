@@ -2,21 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-    --foreground-rgb: white;
-    --background-rgb: black;
-}
-
 *,
 *::before,
 *::after {
     margin: 0;
     padding: 0;
-}
-
-body {
-    color: var(--foreground-rgb);
-    background: var(--background-rgb);
 }
 
 .markdown > * {
@@ -36,7 +26,7 @@ body {
     }
 
     .page-column {
-        @apply p-8 rounded-xl;
+        @apply p-8;
     }
 
     .logo {
@@ -62,11 +52,11 @@ body {
     }
 
     .category-pill {
-        @apply rounded-md border-spacing-1 border-solid border-2 border-accent-orange text-white px-2 py-1 font-bold;
+        @apply rounded-md border-spacing-1 border-solid border-2 border-accent-orange px-2 py-1 font-bold;
     }
 
     .ref-pill {
-        @apply rounded-md border-solid border-2 text-white px-2 py-1 font-bold;
+        @apply rounded-md border-solid border-2  px-2 py-1 font-bold;
     }
 
     input:-webkit-autofill,
@@ -93,8 +83,20 @@ body {
         @apply p-2;
     }
 
+    .share-tech-mono {
+        font-family: 'Share Tech Mono';
+    }
+
+    .fira-sans {
+        font-family: 'Fira Sans';
+    }
+
     .rounded-button {
         @apply ml-2 w-8;
+    }
+
+    .utility-small-icon {
+        @apply w-8 h-8 p-0;
     }
 
     .logo-container {

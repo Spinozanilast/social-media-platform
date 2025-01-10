@@ -7,8 +7,8 @@ namespace ProfileService.Repositories;
 
 public class CountriesRepository(ProfileDbContext context) : ICountriesRepository
 {
-    public Task<List<Country>> GetAll()
+    public async Task<List<Country>> GetAll()
     {
-        return context.Countries.ToListAsync();
+        return await context.Countries.ToListAsync();
     }
 }

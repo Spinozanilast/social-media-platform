@@ -10,12 +10,11 @@ import {
     Divider,
     DatePicker,
     DateValue,
-    Image,
-    Tooltip,
 } from '@nextui-org/react';
-import { Profile } from '@/app/models/Users/user';
 import { getLocalTimeZone, parseDate, today } from '@internationalized/date';
 import ImageTooltip from '../common/ImageTooltip';
+import CountrySelect from '../utils/CountriesSelector';
+import Profile from '../../models/Profiles/profile';
 
 interface EditProfileProps {
     profileInfo: Profile;
@@ -183,11 +182,14 @@ const EditProfile: React.FC<EditProfileProps> = ({
                                     value={form.anything || ''}
                                     onChange={handleChange}
                                 />
-                                <Input
-                                    label="Country"
-                                    name="country"
-                                    value={form.country?.toString() || ''}
-                                    onChange={handleChange}
+                                <CountrySelect
+                                    value={form.country}
+                                    onChange={(country) =>
+                                        setForm((prevForm) => ({
+                                            ...prevForm,
+                                            country,
+                                        }))
+                                    }
                                 />
                                 <DatePicker
                                     showMonthAndYearPickers

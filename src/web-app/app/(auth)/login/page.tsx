@@ -14,10 +14,11 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Identity from '@/app/api/services/user';
 import { ErrorOption, SubmitHandler, useForm } from 'react-hook-form';
-import { User } from '@/app/models/Users/user';
-import isEmailValid from '@/app/helpers/email-validation';
+import isEmailValid from '@/app/services/email-validation';
 import { GoEyeClosed } from 'react-icons/go';
 import { GoEye } from 'react-icons/go';
+import User from '@/app/models/Users/user';
+import { useTranslations } from 'next-intl';
 
 const handleLogin: SubmitHandler<LoginRequest> = async (
     data: LoginRequest
@@ -41,7 +42,10 @@ const handleLogin: SubmitHandler<LoginRequest> = async (
     return response as LoginResponse;
 };
 
+const LoginTranslationSection: string = 'LoginPage';
+
 export default function LoginPage() {
+    const t = useTranslations(LoginTranslationSection);
     const [rememberUserState, setRememberUserState] = useState(false);
     const [isPasswordVisible, setPasswordVisibility] = useState(false);
     const router = useRouter();
@@ -67,8 +71,7 @@ export default function LoginPage() {
         const result = await handleLogin(data);
         if ((result as LoginErrorResult).isError) {
             const errorOption = result as ErrorOption;
-            setError('password', errorOption);
-            setError('email', errorOption);
+            setError('root', errorOption);
             return;
         }
 
@@ -84,13 +87,10 @@ export default function LoginPage() {
         <div className="flex items-center justify-center">
             <div className="flex items-center justify-center max-w-sm flex-col gap-4 rounded-large px-8 pb-10 pt-6">
                 <div className="flex flex-col items-center justify-center">
-                    <FaLockOpen width={48} />
-                    <h1
-                        className="text-3xl my-2"
-                        style={{ fontFamily: 'Share Tech Mono' }}
-                    >
-                        Log in
-                    </h1>
+                    <div className="p-4 text-white bg-accent-orange rounded-full">
+                        <FaLockOpen size={32} />
+                    </div>
+                    <h1 className="text-3xl my-2 fira-sans">{t('login')}</h1>
                 </div>
                 <form
                     className="flex flex-col gap-4"
@@ -98,9 +98,9 @@ export default function LoginPage() {
                 >
                     <div className="flex flex-col gap-1">
                         <Input
-                            label="Email"
+                            label={t('email')}
                             labelPlacement="outside"
-                            placeholder="Enter your email"
+                            placeholder={t('email_placeholder')}
                             isInvalid={!!errors.email}
                             errorMessage={errors.email?.message}
                             type="email"
@@ -136,9 +136,9 @@ export default function LoginPage() {
                             }
                             isInvalid={!!errors.password}
                             errorMessage={errors.password?.message}
-                            label="Password"
+                            label={t('password')}
                             labelPlacement="outside"
-                            placeholder="Enter your password"
+                            placeholder={t('password_placeholder')}
                             type={isPasswordVisible ? 'text' : 'password'}
                             variant="bordered"
                             className={`${
@@ -149,6 +149,11 @@ export default function LoginPage() {
                             })}
                         />
                     </div>
+                    {errors.root && (
+                        <p className="text-small text-center shadow-sm p-2 text-red-400 shadow-red-500/50 rounded-md">
+                            {errors.root.message}
+                        </p>
+                    )}
                     <div className="flex items-center justify-between px-1 py-2 gap-3">
                         <Checkbox
                             defaultSelected
@@ -156,19 +161,19 @@ export default function LoginPage() {
                             size="sm"
                             onChange={handleCheckboxChange}
                         >
-                            Remember me
+                            {t('remember_me')}
                         </Checkbox>
                         <Link className="text-default-500" href="#" size="sm">
-                            Forgot password?
+                            {t('forgot_password')}
                         </Link>
                     </div>
                     <Button color="primary" type="submit">
-                        Log In
+                        {t('sign_in')}
                     </Button>
                 </form>
                 <p className="text-center text-small">
                     <Link href="/register" size="sm">
-                        Create an account
+                        {t('create_account')}
                     </Link>
                 </p>
             </div>
