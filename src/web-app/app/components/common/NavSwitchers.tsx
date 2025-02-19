@@ -1,7 +1,7 @@
 'use client';
 
-import LangSwitchSelect from '../utils/LangSwitchSelect';
-import { ThemeSwitcher } from './ThemeSwitcher';
+import LangSwitchSelect from '../special/LangSwitchSelect';
+import { ThemeSwitcher } from '../layout/ThemeSwitcher';
 
 export type NavSwitcherProps = {
     langBadgeOnLeft?: boolean;

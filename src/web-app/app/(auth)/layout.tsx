@@ -1,5 +1,5 @@
-import Copyright from '@components/common/Copyright';
-import Logo from '@/app/components/common/Logo';
+import Copyright from '@/app/components/layout/Copyright';
+import Logo from '@/app/components/layout/Logo';
 import NavSwitchers from '../components/common/NavSwitchers';
 
 export default function Layout({

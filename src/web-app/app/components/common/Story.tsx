@@ -11,15 +11,15 @@ import {
     DropdownItem,
     DropdownMenu,
     DropdownTrigger,
-} from '@nextui-org/react';
+} from '@heroui/react';
 import Markdown from 'react-markdown';
 import { format } from 'date-fns';
 import { Roboto } from 'next/font/google';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
-import { BsThreeDots } from 'react-icons/bs';
 import { useCallback } from 'react';
 import StoriesService from '@/app/api/services/story';
+import { EllipsisVertical } from 'lucide-react';
 
 type StoryCardProps = {
     story: Story;
@@ -83,7 +83,7 @@ export const StoryCard: React.FC<StoryCardProps> = ({
                                     isIconOnly
                                     variant="bordered"
                                 >
-                                    <BsThreeDots />
+                                    <EllipsisVertical />
                                 </Button>
                             </DropdownTrigger>
                             <DropdownMenu
@@ -97,7 +97,7 @@ export const StoryCard: React.FC<StoryCardProps> = ({
                                     key="delete"
                                     className="text-danger"
                                     color="danger"
-                                    onClick={handleDeleteStory}
+                                    onPress={handleDeleteStory}
                                 >
                                     Delete Story
                                 </DropdownItem>

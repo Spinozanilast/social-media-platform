@@ -1,24 +1,21 @@
 'use client';
 import React, { useCallback, useEffect, useState } from 'react';
-import User from '@models/Users/user';
-import { getLinkStyle } from './utils/LinkStyle';
+import { getLinkStyle } from './special/LinkStyle';
 import Link from 'next/link';
 import { Roboto } from 'next/font/google';
 import { useTranslations } from 'next-intl';
-import IdentityService from '@api/services/user';
-import ProfileService from '@api/services/profile';
-import {
-    Button,
-    Image,
-    Snippet,
-    useDisclosure,
-    Spinner,
-} from '@nextui-org/react';
-import { FaEdit } from 'react-icons/fa';
+import { Button, Image, Snippet, useDisclosure, Spinner } from '@heroui/react';
 import EditProfileModal from './forms/EditProfileModal';
 import ImageTooltip from './common/ImageTooltip';
-import Profile from '@models/Profiles/profile';
-import { set } from 'date-fns';
+import {
+    fetchIsAuthenticated,
+    fetchProfileImage,
+    handleSaveProfile,
+    handleImageUpload,
+} from './UserProfileServer';
+import Profile from '../models/Profiles/profile';
+import User from '../models/Users/user';
+import { UserRoundPen } from 'lucide-react';
 
 const roboto = Roboto({
     subsets: ['latin'],
@@ -45,59 +42,10 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, profileInfo }) => {
 
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-    const fetchIsAuthenticated = useCallback(async () => {
-        const isUserAuthenticated = await IdentityService.checkUserIdentity(
-            user.userName
-        );
-        setIsAuthenticated(isUserAuthenticated);
-    }, [user.userName]);
-
-    const fetchProfileImage = useCallback(async () => {
-        try {
-            const profileImage = await ProfileService.getProfileImage(user.id);
-            setCurrentProfileImage(profileImage);
-        } catch (error) {
-            console.error('Error fetching profile image:', error);
-            setCurrentProfileImage(null);
-        }
-    }, [user.id]);
-
     useEffect(() => {
-        fetchProfileImage();
-        fetchIsAuthenticated();
-    }, [fetchIsAuthenticated, fetchProfileImage]);
-
-    const handleSaveProfile = async (updatedProfile: Profile) => {
-        if (
-            updatedProfile.birthDate &&
-            !isValidDateFormat(updatedProfile.birthDate.toString())
-        ) {
-            updatedProfile.birthDate = formatDate(
-                updatedProfile.birthDate.toString()!
-            );
-        }
-        try {
-            await ProfileService.updateProfile(updatedProfile, user.id);
-            setCurrentProfileInfo(updatedProfile);
-            console.log('Profile updated:', updatedProfile);
-        } catch (error) {
-            console.error('Error updating profile:', error);
-        }
-    };
-
-    const handleImageUpload = async (uploadedImage: Blob) => {
-        try {
-            const userId = user.id;
-            const file = new File([uploadedImage], 'profileImage', {
-                type: uploadedImage.type,
-            });
-            await ProfileService.uploadProfileImage(file, userId);
-            setCurrentProfileImage(uploadedImage);
-            console.log('Image uploaded:', uploadedImage);
-        } catch (error) {
-            console.error('Error uploading image:', error);
-        }
-    };
+        fetchProfileImage(user.id, setCurrentProfileImage);
+        fetchIsAuthenticated(user.userName, setIsAuthenticated);
+    }, [user.id, user.userName]);
 
     const imageUrl: string = currentProfileImage
         ? URL.createObjectURL(currentProfileImage)
@@ -125,7 +73,8 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, profileInfo }) => {
                     >
                         {currentProfileImage ? (
                             <Image
-                                className="rounded-md min-w-16 max-w-16 shadow shadow-accent-orange cursor-pointer hover:shadow-lg hover:shadow-accent-orange"
+                                className="rounded-md min-w-16 max-w-16 shadow shadow-accent-orange cursor-pointer
+                                    hover:shadow-lg hover:shadow-accent-orange"
                                 src={imageUrl}
                                 alt="Profile image"
                             />
@@ -145,7 +94,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, profileInfo }) => {
                                 className="p-4 mx-2 mb-1"
                                 color="primary"
                                 onPress={onOpen}
-                                endContent={<FaEdit color="primary" />}
+                                endContent={<UserRoundPen color="primary" />}
                             >
                                 {t('edit')}
                             </Button>
@@ -228,9 +177,14 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, profileInfo }) => {
                                             rel="noreferrer"
                                             target="_blank"
                                             key={ref}
-                                            className={`min-w-full font-light border-solid border-2 ${linkStyle.linkStyle.borderColor} ref-pill text-center p-2 rounded-md flex items-center justify-center transition-all duration-300 group`}
+                                            className={`min-w-full font-light border-solid border-2 ${linkStyle.linkStyle.borderColor}
+                                            ref-pill text-center p-2 rounded-md flex items-center justify-center
+                                            transition-all duration-300 group`}
                                         >
-                                            <span className="transform group-hover:scale-110 group-hover:translate-y-[2px] transition-all duration-300">
+                                            <span
+                                                className="transform group-hover:scale-110 group-hover:translate-y-[2px] transition-all
+                                                    duration-300"
+                                            >
                                                 {linkStyle.linkStyle.icon}
                                             </span>
                                             <span className="opacity-90 transition-opacity duration-300 group-hover:opacity-100 ml-2">
@@ -249,21 +203,23 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, profileInfo }) => {
                 image={currentProfileImage}
                 isOpen={isOpen}
                 onOpenChange={onOpenChange}
-                onSave={handleSaveProfile}
-                onImageUpload={handleImageUpload}
+                onSave={(updatedProfile) =>
+                    handleSaveProfile(
+                        updatedProfile,
+                        user.id,
+                        setCurrentProfileInfo
+                    )
+                }
+                onImageUpload={(uploadedImage) =>
+                    handleImageUpload(
+                        uploadedImage,
+                        user.id,
+                        setCurrentProfileImage
+                    )
+                }
             />
         </div>
     );
-};
-
-const isValidDateFormat = (dateString: string) => {
-    const regex = /^\d{4}-\d{2}-\d{2}$/;
-    return regex.test(dateString);
-};
-
-const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toISOString().split('T')[0];
 };
 
 export default UserProfile;

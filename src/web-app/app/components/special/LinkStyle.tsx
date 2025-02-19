@@ -1,24 +1,29 @@
-import { FaTelegramPlane, FaVk, FaGithub, FaWhatsapp } from 'react-icons/fa';
+import {
+    SiTelegram,
+    SiVk,
+    SiGithub,
+    SiWhatsapp,
+} from '@icons-pack/react-simple-icons';
 
 const linkStyles: Record<
     string,
     { borderColor: string; icon: JSX.Element | null }
 > = {
     't.me': {
-        borderColor: 'border-blue-500',
-        icon: <FaTelegramPlane className="inline-block mr-2" />,
+        borderColor: 'border-[#26A5E4]',
+        icon: <SiTelegram className="social-link" color="#26A5E4" />,
     },
     'vk.com': {
-        borderColor: 'border-blue-600',
-        icon: <FaVk className="inline-block mr-2" />,
+        borderColor: 'border-[#0077FF]',
+        icon: <SiVk className="social-link" color="#0077FF" />,
     },
     'github.com': {
-        borderColor: 'border-gray-800',
-        icon: <FaGithub className="inline-block mr-2" />,
+        borderColor: 'border-[#181717]',
+        icon: <SiGithub className="social-link" color="#181717" />,
     },
     'wa.me': {
-        borderColor: 'border-green-500',
-        icon: <FaWhatsapp className="inline-block mr-2" />,
+        borderColor: 'border-[#25D366]',
+        icon: <SiWhatsapp className="social-link" color="#25D366" />,
     },
     default: {
         borderColor: 'border-gray-200',

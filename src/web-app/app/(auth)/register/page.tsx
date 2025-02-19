@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Button, Input, Spacer, Link } from '@nextui-org/react';
+import { Button, Input, Spacer, Link } from '@heroui/react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { object, string, TypeOf } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,7 +10,7 @@ import Identity from '@/app/api/services/user';
 import { UserApiResponse, FieldId } from '@/app/models/Users/util';
 import { FaLock } from 'react-icons/fa';
 import '@fontsource/share-tech';
-import ShowPasswordButton from '@/app/components/utils/ShowPasswordButton';
+import ShowPasswordButton from '@/app/components/special/ShowPasswordButton';
 import { useTranslations } from 'next-intl';
 
 const registerSchema = object({
@@ -241,7 +241,7 @@ export default function RegisterPage() {
                                         (fieldData.id === FieldId.Password && (
                                             <ShowPasswordButton
                                                 isVisible={isPasswordVisible}
-                                                onClick={() => {
+                                                onPress={() => {
                                                     togglePasswordVisibility();
                                                 }}
                                             />
@@ -252,7 +252,7 @@ export default function RegisterPage() {
                                                 isVisible={
                                                     isConfirmPasswordVisible
                                                 }
-                                                onClick={() => {
+                                                onPress={() => {
                                                     toggleConfirmPasswordVisibility();
                                                 }}
                                             />

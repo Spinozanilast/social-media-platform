@@ -1,10 +1,10 @@
 import type { Config } from 'tailwindcss';
-import { nextui } from '@nextui-org/react';
+import { heroui } from "@heroui/react";
 
 const config: Config = {
     content: [
         './app/**/*.{js,ts,jsx,tsx,mdx}',
-        './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
+        "./node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}",
     ],
     theme: {
         extend: {
@@ -34,7 +34,7 @@ const config: Config = {
     darkMode: 'class',
     plugins: [
         //Generated with nextui-themegen.netlify.app
-        nextui({
+        heroui({
             themes: {
                 light: {
                     colors: {

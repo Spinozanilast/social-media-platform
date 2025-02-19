@@ -1,5 +1,5 @@
-import Navbar from '@/app/components/common/Navbar';
-import Copyright from '@components/common/Copyright';
+import Navbar from '@/app/components/layout/Navbar';
+import Copyright from '@/app/components/layout/Copyright';
 
 export default function Layout({
     children,

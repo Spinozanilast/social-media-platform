@@ -1,7 +1,7 @@
 'use client';
 import ProfileService from '@/app/api/services/profile';
 import Country from '@/app/models/Profiles/country';
-import { Select, SelectItem, Avatar } from '@nextui-org/react';
+import { Select, SelectItem, Avatar } from "@heroui/react";
 import { useState, useEffect } from 'react';
 
 interface CountrySelectProps {

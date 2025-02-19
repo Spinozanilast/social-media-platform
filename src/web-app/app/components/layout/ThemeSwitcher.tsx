@@ -1,9 +1,9 @@
 'use client';
 
-import { SwitchProps, useSwitch, VisuallyHidden } from '@nextui-org/react';
+import { SwitchProps, useSwitch, VisuallyHidden } from '@heroui/react';
+import { Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
-import { IoMoon, IoSunny } from 'react-icons/io5';
 
 export function ThemeSwitcher(props: SwitchProps) {
     const [mounted, setMounted] = useState(false);
@@ -36,7 +36,7 @@ export function ThemeSwitcher(props: SwitchProps) {
                     ],
                 })}
             >
-                {isLightThemeOn ? <IoMoon /> : <IoSunny />}
+                {isLightThemeOn ? <Moon /> : <Sun />}
             </div>
         </Component>
     );

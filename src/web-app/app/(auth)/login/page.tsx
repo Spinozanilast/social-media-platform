@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Button, Input, Checkbox, Link } from '@nextui-org/react';
+import { Button, Input, Checkbox, Link } from '@heroui/react';
 import { FaLockOpen } from 'react-icons/fa';
 
 import {
@@ -123,16 +123,16 @@ export default function LoginPage() {
                     <div className="flex flex-col gap-1">
                         <Input
                             endContent={
-                                <button
+                                <Button
                                     type="button"
-                                    onClick={togglePasswordVisibility}
+                                    onPress={togglePasswordVisibility}
                                 >
                                     {isPasswordVisible ? (
                                         <GoEyeClosed className="pointer-events-none text-2xl text-default-400" />
                                     ) : (
                                         <GoEye className="pointer-events-none text-2xl text-default-400" />
                                     )}
-                                </button>
+                                </Button>
                             }
                             isInvalid={!!errors.password}
                             errorMessage={errors.password?.message}

@@ -8,7 +8,11 @@ const nextConfig = {
             {
                 protocol: 'https',
                 hostname: 'profile-images-bucket.s3.yandexcloud.net',
-                port: '',
+            },
+            {
+                protocol: 'https',
+                hostname: "cdn.simpleicons.org",
+                port: ''
             }
         ]
     }

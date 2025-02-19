@@ -1,11 +1,20 @@
-import { IconType } from 'react-icons/lib';
-import CompleteItemData from './CompleteItemData';
-import { TiMessages } from 'react-icons/ti';
-import { FaBookOpen } from 'react-icons/fa6';
-import { MdOutlineSpaceDashboard } from 'react-icons/md';
+import {
+    LucideProps,
+    MessageSquare,
+    BookOpenText,
+    LayoutDashboard,
+} from 'lucide-react';
+
+export default interface CompleteItemData {
+    id: number;
+    name: string;
+    url: string;
+}
 
 export type VisualCompleteItemData = CompleteItemData & {
-    icon: IconType;
+    icon: React.ForwardRefExoticComponent<
+        Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>
+    >;
 };
 
 export const PersonalUrlPagesItems: VisualCompleteItemData[] = [
@@ -13,18 +22,18 @@ export const PersonalUrlPagesItems: VisualCompleteItemData[] = [
         id: 1,
         name: 'messages',
         url: '/messages',
-        icon: TiMessages,
+        icon: MessageSquare,
     },
     {
         id: 2,
         name: 'stories',
         url: '/stories',
-        icon: FaBookOpen,
+        icon: BookOpenText,
     },
     {
         id: 3,
         name: 'board',
         url: '/board',
-        icon: MdOutlineSpaceDashboard,
+        icon: LayoutDashboard,
     },
 ];

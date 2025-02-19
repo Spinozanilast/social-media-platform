@@ -13,15 +13,13 @@ import {
     Pagination,
     Skeleton,
     Modal,
-    useModal,
     ModalHeader,
     ModalBody,
     useDisclosure,
     ModalContent,
-} from '@nextui-org/react';
-import { BiMessageSquareAdd } from 'react-icons/bi';
-import { IoCloseCircleSharp } from 'react-icons/io5';
+} from '@heroui/react';
 import CreateStory from '../forms/CreatyStory';
+import { MessageSquarePlus } from 'lucide-react';
 
 type UserStoriesContainerProps = {
     userId: string;
@@ -42,9 +40,8 @@ export const UserStoriesContainer: React.FC<UserStoriesContainerProps> = ({
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
     const fetchIsAuthenticated = useCallback(async () => {
-        const isUserAuthenticated = await IdentityService.checkUserIdentity(
-            userName
-        );
+        const isUserAuthenticated =
+            await IdentityService.checkUserIdentity(userName);
         setIsAuthenticated(isUserAuthenticated);
     }, [userName]);
 
@@ -104,8 +101,8 @@ export const UserStoriesContainer: React.FC<UserStoriesContainerProps> = ({
                     variant="ghost"
                     color="primary"
                     className="w-full p-1"
-                    startContent={<BiMessageSquareAdd className="h-full" />}
-                    onPress={onOpen} // Open the modal
+                    startContent={<MessageSquarePlus className="h-full" />}
+                    onPress={onOpen}
                 >
                     Create Story
                 </Button>
@@ -128,7 +125,7 @@ export const UserStoriesContainer: React.FC<UserStoriesContainerProps> = ({
                                     size="sm"
                                     variant="flat"
                                     color="warning"
-                                    onClick={onClose}
+                                    onPress={onClose}
                                 >
                                     Close
                                 </Button>

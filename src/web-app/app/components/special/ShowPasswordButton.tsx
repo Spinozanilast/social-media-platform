@@ -3,13 +3,13 @@ import { GoEye, GoEyeClosed } from 'react-icons/go';
 
 const ShowPasswordButton = ({
     isVisible,
-    onClick,
+    onPress,
 }: {
     isVisible: boolean;
-    onClick: () => void;
+    onPress: () => void;
 }) => {
     return (
-        <button type="button" onClick={onClick}>
+        <button type="button" onPress={onPress}>
             {isVisible ? (
                 <GoEyeClosed className="pointer-events-none text-2xl text-default-400" />
             ) : (

@@ -1,4 +1,4 @@
-import { Tooltip, Image, ImageProps, TooltipProps } from '@nextui-org/react';
+import { Tooltip, Image, ImageProps, TooltipProps } from "@heroui/react";
 
 interface ImageTooltipProps {
     width: number;

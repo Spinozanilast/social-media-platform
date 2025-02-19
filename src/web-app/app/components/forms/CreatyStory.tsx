@@ -8,7 +8,7 @@ import {
     CardHeader,
     Divider,
     Spinner,
-} from '@nextui-org/react';
+} from "@heroui/react";
 import StoriesService from '@api/services/story';
 import { CreateStoryModel } from '@/app/models/Stories/stories';
 import { ValidationResult } from '@/app/models/validation-result';

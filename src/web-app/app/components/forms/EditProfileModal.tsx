@@ -10,10 +10,15 @@ import {
     Divider,
     DatePicker,
     DateValue,
-} from '@nextui-org/react';
-import { getLocalTimeZone, parseDate, today } from '@internationalized/date';
+} from '@heroui/react';
+import {
+    CalendarDate,
+    getLocalTimeZone,
+    parseDate,
+    today,
+} from '@internationalized/date';
 import ImageTooltip from '../common/ImageTooltip';
-import CountrySelect from '../utils/CountriesSelector';
+import CountrySelect from '../special/CountriesSelector';
 import Profile from '../../models/Profiles/profile';
 
 interface EditProfileProps {
@@ -58,7 +63,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
         setForm((prevForm) => ({ ...prevForm, [name]: value }));
     };
 
-    const handleDateChange = (date: DateValue) => {
+    const handleDateChange = (date: CalendarDate | null) => {
         setForm((prevForm) => ({
             ...prevForm,
             birthDate: date ? date.toString() : undefined,
@@ -205,7 +210,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
                                               )
                                             : today(getLocalTimeZone())
                                     }
-                                    onChange={handleDateChange}
+                                    onChange={(date) => handleDateChange(date)}
                                 />
                                 <Divider />
                                 <div className="flex flex-col gap-2">

@@ -1,5 +1,5 @@
 'use client';
-import type { Selection } from '@nextui-org/react';
+import type { Selection } from '@heroui/react';
 import React, { use, useEffect, useState } from 'react';
 import { Locale, locales } from '@/i18n/i18n.config';
 import {
@@ -9,10 +9,10 @@ import {
     Button,
     DropdownMenu,
     Badge,
-} from '@nextui-org/react';
+} from '@heroui/react';
 import { useLocale, useTranslations } from 'next-intl';
-import { IoLanguage } from 'react-icons/io5';
 import { setUserLocale } from '@/app/services/locale';
+import { Languages } from 'lucide-react';
 
 const LangSwitcherTranslationSection = 'LangSwitcher';
 
@@ -26,7 +26,7 @@ const LangSwitchSelect = ({ badgeOnLeft = true }: LangSwitchSelectProps) => {
     const existingLocales = locales;
     const [isOpen, setIsOpen] = useState(false);
 
-    const handleButtonClick = () => {
+    const handleButtonPress = () => {
         setIsOpen(!isOpen);
     };
 
@@ -56,9 +56,9 @@ const LangSwitchSelect = ({ badgeOnLeft = true }: LangSwitchSelectProps) => {
                 >
                     <Button
                         className="utility-small-icon min-w-fit"
-                        onClick={handleButtonClick}
+                        onPress={handleButtonPress}
                     >
-                        <IoLanguage />
+                        <Languages />
                     </Button>
                 </Badge>
             </DropdownTrigger>
@@ -69,7 +69,7 @@ const LangSwitchSelect = ({ badgeOnLeft = true }: LangSwitchSelectProps) => {
                 onSelectionChange={setSelectedKeys}
             >
                 {existingLocales.map((locale) => (
-                    <SelectItem key={locale} onClick={() => setIsOpen(false)}>
+                    <SelectItem key={locale} onPress={() => setIsOpen(false)}>
                         {t(locale)}
                     </SelectItem>
                 ))}

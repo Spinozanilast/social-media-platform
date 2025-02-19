@@ -1,11 +1,9 @@
 'use client';
 import Image from 'next/image';
 import React from 'react';
-import { FaUser } from 'react-icons/fa';
-import { BsThreeDots } from 'react-icons/bs';
-import { CiLogout } from 'react-icons/ci';
-import IdentityService from '../api/services/user';
+import IdentityService from '../../api/services/user';
 import {
+    Button,
     cn,
     Dropdown,
     DropdownItem,
@@ -13,17 +11,17 @@ import {
     DropdownSection,
     DropdownTrigger,
     Link,
-} from '@nextui-org/react';
+} from '@heroui/react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
+import { EllipsisVertical, LogOut, UserRound } from 'lucide-react';
 
 const CurrentUserTranslationSection: string = 'CurrentUser';
 
 const CurrentUser = () => {
     const router = useRouter();
     const t = useTranslations(CurrentUserTranslationSection);
-    const iconClasses =
-        'text-xl text-default-500 pointer-events-none flex-shrink-0';
+    const iconClasses = 'text-default-500 pointer-events-none flex-shrink-0';
     const imageUrl: string = '/profile.svg';
 
     const handleLogout = async () => {
@@ -38,23 +36,17 @@ const CurrentUser = () => {
     };
 
     return (
-        <Dropdown
-            placement="left-start"
-            showArrow
-            classNames={{
-                base: 'before:bg-default-200',
-                content:
-                    'py-1 px-1 border border-default-200 bg-gradient-to-br from-white to-default-200 dark:from-default-50 dark:to-black',
-            }}
-        >
+        <Dropdown placement="left-start">
             <DropdownTrigger>
-                <Image
-                    className="rounded-md p-2 shadow-accent-orange shadow-inner hover:shadow-lg hover:border-l-2 hover:border-accent-orange hover:border-solid"
-                    src={imageUrl}
-                    alt="curret user profile image"
-                    width={36}
-                    height={36}
-                />
+                <Button variant="bordered">
+                    <Image
+                        className="rounded-md p-2"
+                        src={imageUrl}
+                        alt="current user profile image"
+                        width={36}
+                        height={36}
+                    />
+                </Button>
             </DropdownTrigger>
             <DropdownMenu
                 aria-label="Profile Menu"
@@ -68,12 +60,12 @@ const CurrentUser = () => {
                 >
                     <DropdownItem
                         key="profile"
-                        startContent={<FaUser />}
+                        startContent={<UserRound />}
                         classNames={{
                             description: 'text-default-500 pointer-events-none',
                         }}
                         description={t('profile_description')}
-                        onClick={handleRedirectToProfile}
+                        onPress={handleRedirectToProfile}
                     >
                         {t('profile')}
                     </DropdownItem>
@@ -83,7 +75,7 @@ const CurrentUser = () => {
                         classNames={{
                             description: 'text-default-500 pointer-events-none',
                         }}
-                        startContent={<BsThreeDots />}
+                        startContent={<EllipsisVertical />}
                     >
                         {t('settings')}
                     </DropdownItem>
@@ -102,11 +94,11 @@ const CurrentUser = () => {
                         }}
                         description={t('logout_description')}
                         startContent={
-                            <CiLogout
+                            <LogOut
                                 className={cn(iconClasses, 'text-danger')}
                             />
                         }
-                        onClick={handleLogout}
+                        onPress={handleLogout}
                     >
                         {t('logout')}
                     </DropdownItem>
