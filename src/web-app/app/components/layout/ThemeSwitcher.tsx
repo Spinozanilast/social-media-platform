@@ -32,7 +32,7 @@ export function ThemeSwitcher(props: SwitchProps) {
                     class: [
                         'utility-small-icon',
                         'flex items-center justify-center',
-                        'px-0 mr-0',
+                        'px-0 mr-0 rounded-lg',
                     ],
                 })}
             >

@@ -1,5 +1,4 @@
-﻿using Amazon;
-using ProfileService.Entities;
+﻿using ProfileService.Entities;
 using Profile = ProfileService.Entities.Profile;
 
 namespace ProfileService.Contracts.Mappers;

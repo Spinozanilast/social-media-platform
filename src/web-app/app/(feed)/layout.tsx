@@ -8,10 +8,10 @@ export default function Layout({
 }>) {
     return (
         <div className="selection:bg-cyan-500 flex min-h-[100vh] items-center flex-col">
-            <div className="logo-container mt-page-part flex justify-center m-2 w-full">
-                <Navbar withCurrentUser={true} />
+            <div className="logo-container mt-page-part flex justify-center w-full">
+                <Navbar />
             </div>
-            <div className="my-auto ">{children}</div>
+            <div className="my-auto">{children}</div>
             <Copyright mt={2} />
         </div>
     );

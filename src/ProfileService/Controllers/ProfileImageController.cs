@@ -1,4 +1,5 @@
 ﻿using Amazon.S3;
+using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProfileService.Common.Services;
@@ -7,6 +8,8 @@ namespace ProfileService.Controllers;
 
 [Authorize]
 [ApiController]
+[Route("api/v{version:apiVersion}/[controller]")]
+[ApiVersion("1.0")]
 public class ProfileImageController(IProfileImageService imageService) : ControllerBase
 {
     private readonly IProfileImageService _imageService = imageService;

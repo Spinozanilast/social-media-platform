@@ -1,7 +1,3 @@
-import ProfileService from '@services/profile';
-import User from '@/app/models/Users/user';
-import Identity from '@services/user';
-import Profile from '@models/Profiles/profile';
 import { notFound } from 'next/navigation';
 import UserPage from '@components/pages/UserPage';
 

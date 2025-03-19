@@ -1,13 +1,15 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProfileService.Common.Repositories;
 using ProfileService.Contracts;
 using ProfileService.Contracts.Mappers;
-using ProfileService.Entities;
 
 namespace ProfileService.Controllers;
 
 [ApiController]
+[Route("api/v{version:apiVersion}/[controller]")]
+[ApiVersion("1.0")]
 public class ProfilesController(IProfileRepository profileRepository, ICountriesRepository countriesRepository)
     : ControllerBase
 {

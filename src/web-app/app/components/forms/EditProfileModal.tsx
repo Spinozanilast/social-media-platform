@@ -19,7 +19,7 @@ import {
 } from '@internationalized/date';
 import ImageTooltip from '../common/ImageTooltip';
 import CountrySelect from '../special/CountriesSelector';
-import Profile from '../../models/Profiles/profile';
+import Profile from '../../api/types/profiles/profile';
 
 interface EditProfileProps {
     profileInfo: Profile;

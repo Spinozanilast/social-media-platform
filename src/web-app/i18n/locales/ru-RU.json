@@ -10,9 +10,11 @@
         "profile_actions": "Действия над профилем",
         "account_actions": "Действия над аккаунтом",
         "logout": "Выйти",
+        "Login": "Войти",
         "settings": "Настройки",
         "profile": "Профиль",
         "logout_description": "Произвести полный выход из аккаунта",
+        "login_description": "Произвести вход в аккаунт",
         "profile_description": "Перейти на страницу профиля",
         "settings_description": "Перейти на страницу настроек профиля"
     },
@@ -39,7 +41,9 @@
         "password_placeholder": "",
         "confirm_password": "Подтвердите пароль",
         "confirm_password_placeholder": "",
-        "sign_up": "Зарегистрироваться"
+        "create_account": "Создать аккаунт",
+        "have_account": "Уже есть аккаунт?",
+        "sign_in": "Войти"
     },
     "LoginPage": {
         "login": "Вход",
@@ -50,6 +54,7 @@
         "forgot_password": "Забыли пароль?",
         "email_placeholder": "Введите ваш email",
         "password_placeholder": "Введите ваш пароль",
-        "create_account": "Создать аккаунт"
+        "create_account": "Создать аккаунт",
+        "error_unexpected": "Что-то пошло не так"
     }
 }

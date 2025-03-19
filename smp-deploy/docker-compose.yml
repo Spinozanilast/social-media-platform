@@ -30,7 +30,7 @@ services:
     ports:
       - "5098:80"
     container_name: gateway
-  identity-service:
+  auth-service:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
@@ -40,9 +40,9 @@ services:
       - ConnectionStrings__PostgresConnection=Server=smp-postgres:5432;User Id=postgres;Password=password;Database=users
     build:
       context: ../.
-      dockerfile: ./src/IdentityService/Dockerfile
-    image: identity-service
-    container_name: identity-service
+      dockerfile: ./src/AuthorizationService/Dockerfile
+    image: auth-service
+    container_name: auth-service
     ports:
       - "5171:80"
     depends_on:

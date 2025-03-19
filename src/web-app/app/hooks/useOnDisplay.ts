@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { RefObject, useEffect, useMemo, useState, useRef } from "react";
 
-export default function useOnScreen(ref: RefObject<HTMLElement>) {
+export default function useOnScreen(ref: RefObject<HTMLElement | null>) {
     const observerRef = useRef<IntersectionObserver | null>(null);
     const [isOnScreen, setIsOnScreen] = useState(false);
 

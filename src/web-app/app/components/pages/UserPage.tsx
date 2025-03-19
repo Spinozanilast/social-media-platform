@@ -1,5 +1,5 @@
-import Profile from '@/app/models/Profiles/profile';
-import User from '@/app/models/Users/user';
+import Profile from '@/app/api/types/profiles/profile';
+import User from '@/app/api/types/users/user';
 import UserProfile from '@components/UserProfile';
 import UserStoriesContainer from '@components/containers/UserStoriesContainer';
 

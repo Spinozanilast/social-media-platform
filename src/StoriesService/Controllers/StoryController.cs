@@ -1,15 +1,16 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StoriesService.Common;
 using StoriesService.Common.Mappers;
-using StoriesService.Entities;
 using StoriesService.Models;
 
 namespace StoriesService.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiVersion("1.0")]
     public class StoriesController(IStoryService storyService) : ControllerBase
     {
         private readonly IStoryService _storyService = storyService;
@@ -22,7 +23,7 @@ namespace StoriesService.Controllers
         {
             return Ok(await _storyService.GetAllStoriesAsync(tag, authorId, pageNumber, pageSize));
         }
-        
+
         [AllowAnonymous]
         [HttpGet("count")]
         [ProducesResponseType(StatusCodes.Status200OK)]

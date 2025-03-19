@@ -1,3 +1,5 @@
+'use client';
+
 import { Button, Link } from '@heroui/react';
 import { Frown } from 'lucide-react';
 

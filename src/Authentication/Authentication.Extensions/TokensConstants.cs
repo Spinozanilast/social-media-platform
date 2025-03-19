@@ -8,16 +8,11 @@ public static class TokensConstants
         { AuthCookieTypes.RefreshCookie, RefreshCookieKey }
     };
 
-    private const string JwtCookieKey = "jwtToken";
-    private const string RefreshCookieKey = "refreshToken";
-
-    public const string JwtIssuer = "SecureApi";
-    public const string JwtAudience = "SecureApiClient";
+    private const string JwtCookieKey = "access_token";
+    private const string RefreshCookieKey = "refresh_token";
 
     public static string GetCookieKey(AuthCookieTypes authCookieType)
     {
         return CookiesKeys[authCookieType];
     }
-
-    public static string[] GetCookiesKeys() => CookiesKeys.Values.Select(v => v).ToArray();
 }

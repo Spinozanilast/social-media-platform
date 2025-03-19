@@ -1,6 +1,7 @@
 import Copyright from '@/app/components/layout/Copyright';
 import Logo from '@/app/components/layout/Logo';
 import NavSwitchers from '../components/common/NavSwitchers';
+import React from 'react';
 
 export default function Layout({
     children,
@@ -19,6 +20,7 @@ export default function Layout({
             <div className="flex flex-col items-center justify-center">
                 <div>{children}</div>
             </div>
+
             <Copyright mt={1} />
         </section>
     );

@@ -8,10 +8,10 @@ import {
     CardHeader,
     Divider,
     Spinner,
-} from "@heroui/react";
+} from '@heroui/react';
 import StoriesService from '@api/services/story';
-import { CreateStoryModel } from '@/app/models/Stories/stories';
-import { ValidationResult } from '@/app/models/validation-result';
+import { CreateStoryModel } from '@/app/api/types/stories/stories';
+import { ValidationResult } from '@/app/api/types/validation-result';
 import MarkdownIt from 'markdown-it';
 import MdEditor from 'react-markdown-editor-lite';
 import 'react-markdown-editor-lite/lib/index.css';
@@ -107,9 +107,7 @@ const CreateStory: React.FC<CreateStoryProps> = ({ onClose, authorId }) => {
                 </form>
                 {message && (
                     <div
-                        className={`mt-4 ${
-                            message.isValid ? 'text-success' : 'text-danger'
-                        }`}
+                        className={`mt-4 ${message.isValid ? 'text-success' : 'text-danger'}`}
                     >
                         {message.errors.map((error) => (
                             <p key={error.propertyName}>{error.errorMessage}</p>

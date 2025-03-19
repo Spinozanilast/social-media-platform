@@ -11,7 +11,7 @@ import {
     Badge,
 } from '@heroui/react';
 import { useLocale, useTranslations } from 'next-intl';
-import { setUserLocale } from '@/app/services/locale';
+import { setUserLocale } from '@/app/utils/locale';
 import { Languages } from 'lucide-react';
 
 const LangSwitcherTranslationSection = 'LangSwitcher';

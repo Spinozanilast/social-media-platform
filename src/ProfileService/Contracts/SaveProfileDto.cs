@@ -1,6 +1,4 @@
-﻿using ProfileService.Entities;
-
-namespace ProfileService.Contracts;
+﻿namespace ProfileService.Contracts;
 
 public record SaveProfileDto(
     Guid UserId,

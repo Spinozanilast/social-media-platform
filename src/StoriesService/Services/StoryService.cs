@@ -2,7 +2,6 @@
 using FluentValidation.Results;
 using StoriesService.Common;
 using StoriesService.Entities;
-using StoriesService.Repositories;
 
 namespace StoriesService.Services;
 

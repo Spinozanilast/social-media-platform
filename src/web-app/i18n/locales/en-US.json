@@ -10,9 +10,11 @@
         "profile_actions": "Profile Actions",
         "account_actions": "Account Actions",
         "logout": "Logout",
+        "login": "Login",
         "settings": "Settings",
         "profile": "Profile",
         "logout_description": "Perform a full logout from the account",
+        "login_description": "Log in to your account",
         "profile_description": "Go to your profile page",
         "settings_description": "Go to your settings page"
     },
@@ -39,7 +41,9 @@
         "password_placeholder": "Enter your password",
         "confirm_password": "Confirm Password",
         "confirm_password_placeholder": "Confirm your password",
-        "sign_up": "Sign up"
+        "create_account": "Create an account",
+        "have_account": "Already have an account?",
+        "sign_in": "Sign in"
     },
     "LoginPage": {
         "login": "Log In",
@@ -50,6 +54,7 @@
         "forgot_password": "Forgot password?",
         "email_placeholder": "Enter your email",
         "password_placeholder": "Enter your password",
-        "create_account": "Create an account"
+        "create_account": "Create an account",
+        "error_unexpected": "Something went wrong"
     }
 }

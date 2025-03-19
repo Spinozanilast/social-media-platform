@@ -1,19 +1,18 @@
+'use client';
+
 import { VisualCompleteItemData } from '@/app/data/VisualCompleteItemData';
 import { Button, ButtonGroup, Link } from '@heroui/react';
 import { useTranslations } from 'next-intl';
-import CurrentUser from './CurrentUser';
 
 interface PagesNavbarProps {
     items: VisualCompleteItemData[];
 }
 
-const LangSwitcherTranslationSection = 'PagesNavbar';
-
 export default function NavbarButtons({ items }: PagesNavbarProps) {
-    const t = useTranslations(LangSwitcherTranslationSection);
+    const t = useTranslations('PagesNavbar');
     return (
         <ButtonGroup>
-            <CurrentUser />
+            {/*<CurrentUser />*/}
             {items.map((item) => (
                 <Button
                     variant="bordered"

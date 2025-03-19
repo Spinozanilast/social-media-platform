@@ -13,8 +13,8 @@ import {
     handleSaveProfile,
     handleImageUpload,
 } from './UserProfileServer';
-import Profile from '../models/Profiles/profile';
-import User from '../models/Users/user';
+import Profile from '../api/types/profiles/profile';
+import User from '../api/types/users/user';
 import { UserRoundPen } from 'lucide-react';
 
 const roboto = Roboto({
