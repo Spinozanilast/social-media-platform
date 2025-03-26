@@ -1,195 +1,147 @@
-// 'use client';
-// import Story from '@/app/api/types/stories/stories';
-// import StoriesService from '@api/services/story';
-// import { StoryCard } from '@components/common/Story';
-// import { useCallback, useEffect, useState } from 'react';
-// import IdentityService from '@/app/api/services/user';
-// import {
-//     Button,
-//     Card,
-//     CardBody,
-//     CardHeader,
-//     Divider,
-//     Pagination,
-//     Skeleton,
-//     Modal,
-//     ModalHeader,
-//     ModalBody,
-//     useDisclosure,
-//     ModalContent,
-// } from '@heroui/react';
-// import CreateStory from '../forms/CreatyStory';
-// import { MessageSquarePlus } from 'lucide-react';
-//
-// type UserStoriesContainerProps = {
-//     userId: string;
-//     userName: string;
-// };
-//
-// export const UserStoriesContainer: React.FC<UserStoriesContainerProps> = ({
-//     userId,
-//     userName,
-// }) => {
-//     const [currentPage, setCurrentPage] = useState(1);
-//
-//     const [isAuthenticated, setIsAuthenticated] = useState(false);
-//     const [stories, setStories] = useState<Story[]>([]);
-//     const [storiesCount, setStoriesCount] = useState<number>(0);
-//     const [storiesPagesNumber, setStoriesPagesNumber] = useState<number>(0);
-//
-//     const { isOpen, onOpen, onOpenChange } = useDisclosure();
-//
-//     const fetchIsAuthenticated = useCallback(async () => {
-//         const isUserAuthenticated =
-//             await IdentityService.checkUserIdentity(userName);
-//         setIsAuthenticated(isUserAuthenticated);
-//     }, [userName]);
-//
-//     const fetchStories = useCallback(async () => {
-//         const stories = await StoriesService.getAllStories(
-//             undefined,
-//             userId,
-//             currentPage
-//         );
-//         setStories(stories);
-//     }, [userId, currentPage]);
-//
-//     const fetchStoriesCount = useCallback(async () => {
-//         const storiesCount = await StoriesService.getAllStoriesCount(
-//             undefined,
-//             userId
-//         );
-//         setStoriesCount(storiesCount);
-//     }, [userId]);
-//
-//     useEffect(() => {
-//         fetchStoriesCount();
-//         setStoriesPagesNumber(Math.ceil(storiesCount / 5));
-//         fetchIsAuthenticated();
-//         fetchStories();
-//     }, [fetchIsAuthenticated, fetchStories, fetchStoriesCount, storiesCount]);
-//
-//     const handleDeleteStory = useCallback(
-//         (id: number) => {
-//             setStories((prevStories) =>
-//                 prevStories.filter((story) => story.id !== id)
-//             );
-//             fetchStoriesCount();
-//         },
-//         [fetchStoriesCount]
-//     );
-//
-//     if (stories.length === 0 && storiesCount > 0) {
-//         return (
-//             <Card>
-//                 <CardHeader className="flex flex-col gap-2 rounded-md">
-//                     <Skeleton className="h-5 w-full" />
-//                     <Skeleton className="h-20 self-center w-40 rounded-md" />
-//                 </CardHeader>
-//                 <Divider />
-//                 <CardBody>
-//                     <Skeleton className="h-40 rounded-md" />
-//                 </CardBody>
-//             </Card>
-//         );
-//     }
-//
-//     return (
-//         <div className="flex flex-col gap-5 items-center">
-//             {isAuthenticated && (
-//                 <Button
-//                     variant="ghost"
-//                     color="primary"
-//                     className="w-full p-1"
-//                     startContent={<MessageSquarePlus className="h-full" />}
-//                     onPress={onOpen}
-//                 >
-//                     Create Story
-//                 </Button>
-//             )}
-//             <Modal
-//                 className="min-w-[75%] min-h-[75%] overflow-y-auto"
-//                 backdrop="opaque"
-//                 classNames={{
-//                     backdrop:
-//                         'bg-gradient-to-t from-zinc-900 to-zinc-900/10 backdrop-opacity-20',
-//                 }}
-//                 isOpen={isOpen}
-//                 onOpenChange={onOpenChange}
-//             >
-//                 <ModalContent>
-//                     {(onClose) => (
-//                         <>
-//                             <ModalHeader className="h-min">
-//                                 <Button
-//                                     size="sm"
-//                                     variant="flat"
-//                                     color="warning"
-//                                     onPress={onClose}
-//                                 >
-//                                     Close
-//                                 </Button>
-//                             </ModalHeader>
-//                             <ModalBody className="min-h-full w-full">
-//                                 <CreateStory
-//                                     onClose={onClose}
-//                                     authorId={userId}
-//                                 />
-//                             </ModalBody>
-//                         </>
-//                     )}
-//                 </ModalContent>
-//             </Modal>
-//             {stories.map((story) => (
-//                 <StoryCard
-//                     key={story.id}
-//                     story={story}
-//                     isAuthenticated={isAuthenticated}
-//                     onDeleteStory={handleDeleteStory}
-//                 />
-//             ))}
-//             <div className="flex flex-col gap-5 items-center">
-//                 <Pagination
-//                     color="primary"
-//                     variant="faded"
-//                     page={currentPage}
-//                     total={storiesPagesNumber}
-//                     onChange={setCurrentPage}
-//                 />
-//                 <div className="flex flex-row gap-2 justify-center w-full">
-//                     {storiesPagesNumber > 1 && (
-//                         <>
-//                             <Button
-//                                 size="sm"
-//                                 variant="flat"
-//                                 onPress={() =>
-//                                     setCurrentPage((prev) =>
-//                                         prev > 1 ? prev - 1 : prev
-//                                     )
-//                                 }
-//                             >
-//                                 Previous
-//                             </Button>
-//                             <Button
-//                                 color="primary"
-//                                 size="sm"
-//                                 variant="flat"
-//                                 onPress={() =>
-//                                     setCurrentPage((prev) =>
-//                                         prev < storiesPagesNumber
-//                                             ? prev + 1
-//                                             : prev
-//                                     )
-//                                 }
-//                             >
-//                                 Next
-//                             </Button>
-//                         </>
-//                     )}
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// };
-//
-// export default UserStoriesContainer;
+'use client';
+
+import { useState } from 'react';
+import {
+    Button,
+    Card,
+    CardBody,
+    CardHeader,
+    Divider,
+    Pagination,
+    Skeleton,
+} from '@heroui/react';
+import StoriesService from '@api/story/service';
+import { useDisclosure } from '@heroui/react';
+import { MessageSquarePlus } from 'lucide-react';
+import { StoryCard } from '@components/common/Story';
+import useStoriesCount, {
+    storiesCountMutationKey,
+} from '@hooks/swr/useStoriesCount';
+import useStories, { storiesMutationKey } from '@hooks/swr/useStories';
+import { CreateStoryModal } from '@components/modals/CreatyStory';
+import { Story } from '@api/story/types';
+import { mutate } from 'swr';
+
+type UserStoriesContainerProps = {
+    userId: string;
+    initialStories: Story[];
+    isOwner: boolean;
+};
+
+const UserStoriesContainer = ({
+    userId,
+    initialStories,
+    isOwner,
+}: UserStoriesContainerProps) => {
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize] = useState(10);
+
+    const { stories: storiesData } = useStories(
+        { authorId: userId, pageNumber: currentPage, pageSize },
+        initialStories
+    );
+
+    const { storiesCount } = useStoriesCount(userId);
+    const storiesPagesNumber = Math.ceil((storiesCount ?? 0) / pageSize);
+
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+    };
+
+    const handleDeleteStory = async (storyId: number) => {
+        const success = await StoriesService.deleteStory(storyId);
+        if (success) {
+            await mutate(
+                storiesMutationKey({
+                    authorId: userId,
+                    pageNumber: currentPage,
+                    pageSize: pageSize,
+                })
+            );
+            await mutate(storiesCountMutationKey(userId));
+        }
+    };
+
+    if (!storiesData) {
+        return (
+            <Card>
+                <CardHeader className="flex flex-col gap-2 rounded-md">
+                    <Skeleton className="h-5 w-full" />
+                    <Skeleton className="h-20 self-center w-40 rounded-md" />
+                </CardHeader>
+                <Divider />
+                <CardBody>
+                    <Skeleton className="h-40 rounded-md" />
+                </CardBody>
+            </Card>
+        );
+    }
+
+    return (
+        <div className="flex flex-col gap-5 items-center justify-center">
+            {isOwner && (
+                <Button
+                    variant="ghost"
+                    color="primary"
+                    className="w-full p-1"
+                    endContent={<MessageSquarePlus />}
+                    onPress={onOpen}
+                >
+                    Create Story
+                </Button>
+            )}
+
+            <CreateStoryModal
+                isOpen={isOpen}
+                onCloseAction={onClose}
+                authorId={userId}
+                currentPage={currentPage}
+                pageSize={pageSize}
+            />
+
+            {storiesData.map((story) => (
+                <StoryCard
+                    key={story.id}
+                    story={story}
+                    isAuthenticated={isOwner}
+                    onDeleteStoryAction={handleDeleteStory}
+                />
+            ))}
+
+            {storiesPagesNumber > 0 && (
+                <div className="flex flex-col gap-5 items-center w-full">
+                    <Pagination
+                        color="primary"
+                        variant="faded"
+                        page={currentPage}
+                        total={storiesPagesNumber}
+                        onChange={handlePageChange}
+                    />
+
+                    <div className="flex gap-2 justify-center w-full">
+                        <Button
+                            size="sm"
+                            variant="flat"
+                            isDisabled={currentPage === 1}
+                            onPress={() => handlePageChange(currentPage - 1)}
+                        >
+                            Previous
+                        </Button>
+                        <Button
+                            color="primary"
+                            size="sm"
+                            variant="flat"
+                            isDisabled={currentPage >= storiesPagesNumber}
+                            onPress={() => handlePageChange(currentPage + 1)}
+                        >
+                            Next
+                        </Button>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default UserStoriesContainer;

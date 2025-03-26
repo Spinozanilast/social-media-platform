@@ -17,6 +17,7 @@
     .search-bar {
         @apply bg-transparent rounded-lg text-base border-transparent focus:outline-none focus:border-solid focus:placeholder:text-transparent transition duration-300;
     }
+
     .search-bar:hover {
         @apply border-accent-orange;
     }
@@ -50,7 +51,7 @@
         animation: appear 0.5s forwards;
     }
 
-    .profile-header {
+    .profile-section-header {
         @apply text-base;
         opacity: 0.6;
     }

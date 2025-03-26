@@ -36,6 +36,7 @@ builder.Services.AddMassTransitConfigured(rabbitMqConfig,
 
 builder.Services.AddJwtConfiguration();
 builder.Services.AddAuthentication();
+builder.Services.AddApiVersioning();
 
 var app = builder.Build();
 

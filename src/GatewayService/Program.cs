@@ -12,15 +12,18 @@ builder.Services.AddJwtConfiguration();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("customPolicy", b =>
+    options.AddPolicy("NextFrontend", b =>
     {
-        b.AllowAnyHeader()
-            .AllowAnyMethod().AllowCredentials().WithOrigins(builder.Configuration["ClientApp"]!);
+        b
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials()
+            .WithOrigins(builder.Configuration["ClientApp"]!);
     });
 });
 
 var app = builder.Build();
-app.UseCors("customPolicy");
+app.UseCors("NextFrontend");
 app.MapReverseProxy();
 app.UseAuthentication();
 app.UseAuthorization();

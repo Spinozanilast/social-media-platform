@@ -15,7 +15,7 @@ public static class StoriesModelsToEntityExtensions
         };
     }
 
-    public static Story UpdateStory(this UpdateStoryModel model, Story story)
+    public static void UpdateStory(this UpdateStoryModel model, Story story)
     {
         story.Title = model.Title;
         story.Content = model.Content;
@@ -24,7 +24,5 @@ public static class StoriesModelsToEntityExtensions
         story.IsShared = model.IsShared;
         story.UpdatedAt = model.UpdatedAt ?? DateTime.UtcNow;
         story.OriginalPostId = model.OriginalPostId;
-
-        return story;
     }
 }

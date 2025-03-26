@@ -11,7 +11,6 @@ import PasswordInput from '@/app/components/special/PasswordInput';
 import { LoginRequest, LoginSchema } from '@api/auth/types';
 import AuthService from '@api/auth/service';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { isApiError } from '@app/lib/api/error';
 
 interface ClientLoginFormProps {
     translations: {
@@ -24,8 +23,7 @@ interface ClientLoginFormProps {
         forgot_password: string;
         sign_in: string;
         create_account: string;
-        validation_required: string;
-        error_unexpected: string;
+        error_user_exists_or_not_found: string;
     };
 }
 
@@ -57,12 +55,10 @@ export default function ClientLoginForm(props: ClientLoginFormProps) {
             const response = await AuthService.login(data);
             router.push(`/${response.userName}`);
         } catch (error) {
-            if (isApiError(error)) {
-                setError('root', {
-                    message: t.error_unexpected,
-                });
-            }
             console.error(error);
+            setError('root', {
+                message: t.error_user_exists_or_not_found,
+            });
         } finally {
             setIsSubmitting(false);
         }

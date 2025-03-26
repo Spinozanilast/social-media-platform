@@ -1,11 +1,7 @@
-import CurrentUser from '@/app/components/layout/CurrentUser';
 import React from 'react';
-import Logo from './Logo';
-import { ThemeSwitcher } from './ThemeSwitcher';
+import Logo from '../Logo';
 import NavbarButtons from './NavbarButtons';
-import { PersonalUrlPagesItems } from '@/app/data/VisualCompleteItemData';
-import LangSwitchSelect from '../special/LangSwitchSelect';
-import NavSwitchers from '../common/NavSwitchers';
+import NavSwitchers from '../../common/NavSwitchers';
 
 interface NavbarProps {
     withUser?: boolean;
@@ -19,7 +15,7 @@ const Navbar: React.FC<NavbarProps> = () => {
                 <Logo animationType="forward" className="text-left" />
             </div>
             <div className="flex flex-row gap-2 items-center m-2">
-                <NavbarButtons items={PersonalUrlPagesItems} />
+                <NavbarButtons />
             </div>
             <NavSwitchers />
         </div>

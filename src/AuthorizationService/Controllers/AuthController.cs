@@ -151,6 +151,29 @@ public class AuthController : ControllerBase
         return NoContent();
     }
 
+    [HttpPost("me")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetCurrentUser([FromQuery] bool isUserResponse = false)
+    {
+        var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (currentUserId is null)
+        {
+            return NotFound();
+        }
+
+        var user = await _userManager.FindByIdAsync(currentUserId);
+
+        if (user is null)
+        {
+            return NotFound();
+        }
+
+        return isUserResponse ? Ok(user.ToUserDto()) : Ok();
+    }
+
     [HttpGet("{idOrUsername}")]
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK)]

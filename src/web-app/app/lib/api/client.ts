@@ -1,17 +1,13 @@
-import axios, { AxiosInstance } from 'axios';
-import { ApiError } from './error';
+import axios from 'axios';
+import AuthService from '@api/auth/service';
 
-const createApiClient = (baseURL: string): AxiosInstance => {
-    const client = axios.create({
-        baseURL,
-        headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-        },
-        timeout: 10000,
-    });
+const apiClient = axios.create({
+    baseURL: process.env.NEXT_PUBLIC_SERVER_URL!,
+    headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+    },
+    timeout: 10000,
+});
 
-    return client;
-};
-
-export const apiClient = createApiClient(process.env.NEXT_PUBLIC_SERVER_URL!);
+export default apiClient;

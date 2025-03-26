@@ -23,6 +23,8 @@ builder.Services.AddScoped<IStoryService, StoryService>();
 
 builder.Services.AddJwtConfiguration();
 builder.Services.AddAuthentication();
+builder.Services.AddApiVersioning();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

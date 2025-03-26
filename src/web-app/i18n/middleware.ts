@@ -1,4 +1,4 @@
-// middleware.ts
+// middlewares.ts
 
 import createMiddleware from 'next-intl/middleware';
 import { defaultLocale, locales } from './i18n.config';
@@ -19,7 +19,7 @@ export default createMiddleware({
     localeDetection: false,
 });
 
-// Our middleware only applies to routes that
+// Our middlewares only applies to routes that
 // match the following:
 export const config = {
     matcher: [

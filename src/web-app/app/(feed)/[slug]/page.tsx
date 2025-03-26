@@ -1,29 +1,61 @@
+import StoriesService from '@api/story/service';
+import AuthService from '@api/auth/service';
+import UserProfile from '@components/UserProfile';
+import UserStoriesContainer from '@components/containers/UserStoriesContainer';
+import React from 'react';
+import { ProfilesService } from '@api/profile/service';
 import { notFound } from 'next/navigation';
-import UserPage from '@components/pages/UserPage';
-
-const getUser = async (userIdOrUsername: string): Promise<User | null> =>
-    await Identity.getUser(userIdOrUsername);
-const getProfileData = async (userId: string): Promise<Profile | null> =>
-    await ProfileService.getProfileData(userId);
+import { cookies } from 'next/headers';
 
 interface UserPageProps {
-    params: { slug: string };
+    params: Promise<{ slug: string }>;
 }
 
 export default async function Page({ params }: UserPageProps) {
-    const userId = params.slug;
+    const { slug } = await params;
 
-    const user = await getUser(userId);
+    const user = await AuthService.getUser(slug);
+    if (!user) return notFound();
 
-    if (!user) {
-        return notFound();
-    }
+    const profile = await ProfilesService.get(user.id);
+    if (!profile) return notFound();
 
-    const profileInfo = await getProfileData(user.id);
+    const cookieStore = await cookies();
+    const cookieString = cookieStore
+        .getAll()
+        .map((c) => `${c.name}=${c.value}`)
+        .join('; ');
 
-    if (!profileInfo) {
-        return notFound();
-    }
+    const authorizedUser = await AuthService.getCurrentUser(cookieString);
 
-    return <UserPage user={user} profileInfo={profileInfo} />;
+    const initialStories = await StoriesService.getAllStories({
+        authorId: user.id,
+    });
+
+    const isOwner = !!authorizedUser && authorizedUser.id === user.id;
+
+    return (
+        <div
+            className="bg-gradient-to-br p-1 from-white to-default-200 dark:from-default-50
+                dark:to-black rounded-md grid grid-cols-1 md:grid-cols-2 md:grid-rows-1
+                divide-y-1 md:divide-y-0 md:divide-x-1 max-w-full mx-page-part"
+        >
+            <div className="share-tech-mono">
+                <UserProfile
+                    user={user}
+                    profile={profile}
+                    isOwner={isOwner}
+                ></UserProfile>
+            </div>
+            {(initialStories.length > 0 || isOwner) && (
+                <div className="page-column">
+                    <UserStoriesContainer
+                        userId={user.id}
+                        initialStories={initialStories}
+                        isOwner={isOwner}
+                    />
+                </div>
+            )}
+        </div>
+    );
 }

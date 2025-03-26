@@ -1,7 +1,10 @@
-import type { Metadata } from 'next';
 import './globals.css';
+
+import HeroProvider from '@providers/hero-provider';
+import React from 'react';
+
+import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
-import { Providers } from './providers';
 import { getLocale, getMessages } from 'next-intl/server';
 
 export const metadata: Metadata = {
@@ -19,9 +22,27 @@ export default async function RootLayout({
 
     return (
         <html lang={locale}>
+            <head>
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `
+              (function() {
+                var theme = localStorage.getItem('theme');
+                var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (theme === 'dark' || (!theme && systemDark)) {
+                  document.documentElement.classList.add('dark');
+                } else {
+                  document.documentElement.classList.remove('dark');
+                }
+              })();
+            `,
+                    }}
+                />
+                <script src="https://unpkg.com/react-scan/dist/auto.global.js" />
+            </head>
             <body>
                 <NextIntlClientProvider messages={messages}>
-                    <Providers>{children}</Providers>
+                    <HeroProvider>{children}</HeroProvider>
                 </NextIntlClientProvider>
             </body>
         </html>

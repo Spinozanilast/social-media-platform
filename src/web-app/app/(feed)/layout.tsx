@@ -1,4 +1,4 @@
-import Navbar from '@/app/components/layout/Navbar';
+import Navbar from '@components/layout/navbar/Navbar';
 import Copyright from '@/app/components/layout/Copyright';
 
 export default function Layout({

@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Authentication.Configuration;
 using Authentication.Configuration.Configurations;
 using IdentityService.Common.Services;
 using IdentityService.Data;
@@ -128,14 +129,7 @@ public class TokenService(
 
     public ClaimsPrincipal? GetPrincipalFromExpiredToken(string token)
     {
-        var tokenValidationParams = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(token)),
-            ValidateIssuer = false,
-            ValidateAudience = false,
-            ValidateLifetime = false
-        };
+        var tokenValidationParams = JwtExtensions.GetTokenValidationParameters();
 
         try
         {

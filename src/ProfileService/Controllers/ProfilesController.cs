@@ -17,7 +17,7 @@ public class ProfilesController(IProfileRepository profileRepository, ICountries
     private readonly ICountriesRepository _countriesRepository = countriesRepository;
 
     [Authorize]
-    [HttpPost(ProfileApiEndpoints.ProfileEndpoints.Init)]
+    [HttpPost("{userId:guid}/init")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -34,17 +34,17 @@ public class ProfilesController(IProfileRepository profileRepository, ICountries
     }
 
     [Authorize]
-    [HttpPut(ProfileApiEndpoints.ProfileEndpoints.Update)]
+    [HttpPut("{userId:guid}/update")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> SaveProfile([FromBody] SaveProfileDto dto)
+    public async Task<IActionResult> SaveProfile([FromRoute] Guid userId, [FromBody] SaveProfileDto dto)
     {
-        await _profileRepository.SaveProfileAsync(dto.ToProfile());
+        await _profileRepository.SaveProfileAsync(dto.ToProfile(userId));
         return Ok();
     }
 
-    [HttpGet(ProfileApiEndpoints.ProfileEndpoints.Get)]
+    [HttpGet("{userId:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetProfile([FromRoute] Guid userId)
@@ -60,7 +60,7 @@ public class ProfilesController(IProfileRepository profileRepository, ICountries
     }
 
     [Authorize]
-    [HttpDelete(ProfileApiEndpoints.ProfileEndpoints.Delete)]
+    [HttpDelete("{userId:guid}/delete")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -70,7 +70,7 @@ public class ProfilesController(IProfileRepository profileRepository, ICountries
         return NoContent();
     }
 
-    [HttpGet(ProfileApiEndpoints.GetCountries)]
+    [HttpGet("countries")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetCountries()
     {

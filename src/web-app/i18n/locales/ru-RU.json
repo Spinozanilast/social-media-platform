@@ -1,60 +1,65 @@
 {
-    "Profile": {
-        "about_title": "О себе",
-        "anything_title": "Что угодно",
-        "interests_title": "Интересы",
-        "references_title": "Ссылки",
-        "edit": "Редактировать"
-    },
-    "CurrentUser": {
-        "profile_actions": "Действия над профилем",
-        "account_actions": "Действия над аккаунтом",
-        "logout": "Выйти",
-        "Login": "Войти",
-        "settings": "Настройки",
-        "profile": "Профиль",
-        "logout_description": "Произвести полный выход из аккаунта",
-        "login_description": "Произвести вход в аккаунт",
-        "profile_description": "Перейти на страницу профиля",
-        "settings_description": "Перейти на страницу настроек профиля"
-    },
-    "LangSwitcher": {
-        "en-US": "English",
-        "ru-RU": "Русский"
-    },
-    "PagesNavbar": {
-        "messages": "Сообщения",
-        "stories": "Истории",
-        "board": "Доска"
-    },
-    "RegisterPage": {
-        "register": "Регистрация",
-        "username": "Имя пользователя",
-        "username_placeholder": "",
-        "first_name": "Имя",
-        "first_name_placeholder": "",
-        "last_name": "Фамилия",
-        "last_name_placeholder": "",
-        "email": "Email",
-        "email_placeholder": "",
-        "password": "Пароль",
-        "password_placeholder": "",
-        "confirm_password": "Подтвердите пароль",
-        "confirm_password_placeholder": "",
-        "create_account": "Создать аккаунт",
-        "have_account": "Уже есть аккаунт?",
-        "sign_in": "Войти"
-    },
-    "LoginPage": {
-        "login": "Вход",
-        "email": "Email",
-        "password": "Пароль",
-        "remember_me": "Запомнить меня",
-        "sign_in": "Войти",
-        "forgot_password": "Забыли пароль?",
-        "email_placeholder": "Введите ваш email",
-        "password_placeholder": "Введите ваш пароль",
-        "create_account": "Создать аккаунт",
-        "error_unexpected": "Что-то пошло не так"
-    }
+  "Profile": {
+    "about_title": "О себе",
+    "anything_title": "Что угодно",
+    "interests_title": "Интересы",
+    "references_title": "Ссылки",
+    "edit": "Редактировать"
+  },
+  "CurrentUser": {
+    "profile_actions": "Действия над профилем",
+    "account_actions": "Действия над аккаунтом",
+    "logout": "Выйти",
+    "login": "Войти",
+    "register": "Зарегестрироваться",
+    "settings": "Настройки",
+    "profile": "Профиль",
+    "logout_description": "Произвести полный выход из аккаунта",
+    "login_description": "Произвести вход в аккаунт",
+    "profile_description": "Перейти на страницу профиля",
+    "settings_description": "Перейти на страницу настроек профиля"
+  },
+  "LangSwitcher": {
+    "en-US": "English",
+    "ru-RU": "Русский"
+  },
+  "PagesNavbar": {
+    "messages": "Сообщения",
+    "stories": "Истории",
+    "board": "Доска"
+  },
+  "RegisterPage": {
+    "register": "Регистрация",
+    "username": "Имя пользователя",
+    "username_placeholder": "",
+    "first_name": "Имя",
+    "first_name_placeholder": "",
+    "last_name": "Фамилия",
+    "last_name_placeholder": "",
+    "email": "Email",
+    "email_placeholder": "",
+    "password": "Пароль",
+    "password_placeholder": "",
+    "confirm_password": "Подтвердите пароль",
+    "confirm_password_placeholder": "",
+    "create_account": "Создать аккаунт",
+    "have_account": "Уже есть аккаунт?",
+    "sign_in": "Войти"
+  },
+  "LoginPage": {
+    "login": "Вход",
+    "email": "Email",
+    "password": "Пароль",
+    "remember_me": "Запомнить меня",
+    "sign_in": "Войти",
+    "forgot_password": "Забыли пароль?",
+    "email_placeholder": "Введите ваш email",
+    "password_placeholder": "Введите ваш пароль",
+    "create_account": "Создать аккаунт",
+    "error_user_exists_or_not_found": "Неправильный логин или пароль"
+  },
+  "UserNotFound": {
+    "user_doesnt_exist": "Пользователь, которого вы ищете, не существует.",
+    "go_home": "На домашнюю страницу"
+  }
 }

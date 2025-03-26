@@ -1,4 +1,5 @@
 import { Tooltip, Image, ImageProps, TooltipProps } from "@heroui/react";
+import React from "react";
 
 interface ImageTooltipProps {
     width: number;

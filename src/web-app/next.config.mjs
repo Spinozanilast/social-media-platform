@@ -1,4 +1,5 @@
 import createNextIntlPlugin from 'next-intl/plugin';
+
 const withNextIntl = createNextIntlPlugin();
 
 /** @type {import('next').NextConfig} */
@@ -11,11 +12,11 @@ const nextConfig = {
             },
             {
                 protocol: 'https',
-                hostname: "cdn.simpleicons.org",
-                port: ''
-            }
-        ]
-    }
+                hostname: 'cdn.simpleicons.org',
+                port: '',
+            },
+        ],
+    },
 };
 
 export default withNextIntl(nextConfig);

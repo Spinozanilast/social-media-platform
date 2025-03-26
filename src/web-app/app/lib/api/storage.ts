@@ -1,6 +1,6 @@
-type StorageType = 'local' | 'session';
+export type StorageType = 'local' | 'session';
 
-export const storage = {
+const storage = {
     get<T>(key: string, type: StorageType = 'local'): T | null {
         if (typeof window === 'undefined') return null;
         const value = (
@@ -22,3 +22,5 @@ export const storage = {
         (type === 'local' ? localStorage : sessionStorage).removeItem(key);
     },
 };
+
+export default storage;

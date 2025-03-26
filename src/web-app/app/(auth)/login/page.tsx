@@ -16,8 +16,7 @@ export default async function LoginPage() {
                 forgot_password: t('forgot_password'),
                 sign_in: t('sign_in'),
                 create_account: t('create_account'),
-                validation_required: t('validation_required'),
-                error_unexpected: t('error_unexpected'),
+                error_user_exists_or_not_found: t('error_user_exists_or_not_found'),
             }}
         />
     );

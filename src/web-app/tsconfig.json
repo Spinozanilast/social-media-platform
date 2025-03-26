@@ -28,11 +28,20 @@
       "@themes/*": [
         "./app/themes/*"
       ],
+      "@providers/*": [
+        "./app/providers/*"
+      ],
       "@app/*": [
         "./app/*"
       ],
       "@api/*": [
         "./app/api/*"
+      ],
+      "@hooks/*": [
+        "./app/hooks/*"
+      ],
+      "@stores/*": [
+        "./app/stores/*"
       ],
       "@models/*": [
         "./app/models/*"
