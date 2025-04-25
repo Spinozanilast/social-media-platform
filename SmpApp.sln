@@ -13,13 +13,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GatewayService", "src\Gatew
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Authentication", "Authentication", "{AE2E1A5C-F476-4412-A44B-412CA22E5E11}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authentication.Extensions", "src\Authentication\Authentication.Extensions\Authentication.Extensions.csproj", "{40C6751E-2310-4D3B-93F0-114D3C5BADD0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authentication.Shared", "src\Authentication\Authentication.Shared\Authentication.Shared.csproj", "{40C6751E-2310-4D3B-93F0-114D3C5BADD0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwsConfigurators", "src\AwsConfigurators\AwsConfigurators.csproj", "{D8673A1B-552C-41B7-B0E4-691C9543C7B0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{1EEA9947-F71F-4118-971D-CEE80881E87B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authentication.Extensions.Tests.Unit", "src\Tests\Authentication.Extensions.Tests.Unit\Authentication.Extensions.Tests.Unit.csproj", "{D9E12898-48E0-4E34-AFCF-08106D4AE7EE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProfileService", "src\ProfileService\ProfileService.csproj", "{9A42D37C-AF7D-49E3-B028-97DC71205290}"
 EndProject
@@ -33,6 +31,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		compose.yaml = compose.yaml
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationService.Tests.Unit", "AuthorizationService.Tests.Unit\AuthorizationService.Tests.Unit.csproj", "{B0D3A44A-ECBF-4474-B108-7803DB3311BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,10 +60,6 @@ Global
 		{D8673A1B-552C-41B7-B0E4-691C9543C7B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D8673A1B-552C-41B7-B0E4-691C9543C7B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D8673A1B-552C-41B7-B0E4-691C9543C7B0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D9E12898-48E0-4E34-AFCF-08106D4AE7EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D9E12898-48E0-4E34-AFCF-08106D4AE7EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D9E12898-48E0-4E34-AFCF-08106D4AE7EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D9E12898-48E0-4E34-AFCF-08106D4AE7EE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9A42D37C-AF7D-49E3-B028-97DC71205290}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9A42D37C-AF7D-49E3-B028-97DC71205290}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A42D37C-AF7D-49E3-B028-97DC71205290}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -76,6 +72,10 @@ Global
 		{120E9B10-AE47-4961-B7DC-D0B4C726AB56}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{120E9B10-AE47-4961-B7DC-D0B4C726AB56}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{120E9B10-AE47-4961-B7DC-D0B4C726AB56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0D3A44A-ECBF-4474-B108-7803DB3311BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0D3A44A-ECBF-4474-B108-7803DB3311BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0D3A44A-ECBF-4474-B108-7803DB3311BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0D3A44A-ECBF-4474-B108-7803DB3311BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -88,10 +88,10 @@ Global
 		{40C6751E-2310-4D3B-93F0-114D3C5BADD0} = {AE2E1A5C-F476-4412-A44B-412CA22E5E11}
 		{D8673A1B-552C-41B7-B0E4-691C9543C7B0} = {E89D1045-23FC-4B48-82D7-C143CF3AE8C0}
 		{1EEA9947-F71F-4118-971D-CEE80881E87B} = {E89D1045-23FC-4B48-82D7-C143CF3AE8C0}
-		{D9E12898-48E0-4E34-AFCF-08106D4AE7EE} = {1EEA9947-F71F-4118-971D-CEE80881E87B}
 		{9A42D37C-AF7D-49E3-B028-97DC71205290} = {E89D1045-23FC-4B48-82D7-C143CF3AE8C0}
 		{0971C55A-69A1-4F58-B8D4-35735A850187} = {E89D1045-23FC-4B48-82D7-C143CF3AE8C0}
 		{4C41B793-BE66-4F90-9191-F51C497F88F3} = {0971C55A-69A1-4F58-B8D4-35735A850187}
 		{120E9B10-AE47-4961-B7DC-D0B4C726AB56} = {0971C55A-69A1-4F58-B8D4-35735A850187}
+		{B0D3A44A-ECBF-4474-B108-7803DB3311BF} = {1EEA9947-F71F-4118-971D-CEE80881E87B}
 	EndGlobalSection
 EndGlobal

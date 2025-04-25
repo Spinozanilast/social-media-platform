@@ -2,7 +2,6 @@
 
 public record SaveProfileDto(
     string? About,
-    string? Anything,
     DateOnly? BirthDate,
     CountryDto? Country,
     List<string> Interests,

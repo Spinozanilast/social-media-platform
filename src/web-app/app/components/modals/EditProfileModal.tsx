@@ -24,7 +24,7 @@ interface EditProfileProps {
     imageUrl: string;
     isOpen: boolean;
     onOpenChange: () => void;
-    onSave: (profile: Profile) => Promise<void>;
+    onProfileInfoSave: (profile: Profile) => Promise<void>;
     onImageUpload: (image: Blob) => Promise<void>;
 }
 
@@ -32,8 +32,8 @@ const EditProfile: React.FC<EditProfileProps> = ({
     profileInfo,
     imageUrl,
     isOpen,
+    onProfileInfoSave,
     onOpenChange,
-    onSave,
     onImageUpload,
 }) => {
     const [form, setform] = useState<Profile>(profileInfo);
@@ -49,7 +49,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
         setLoading(true);
         try {
             if (selectedImage) await onImageUpload(selectedImage);
-            await onSave(form);
+            await onProfileInfoSave(form);
             onOpenChange();
         } finally {
             setLoading(false);

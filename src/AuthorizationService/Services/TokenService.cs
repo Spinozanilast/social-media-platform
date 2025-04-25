@@ -4,19 +4,22 @@ using System.Security.Cryptography;
 using System.Text;
 using Authentication.Configuration;
 using Authentication.Configuration.Configurations;
-using IdentityService.Common.Services;
-using IdentityService.Data;
-using IdentityService.Entities;
-using IdentityService.Entities.Tokens;
+using Authentication.Configuration.Options;
+using AuthorizationService.Common.Services;
+using AuthorizationService.Data;
+using AuthorizationService.Entities;
+using AuthorizationService.Entities.Tokens;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace IdentityService.Services;
+namespace AuthorizationService.Services;
 
 public class TokenService(
     IdentityAppContext context,
     UserManager<User> userManager,
     ICookieManager cookieManager,
+    IOptions<JwtOptions> jwtOptions,
     ILogger<TokenService> logger)
     : ITokenService
 {
@@ -24,25 +27,24 @@ public class TokenService(
     private readonly UserManager<User> _userManager = userManager;
     private readonly ICookieManager _cookieManager = cookieManager;
     private readonly ILogger<TokenService> _logger = logger;
+    private readonly JwtOptions _jwtOptions = jwtOptions.Value;
 
     public async Task<Token> GenerateAccessTokenAsync(User user)
     {
         try
         {
-            var tokenConfig = ConfigurationsManager.GetInstance().TokenConfiguration;
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenConfig.SecretKey));
-
-            var expiryDays = tokenConfig.ExpiryDays;
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey));
             var claims = await GetUserClaimsAsync(user);
+
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddDays(expiryDays - 5),
+                Expires = DateTime.UtcNow.AddMinutes(_jwtOptions.AccessTokenExpiryMinutes),
                 SigningCredentials = credentials,
-                Issuer = null,
-                Audience = null
+                Issuer = _jwtOptions.ValidIssuer,
+                Audience = _jwtOptions.ValidAudience,
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -63,30 +65,28 @@ public class TokenService(
 
     public RefreshToken GenerateRefreshToken(string deviceId, string deviceName, string ipAddress, bool rememberUser)
     {
-        using var generator = RandomNumberGenerator.Create();
-        var randomNumber = new byte[64];
-        generator.GetBytes(randomNumber);
-
-        var expiryDate = rememberUser ? DateTime.UtcNow.AddDays(10) : DateTime.UtcNow.AddHours(1);
+        var randomNumber = RandomNumberGenerator.GetBytes(64);
 
         return new RefreshToken
         {
-            CreatedAt = DateTime.UtcNow,
             TokenValue = Convert.ToBase64String(randomNumber),
-            Expires = DateTime.UtcNow.AddDays(10),
+            Expires = rememberUser
+                ? DateTime.UtcNow.AddDays(_jwtOptions.RefreshTokenExpiryDays)
+                : DateTime.UtcNow.AddHours(_jwtOptions.ShortRefreshTokenExpiryHours),
+            CreatedAt = DateTime.UtcNow,
             DeviceId = deviceId,
             DeviceName = deviceName,
             IpAddress = ipAddress
         };
     }
 
-    public async Task<bool> ValidateRefreshTokenAsync(User user, string refreshToken)
+    public bool ValidateRefreshTokenAsync(User user, string refreshToken)
     {
         if (string.IsNullOrWhiteSpace(refreshToken)) return false;
 
         var existingToken = user.RefreshTokens.FirstOrDefault(rt => rt.TokenValue == refreshToken);
 
-        return existingToken is not null && existingToken.Expires < DateTime.UtcNow &&
+        return existingToken is not null && existingToken.Expires > DateTime.UtcNow &&
                existingToken.IsActive;
     }
 
@@ -105,6 +105,11 @@ public class TokenService(
     {
         var expiredTokens = user.RefreshTokens.Where(rt => !rt.IsActive).ToList();
 
+        if (expiredTokens.Count == 0)
+        {
+            return 0;
+        }
+
         foreach (var token in expiredTokens)
         {
             user.RefreshTokens.Remove(token);
@@ -118,10 +123,10 @@ public class TokenService(
     {
         user.RefreshTokens.Add(refreshToken);
 
-        while (user.RefreshTokens.Count > 10)
+        while (user.RefreshTokens.Count > _jwtOptions.MaxRefreshTokensPerUser)
         {
-            var oldestToken = user.RefreshTokens.OrderBy(rt => rt.CreatedAt).First();
-            user.RefreshTokens.Remove(oldestToken);
+            var oldestToken = user.RefreshTokens.MinBy(rt => rt.CreatedAt);
+            if (oldestToken is not null) user.RefreshTokens.Remove(oldestToken);
         }
 
         await _userManager.UpdateAsync(user);
@@ -129,17 +134,29 @@ public class TokenService(
 
     public ClaimsPrincipal? GetPrincipalFromExpiredToken(string token)
     {
-        var tokenValidationParams = JwtExtensions.GetTokenValidationParameters();
+        var tokenValidationParams = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey)),
+            ValidateLifetime = true,
+            ValidateIssuer = _jwtOptions.ValidateIssuer,
+            ValidateAudience = _jwtOptions.ValidateAudience,
+        };
 
         try
         {
             var principal =
                 new JwtSecurityTokenHandler().ValidateToken(token, tokenValidationParams, out var validatedToken);
 
-            if (validatedToken is not JwtSecurityToken jwtSecurityToken ||
-                !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha512, StringComparison.InvariantCulture))
+            if (validatedToken is not JwtSecurityToken jwt ||
+                !jwt.Header.Alg.Equals(SecurityAlgorithms.HmacSha512, StringComparison.InvariantCulture))
             {
-                throw new SecurityTokenException("Invalid token");
+                throw new SecurityTokenException("Invalid token security algorithm");
+            }
+
+            if (jwt.ValidTo > DateTime.UtcNow)
+            {
+                throw new SecurityTokenException("Token is not expired");
             }
 
             return principal;

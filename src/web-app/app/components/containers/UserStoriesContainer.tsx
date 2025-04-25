@@ -109,7 +109,7 @@ const UserStoriesContainer = ({
                 />
             ))}
 
-            {storiesPagesNumber > 0 && (
+            {storiesPagesNumber > 1 && (
                 <div className="flex flex-col gap-5 items-center w-full">
                     <Pagination
                         color="primary"

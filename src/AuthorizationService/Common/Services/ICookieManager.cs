@@ -1,6 +1,6 @@
-﻿using IdentityService.Entities.Tokens;
+﻿using AuthorizationService.Entities.Tokens;
 
-namespace IdentityService.Common.Services;
+namespace AuthorizationService.Common.Services;
 
 public interface ICookieManager
 {

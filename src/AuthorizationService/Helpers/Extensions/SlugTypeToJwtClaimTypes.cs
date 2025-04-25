@@ -1,7 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using IdentityService.Entities.Enums;
+using AuthorizationService.Entities.Enums;
 
-namespace IdentityService.Helpers.Extensions;
+namespace AuthorizationService.Helpers.Extensions;
 
 public static class SlugTypeToJwtClaimTypes
 {

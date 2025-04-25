@@ -1,13 +1,13 @@
 using System.Security.Claims;
 using Asp.Versioning;
-using IdentityService.Common.Mappers;
-using IdentityService.Common.Services;
-using IdentityService.Contracts.Devices;
-using IdentityService.Contracts.Login;
-using IdentityService.Contracts.Register;
-using IdentityService.Entities;
-using IdentityService.Entities.Tokens;
-using IdentityService.Helpers.Extensions;
+using AuthorizationService.Common.Services;
+using AuthorizationService.Contracts.Devices;
+using AuthorizationService.Contracts.Login;
+using AuthorizationService.Contracts.Register;
+using AuthorizationService.Entities;
+using AuthorizationService.Entities.Tokens;
+using AuthorizationService.Common.Mappers;
+using AuthorizationService.Helpers.Extensions;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -15,10 +15,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Models;
 
-namespace IdentityService.Controllers;
+namespace AuthorizationService.Controllers;
 
 [ApiController]
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 [Route("api/v{version:apiVersion}/auth")]
 [ApiVersion("1.0")]
 public class AuthController : ControllerBase
@@ -222,7 +221,7 @@ public class AuthController : ControllerBase
         }
 
         var user = await _userManager.FindByIdAsync(userId);
-        if (user is null || !await _tokenService.ValidateRefreshTokenAsync(user, refreshToken))
+        if (user is null || !_tokenService.ValidateRefreshTokenAsync(user, refreshToken))
         {
             _logger.LogWarning("Invalid refresh token attempt for user {UserId}", userId);
             return Unauthorized(new ProblemDetails

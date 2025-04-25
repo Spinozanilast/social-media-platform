@@ -1,7 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 
-namespace IdentityService.Helpers;
+namespace AuthorizationService.Helpers;
 
 public class TokenValidator(TokenValidationParameters validationParameters)
 {

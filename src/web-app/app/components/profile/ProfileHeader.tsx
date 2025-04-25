@@ -26,10 +26,10 @@ export const ProfileHeader = ({
     translations,
 }: ProfileHeaderProps) => {
     return (
-        <div className="flex flex-row gap-5 items-center">
+        <div className="flex flex-row gap-5 items-center justify-center">
             {imageUrl === '/profile.svg' ? (
                 <Image
-                    className="rounded-md min-w-16 max-w-16 shadow shadow-accent-orange p-2"
+                    className="rounded-md shadow shadow-accent-orange p-2"
                     src={imageUrl}
                     alt="Profile image"
                 />
@@ -45,8 +45,7 @@ export const ProfileHeader = ({
                 >
                     {imageUrl ? (
                         <Image
-                            className="rounded-md min-w-16 max-w-16 shadow shadow-accent-orange cursor-pointer
-                                hover:shadow-lg hover:shadow-accent-orange"
+                            className="rounded-md min-w-16 cursor-pointer hover:shadow-lg"
                             src={imageUrl}
                             alt="Profile image"
                         />
@@ -74,7 +73,7 @@ export const ProfileHeader = ({
                 </div>
                 <Snippet
                     className="w-full bg-default-100"
-                    variant='shadow'
+                    variant="shadow"
                     symbol="@"
                     tooltipProps={{
                         content: 'Copy username',

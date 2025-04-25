@@ -56,7 +56,7 @@ export const StoryCard: React.FC<StoryCardProps> = ({
     return (
         <Card className="w-full" key={key}>
             <CardHeader className="flex flex-col gap-2">
-                <div className="flex flex-row w-full gap-2">
+                <div className="flex flex-row w-full h-min gap-2">
                     <div className="flex flex-row justify-between w-full">
                         <div className="flex flex-row gap-1">
                             <p className="timestamp-pre-text">Created At</p>
@@ -77,14 +77,14 @@ export const StoryCard: React.FC<StoryCardProps> = ({
                             )}
                     </div>
                     {isAuthenticated && (
-                        <Dropdown backdrop="blur">
+                        <Dropdown backdrop='opaque'>
                             <DropdownTrigger>
                                 <Button
-                                    className="h-full"
                                     isIconOnly
-                                    variant="bordered"
+                                    className="h-fit w-min"
+                                    variant="shadow"
                                 >
-                                    <EllipsisVertical />
+                                    <EllipsisVertical size={16} />
                                 </Button>
                             </DropdownTrigger>
                             <DropdownMenu

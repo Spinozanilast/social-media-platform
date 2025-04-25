@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace IdentityService.Data;
+namespace AuthorizationService.Data;
 
 public static class DbInjector
 {

@@ -1,5 +1,5 @@
 ﻿{
-  "profilesApi": {
+  "authorization": {
     "http": {
       "commandName": "Project",
       "dotnetRunMessages": true,

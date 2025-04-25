@@ -1,4 +1,5 @@
 using Authentication.Configuration;
+using Authentication.Configuration.Options;
 using MassTransit;
 using ProfileService.Common.Repositories;
 using ProfileService.Common.Services;
@@ -34,7 +35,9 @@ builder.Services.AddMassTransitConfigured(rabbitMqConfig,
     }
 );
 
-builder.Services.AddJwtConfiguration();
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptions.SectionName));
+builder.Services.AddJwtAuthentication();
+
 builder.Services.AddAuthentication();
 builder.Services.AddApiVersioning();
 

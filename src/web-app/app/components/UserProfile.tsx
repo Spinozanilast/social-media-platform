@@ -77,7 +77,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
                 imageUrl={imageUrl}
                 isOpen={isOpen}
                 onOpenChange={onOpenChange}
-                onSave={handleSaveProfile}
+                onProfileInfoSave={handleSaveProfile}
                 onImageUpload={handleImageUpload}
             />
         </div>

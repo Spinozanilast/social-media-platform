@@ -1,8 +1,9 @@
 using Authentication.Configuration;
-using IdentityService.Common.Services;
-using IdentityService.Data;
-using IdentityService.Entities;
-using IdentityService.Services;
+using Authentication.Configuration.Options;
+using AuthorizationService.Common.Services;
+using AuthorizationService.Data;
+using AuthorizationService.Entities;
+using AuthorizationService.Services;
 using Microsoft.OpenApi.Models;
 using Shared.Infrastructure;
 using Shared.Infrastructure.Configurations;
@@ -60,7 +61,9 @@ var rabbitMqConfig = new RabbitMqConfiguration();
 builder.Configuration.GetSection(RabbitMqConfiguration.SectionName).Bind(rabbitMqConfig);
 builder.Services.AddMassTransitConfigured(rabbitMqConfig);
 
-builder.Services.AddJwtConfiguration();
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptions.SectionName));
+builder.Services.AddJwtAuthentication();
+
 builder.Services.AddAuthentication();
 builder.Services.AddApiVersioning();
 
@@ -71,9 +74,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
     app.ApplyMigrations();
+    await app.Services.SeedRoles();
 }
 
-await app.Services.SeedRoles();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseCors(corsBuilder => corsBuilder.AllowAnyOrigin());

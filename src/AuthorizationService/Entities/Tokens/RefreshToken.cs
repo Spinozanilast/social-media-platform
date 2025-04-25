@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace IdentityService.Entities.Tokens;
+namespace AuthorizationService.Entities.Tokens;
 
 [Owned]
 public class RefreshToken : Token

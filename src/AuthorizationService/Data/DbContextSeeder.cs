@@ -1,7 +1,7 @@
-﻿using IdentityService.Entities;
+﻿using AuthorizationService.Entities;
 using Microsoft.AspNetCore.Identity;
 
-namespace IdentityService.Data;
+namespace AuthorizationService.Data;
 
 public static class DbContextSeeder
 {

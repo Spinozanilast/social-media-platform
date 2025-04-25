@@ -1,8 +1,8 @@
-﻿using IdentityService.Entities;
-using IdentityService.Entities.Enums;
+﻿using AuthorizationService.Entities;
+using AuthorizationService.Entities.Enums;
 using Microsoft.AspNetCore.Identity;
 
-namespace IdentityService.Helpers.Extensions;
+namespace AuthorizationService.Helpers.Extensions;
 
 public static class UserSearcherExtensions
 {

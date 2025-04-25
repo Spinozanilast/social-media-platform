@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace IdentityService.Data.Migrations
+namespace AuthorizationService.Data.Migrations
 {
     /// <inheritdoc />
     public partial class RemoveProfilePictureFromUser : Migration

@@ -1,8 +1,8 @@
 ﻿using System.Security.Claims;
-using IdentityService.Entities;
-using IdentityService.Entities.Tokens;
+using AuthorizationService.Entities;
+using AuthorizationService.Entities.Tokens;
 
-namespace IdentityService.Common.Services;
+namespace AuthorizationService.Common.Services;
 
 public interface ITokenService
 {
@@ -10,7 +10,7 @@ public interface ITokenService
 
     RefreshToken GenerateRefreshToken(string deviceId, string deviceName, string ipAddress, bool rememberUser);
 
-    Task<bool> ValidateRefreshTokenAsync(User user, string refreshToken);
+    bool ValidateRefreshTokenAsync(User user, string refreshToken);
 
     Task RevokeRefreshTokenAsync(User user, string refreshToken);
 

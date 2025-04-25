@@ -1,4 +1,4 @@
-﻿namespace IdentityService.Contracts.Login;
+﻿namespace AuthorizationService.Contracts.Login;
 
 public sealed record AuthResponse(
     Guid UserId,

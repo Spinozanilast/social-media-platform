@@ -23,7 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Authentication\Authentication.Extensions\Authentication.Extensions.csproj"/>
+        <ProjectReference Include="..\Authentication\Authentication.Shared\Authentication.Shared.csproj" />
         <ProjectReference Include="..\AwsConfigurators\AwsConfigurators.csproj"/>
         <ProjectReference Include="..\Shared\Shared.Infrastructure\Shared.Infrastructure.csproj"/>
         <ProjectReference Include="..\Shared\Shared.Models\Shared.Models.csproj"/>

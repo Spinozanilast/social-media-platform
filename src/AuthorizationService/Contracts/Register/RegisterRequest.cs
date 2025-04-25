@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace IdentityService.Contracts.Register;
+namespace AuthorizationService.Contracts.Register;
 
 public class RegisterRequest
 {

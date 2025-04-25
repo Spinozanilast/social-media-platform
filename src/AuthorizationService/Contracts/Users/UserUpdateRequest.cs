@@ -1,4 +1,4 @@
-﻿namespace IdentityService.Contracts.Users;
+﻿namespace AuthorizationService.Contracts.Users;
 
 public record UserUpdateRequest(
     string? UserName,

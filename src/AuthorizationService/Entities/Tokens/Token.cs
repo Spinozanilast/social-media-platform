@@ -1,4 +1,4 @@
-﻿namespace IdentityService.Entities.Tokens;
+﻿namespace AuthorizationService.Entities.Tokens;
 
 public class Token
 {

@@ -1,8 +1,16 @@
-using IdentityService.Entities;
+using AuthorizationService.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace IdentityService.Data;
+namespace AuthorizationService.Data;
 
-public class IdentityAppContext(DbContextOptions<IdentityAppContext> options)
-    : IdentityDbContext<User, Role, Guid>(options);
+public class IdentityAppContext : IdentityDbContext<User, Role, Guid>
+{
+    public IdentityAppContext()
+    {
+    }
+
+    public IdentityAppContext(DbContextOptions<IdentityAppContext> options) : base(options)
+    {
+    }
+}

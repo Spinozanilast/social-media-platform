@@ -1,4 +1,5 @@
 using Authentication.Configuration;
+using Authentication.Configuration.Options;
 using FluentValidation;
 using Shared.Infrastructure;
 using StoriesService.Common;
@@ -21,7 +22,9 @@ builder.Services.AddScoped<IStoryRepository, StoryRepository>();
 builder.Services.AddTransient<IValidator<Story>, StoryValidator>();
 builder.Services.AddScoped<IStoryService, StoryService>();
 
-builder.Services.AddJwtConfiguration();
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptions.SectionName));
+builder.Services.AddJwtAuthentication();
+
 builder.Services.AddAuthentication();
 builder.Services.AddApiVersioning();
 

@@ -1,4 +1,4 @@
-﻿namespace IdentityService.Entities.Enums;
+﻿namespace AuthorizationService.Entities.Enums;
 
 public enum UserSlugTypes
 {

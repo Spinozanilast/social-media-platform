@@ -1,4 +1,4 @@
-﻿namespace IdentityService.Entities;
+﻿namespace AuthorizationService.Entities;
 
 public static class IdentityRoles
 {

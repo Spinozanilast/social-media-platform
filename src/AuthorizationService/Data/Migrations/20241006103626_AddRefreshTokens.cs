@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace IdentityService.Data.Migrations
+namespace AuthorizationService.Data.Migrations
 {
     /// <inheritdoc />
     public partial class AddRefreshTokens : Migration

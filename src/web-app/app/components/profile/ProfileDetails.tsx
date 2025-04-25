@@ -61,17 +61,17 @@ export const ProfileDetails = ({ info, translations }: ProfileDetailsProps) => {
                         {translations.references_title}:
                     </h2>
                     <div className="flex gap-2 flex-wrap">
-                        {info.references!.map((ref) => {
-                            const linkStyle = getLinkStyle(ref);
+                        {info.references!.map((link) => {
+                            const linkStyle = getLinkStyle(link);
                             return (
                                 <Link
                                     href={linkStyle.validUrl}
                                     rel="noreferrer"
                                     target="_blank"
-                                    key={ref}
-                                    className={`min-w-full font-light border-solid border-2 ${linkStyle.linkStyle.borderColor}
-                                    ref-pill text-center p-2 rounded-md flex items-center justify-center
-                                    transition-all duration-300 group`}
+                                    key={link}
+                                    className={`font-light border-solid border-2 ${linkStyle.linkStyle.borderColor} ref-pill
+                                    text-center p-2 rounded-md flex items-center justify-center transition-all
+                                    duration-300 group`}
                                 >
                                     <span
                                         className="transform group-hover:scale-110 group-hover:translate-y-[2px] transition-all
@@ -80,7 +80,7 @@ export const ProfileDetails = ({ info, translations }: ProfileDetailsProps) => {
                                         {linkStyle.linkStyle.icon}
                                     </span>
                                     <span className="opacity-90 transition-opacity duration-300 group-hover:opacity-100 ml-2">
-                                        {ref}
+                                        {link}
                                     </span>
                                 </Link>
                             );

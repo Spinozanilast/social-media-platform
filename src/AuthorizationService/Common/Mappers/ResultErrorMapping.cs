@@ -1,8 +1,7 @@
-﻿using System.Collections.Frozen;
-using IdentityService.Contracts.Register;
+﻿using AuthorizationService.Contracts.Register;
 using Microsoft.AspNetCore.Identity;
 
-namespace IdentityService.Common.Mappers;
+namespace AuthorizationService.Common.Mappers;
 
 public static class ResultErrorMapper
 {

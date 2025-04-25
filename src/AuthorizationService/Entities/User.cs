@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
-using IdentityService.Entities.Tokens;
+using AuthorizationService.Entities.Tokens;
 using Microsoft.AspNetCore.Identity;
 
-namespace IdentityService.Entities;
+namespace AuthorizationService.Entities;
 
 public class User : IdentityUser<Guid>
 {

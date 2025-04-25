@@ -20,7 +20,7 @@ const InterestManager = ({ interests, onUpdate }: InterestManagerProps) => {
     return (
         <div>
             <h3 className="font-semibold">Interests</h3>
-            <div className="flex gap-2 flex-wrap">
+            <div className="flex gap-2 flex-wrap mb-1">
                 {interests.map((interest, index) => (
                     <div key={index} className="relative group">
                         <Input

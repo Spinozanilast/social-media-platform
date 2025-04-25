@@ -1,8 +1,8 @@
-using IdentityService.Contracts.Register;
-using IdentityService.Contracts.Users;
-using IdentityService.Entities;
+using AuthorizationService.Contracts.Register;
+using AuthorizationService.Contracts.Users;
+using AuthorizationService.Entities;
 
-namespace IdentityService.Common.Mappers;
+namespace AuthorizationService.Common.Mappers;
 
 public static class UserMapping
 {

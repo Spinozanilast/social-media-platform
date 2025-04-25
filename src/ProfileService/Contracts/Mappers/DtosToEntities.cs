@@ -9,16 +9,20 @@ public static class DtosToEntities
     {
         var updatedProfile = new Profile(userId)
         {
-            About = saveProfileDto.About,
-            Country = new Country
-            {
-                Id = saveProfileDto.Country.Id,
-                IsoCode = saveProfileDto.Country.IsoCode,
-                Name = saveProfileDto.Country.Name,
-            },
+            About = saveProfileDto.About ?? "",
             Interests = saveProfileDto.Interests,
             References = saveProfileDto.References
         };
+
+        if (saveProfileDto.Country is not null)
+        {
+            updatedProfile.Country = new Country
+            {
+                Id = saveProfileDto.Country.Id,
+                Name = saveProfileDto.Country.Name,
+                IsoCode = saveProfileDto.Country.IsoCode
+            };
+        }
 
         return updatedProfile;
     }

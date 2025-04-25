@@ -1,4 +1,4 @@
-﻿namespace IdentityService.Contracts.Devices;
+﻿namespace AuthorizationService.Contracts.Devices;
 
 public record DeviceInfoResponse(
     string DeviceId,

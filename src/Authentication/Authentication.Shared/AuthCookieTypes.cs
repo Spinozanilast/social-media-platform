@@ -2,6 +2,6 @@
 
 public enum AuthCookieTypes
 {
-    JwtCookie,
-    RefreshCookie
+    JwtCookie = 0,
+    RefreshCookie = 1
 }

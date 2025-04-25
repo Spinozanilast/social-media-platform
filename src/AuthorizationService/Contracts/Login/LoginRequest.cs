@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace IdentityService.Contracts.Login;
+namespace AuthorizationService.Contracts.Login;
 
 public class LoginRequest
 {

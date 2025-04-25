@@ -38,7 +38,7 @@ export const getCountries = async (): Promise<Country[]> => {
 
 export const ProfilesService = {
     async save(payload: Profile): Promise<boolean> {
-        const response = await apiClient.post(
+        const response = await apiClient.put(
             profilesEndpoints.update(payload.userId),
             payload,
             { withCredentials: true }
@@ -63,13 +63,16 @@ export const ProfilesService = {
 
 export const ProfileImagesService = {
     async get(userId: string): Promise<Blob | null> {
-        const response = await fetch(profileImagesEndpoints.get(userId));
+        const response = await fetch(
+            apiClient.getUri() + profileImagesEndpoints.get(userId),
+            { cache: 'force-cache' }
+        );
 
         if (!response.ok) {
             return null;
         }
 
-        return await response.json();
+        return await response.blob();
     },
 
     async upload(profileImage: Blob, userId: string): Promise<void> {
@@ -78,6 +81,7 @@ export const ProfileImagesService = {
 
         await apiClient.post(profileImagesEndpoints.upload(userId), formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
+            withCredentials: true,
         });
     },
 

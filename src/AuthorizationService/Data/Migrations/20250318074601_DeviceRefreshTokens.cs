@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace IdentityService.Data.Migrations
+namespace AuthorizationService.Data.Migrations
 {
     /// <inheritdoc />
     public partial class DeviceRefreshTokens : Migration
