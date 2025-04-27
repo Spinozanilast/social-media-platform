@@ -1,10 +1,15 @@
+using Asp.Versioning;
 using Authentication.Configuration;
 using Authentication.Configuration.Options;
 using MassTransit;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using ProfileService.Common.Repositories;
 using ProfileService.Common.Services;
 using ProfileService.Consumers;
 using ProfileService.Data;
+using ProfileService.Endpoints;
+using ProfileService.Entities;
 using ProfileService.Repositories;
 using ProfileService.Services;
 using Shared.Infrastructure;
@@ -14,7 +19,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddConfiguredSerilog(builder.Configuration);
 
-builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -43,6 +47,31 @@ builder.Services.AddApiVersioning();
 
 var app = builder.Build();
 
+var apiVersionSet = app.NewApiVersionSet()
+    .HasApiVersion(new ApiVersion(1, 0))
+    .ReportApiVersions()
+    .Build();
+
+app.MapGroup("api/v{version:apiVersion}/profiles")
+    .MapProfilesEndpoints()
+    .WithApiVersionSet(apiVersionSet)
+    .HasApiVersion(1, 0);
+
+app.MapGroup("api/v{version:apiVersion}/profiles/{userId:guid}/image")
+    .MapProfilesImagesEndpoints()
+    .WithApiVersionSet(apiVersionSet)
+    .HasApiVersion(1, 0);
+
+app.MapGet("api/v{version:apiVersion}/countries",
+        async Task<Ok<List<Country>>> ([FromServices] ICountriesRepository countriesRepository) =>
+        {
+            var countries = await countriesRepository.GetAll();
+            return TypedResults.Ok(countries);
+        })
+    .AllowAnonymous()
+    .WithName("GetCountries")
+    .WithOpenApi();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -53,5 +82,4 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapControllers();
 app.Run();

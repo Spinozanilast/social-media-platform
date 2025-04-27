@@ -1,5 +1,7 @@
+using Asp.Versioning;
 using Authentication.Configuration;
 using Authentication.Configuration.Options;
+using AuthorizationService;
 using AuthorizationService.Common.Services;
 using AuthorizationService.Data;
 using AuthorizationService.Entities;
@@ -12,7 +14,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddConfiguredSerilog(builder.Configuration);
 
-builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option =>
 {
@@ -69,6 +70,17 @@ builder.Services.AddApiVersioning();
 
 var app = builder.Build();
 
+var apiVersionSet = app.NewApiVersionSet()
+    .HasApiVersion(new ApiVersion(1, 0))
+    .ReportApiVersions()
+    .Build();
+
+// Endpoints registration
+app.MapGroup("/api/v{version:apiVersion}/auth")
+    .MapAuthEndpoints()
+    .WithApiVersionSet(apiVersionSet)
+    .HasApiVersion(new ApiVersion(1, 0));
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -80,6 +92,5 @@ if (app.Environment.IsDevelopment())
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseCors(corsBuilder => corsBuilder.AllowAnyOrigin());
-app.MapControllers();
 
 app.Run();

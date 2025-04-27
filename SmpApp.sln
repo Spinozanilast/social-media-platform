@@ -34,6 +34,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationService.Tests.Unit", "AuthorizationService.Tests.Unit\AuthorizationService.Tests.Unit.csproj", "{B0D3A44A-ECBF-4474-B108-7803DB3311BF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessagingService", "MessagingService\MessagingService.csproj", "{8B54EC51-B297-44DC-BAD7-6A9A40B4C920}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FriendsServices", "FriendsServices\FriendsServices.csproj", "{D221894F-F327-40F8-AB01-431E250C9E99}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -76,6 +80,14 @@ Global
 		{B0D3A44A-ECBF-4474-B108-7803DB3311BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0D3A44A-ECBF-4474-B108-7803DB3311BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B0D3A44A-ECBF-4474-B108-7803DB3311BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B54EC51-B297-44DC-BAD7-6A9A40B4C920}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B54EC51-B297-44DC-BAD7-6A9A40B4C920}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B54EC51-B297-44DC-BAD7-6A9A40B4C920}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B54EC51-B297-44DC-BAD7-6A9A40B4C920}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D221894F-F327-40F8-AB01-431E250C9E99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D221894F-F327-40F8-AB01-431E250C9E99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D221894F-F327-40F8-AB01-431E250C9E99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D221894F-F327-40F8-AB01-431E250C9E99}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -93,5 +105,7 @@ Global
 		{4C41B793-BE66-4F90-9191-F51C497F88F3} = {0971C55A-69A1-4F58-B8D4-35735A850187}
 		{120E9B10-AE47-4961-B7DC-D0B4C726AB56} = {0971C55A-69A1-4F58-B8D4-35735A850187}
 		{B0D3A44A-ECBF-4474-B108-7803DB3311BF} = {1EEA9947-F71F-4118-971D-CEE80881E87B}
+		{8B54EC51-B297-44DC-BAD7-6A9A40B4C920} = {E89D1045-23FC-4B48-82D7-C143CF3AE8C0}
+		{D221894F-F327-40F8-AB01-431E250C9E99} = {E89D1045-23FC-4B48-82D7-C143CF3AE8C0}
 	EndGlobalSection
 EndGlobal

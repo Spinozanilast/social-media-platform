@@ -26,7 +26,6 @@ public class TokenServiceTests
     private readonly Mock<ILogger<TokenService>> _loggerMock;
     private readonly Mock<UserManager<User>> _userManagerMock;
     private readonly JwtOptions _jwtOptions;
-    private readonly JwtOptions _optionsMock;
 
     public TokenServiceTests()
     {
@@ -36,16 +35,7 @@ public class TokenServiceTests
         _userManagerMock = new Mock<UserManager<User>>(
             Mock.Of<IUserStore<User>>(), null, null, null, null, null, null, null, null);
 
-        _jwtOptions = new JwtOptions
-        {
-            SecretKey = "very-long-and-secure-secret-key-with-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-a-hms512-cond",
-            AccessTokenExpiryMinutes = 30,
-            RefreshTokenExpiryDays = 7,
-            ShortRefreshTokenExpiryHours = 2,
-            MaxRefreshTokensPerUser = 5,
-            ValidIssuer = "test-issuer",
-            ValidAudience = "test-audience"
-        };
+        _jwtOptions = SharedTestData.JwtOptions;
 
         _sut = new TokenService(_appContextMock.Object, _userManagerMock.Object, _cookieManagerMock.Object,
             Options.Create(_jwtOptions), _loggerMock.Object);
@@ -61,8 +51,8 @@ public class TokenServiceTests
             new("permission", "read")
         };
         var testRoles = new List<string> { "User", "Admin" };
-        _userManagerMock.Setup((manager) => manager.GetClaimsAsync(user)).ReturnsAsync(claims);
-        _userManagerMock.Setup((manager) => manager.GetRolesAsync(user)).ReturnsAsync(testRoles);
+        _userManagerMock.Setup(manager => manager.GetClaimsAsync(user)).ReturnsAsync(claims);
+        _userManagerMock.Setup(manager => manager.GetRolesAsync(user)).ReturnsAsync(testRoles);
 
         //Act
         var result = await _sut.GenerateAccessTokenAsync(user);

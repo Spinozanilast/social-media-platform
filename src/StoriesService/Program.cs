@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using Authentication.Configuration;
 using Authentication.Configuration.Options;
 using FluentValidation;
@@ -29,6 +30,15 @@ builder.Services.AddAuthentication();
 builder.Services.AddApiVersioning();
 
 var app = builder.Build();
+
+var versionSet = app.NewApiVersionSet()
+    .HasApiVersion(new ApiVersion(1, 0))
+    .ReportApiVersions()
+    .Build();
+
+app.MapGroup("/api/v{version:apiVersion}/stories")
+    .WithApiVersionSet(versionSet)
+    .HasApiVersion(new ApiVersion(1, 0));
 
 if (app.Environment.IsDevelopment())
 {
