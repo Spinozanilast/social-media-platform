@@ -43,8 +43,8 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
-
-builder.Services.AddUsersDbContext(builder.Configuration);
+var dbOperator = new DbOperator<IdentityAppContext>();
+dbOperator.AddDbContextWithSnakeNamingConvention(builder.Services, builder.Configuration);
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddTransient<ICookieManager, CookieManager>();
 
@@ -85,7 +85,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.ApplyMigrations();
+    dbOperator.ApplyMigrations(app);
     await app.Services.SeedRoles();
 }
 

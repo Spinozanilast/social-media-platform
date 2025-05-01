@@ -18,7 +18,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddUsersDbContext(builder.Configuration);
+var dbOperator = new DbOperator<StoriesDbContext>();
+dbOperator.AddDbContextWithSnakeNamingConvention(builder.Services, builder.Configuration);
+
 builder.Services.AddScoped<IStoryRepository, StoryRepository>();
 builder.Services.AddTransient<IValidator<Story>, StoryValidator>();
 builder.Services.AddScoped<IStoryService, StoryService>();
@@ -44,7 +46,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.ApplyMigrations();
+    dbOperator.ApplyMigrations(app);
 }
 
 app.UseAuthentication();

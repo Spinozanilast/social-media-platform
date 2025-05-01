@@ -12,7 +12,7 @@ using ProfileService.Data;
 
 namespace ProfileService.Data.Migrations
 {
-    [DbContext(typeof(ProfileDbContext))]
+    [DbContext(typeof(ProfilesDbContext))]
     [Migration("20250104110611_CountryPossibleNull")]
     partial class CountryPossibleNull
     {

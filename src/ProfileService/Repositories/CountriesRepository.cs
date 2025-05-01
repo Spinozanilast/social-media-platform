@@ -5,7 +5,7 @@ using ProfileService.Entities;
 
 namespace ProfileService.Repositories;
 
-public class CountriesRepository(ProfileDbContext context) : ICountriesRepository
+public class CountriesRepository(ProfilesDbContext context) : ICountriesRepository
 {
     public async Task<List<Country>> GetAll()
     {

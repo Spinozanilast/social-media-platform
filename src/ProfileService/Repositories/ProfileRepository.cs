@@ -5,7 +5,7 @@ using ProfileService.Entities;
 
 namespace ProfileService.Repositories;
 
-public class ProfileRepository(ProfileDbContext context) : IProfileRepository
+public class ProfileRepository(ProfilesDbContext context) : IProfileRepository
 {
     public async Task InitUserProfileAsync(Guid userId)
     {

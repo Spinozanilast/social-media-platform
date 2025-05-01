@@ -12,7 +12,7 @@ using ProfileService.Data;
 
 namespace ProfileService.Data.Migrations
 {
-    [DbContext(typeof(ProfileDbContext))]
+    [DbContext(typeof(ProfilesDbContext))]
     [Migration("20250324140539_RemoveAnything")]
     partial class RemoveAnything
     {

@@ -2,8 +2,6 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using Authentication.Configuration;
-using Authentication.Configuration.Configurations;
 using Authentication.Configuration.Options;
 using AuthorizationService.Common.Services;
 using AuthorizationService.Data;

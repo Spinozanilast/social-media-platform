@@ -17,6 +17,20 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+  #  pgadmin:
+  #    container_name: pgadmin_container
+  #    image: dpage/pgadmin4
+  #    depends_on:
+  #      - smp-postgres
+  #    environment:
+  #      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin@example.com}
+  #      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+  #      PGADMIN_CONFIG_SERVER_MODE: 'False'
+  #    volumes:
+  #      - ./pgadmin:/var/lib/pgadmin
+  #    ports:
+  #      - ${PGADMIN_PORT:-5050}:80
+  #    restart: unless-stopped
   gateway-service:
     environment:
       - ASPNETCORE_URLS=http://+:80
@@ -62,6 +76,20 @@ services:
     depends_on:
       - rabbitmq
       - smp-postgres
+  messaging-service:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__PostgresConnection=Server=smp-postgres:5432;User Id=postgres;Password=password;Database=chats
+    build:
+      context: ../.
+      dockerfile: ./src/MessagingService/Dockerfile
+    image: messaging-service
+    container_name: messaging-service
+    ports:
+      - "5173:80"
+    depends_on:
+      - smp-postgres
   stories-service:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -75,7 +103,7 @@ services:
     image: stories-service
     container_name: stories-service
     ports:
-      - "5173:80"
+      - "5174:80"
     depends_on:
       - smp-postgres
 

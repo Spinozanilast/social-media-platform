@@ -22,7 +22,9 @@ builder.Services.AddConfiguredSerilog(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddProfileDbContext(builder.Configuration);
+var dbOperator = new DbOperator<ProfilesDbContext>();
+dbOperator.AddDbContextWithSnakeNamingConvention(builder.Services, builder.Configuration);
+
 builder.Services.AddS3Client(builder.Configuration);
 builder.Services.AddScoped<IProfileImageService, ProfileImageService>();
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
@@ -76,7 +78,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.ApplyMigrations();
+    dbOperator.ApplyMigrations(app);
 }
 
 app.UseHttpsRedirection();

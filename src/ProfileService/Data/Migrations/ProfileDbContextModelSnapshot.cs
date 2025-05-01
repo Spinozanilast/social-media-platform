@@ -11,7 +11,7 @@ using ProfileService.Data;
 
 namespace ProfileService.Data.Migrations
 {
-    [DbContext(typeof(ProfileDbContext))]
+    [DbContext(typeof(ProfilesDbContext))]
     partial class ProfileDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
