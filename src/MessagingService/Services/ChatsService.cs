@@ -4,19 +4,19 @@ using MessagingService.Entities;
 
 namespace MessagingService.Services;
 
-public class ChatService : IChatService
+public class ChatsService : IChatService
 {
     private readonly IChatsRepository _chatsRepository;
     private readonly IChatParticipantsRepository _chatParticipantsRepository;
 
-    public ChatService(IChatsRepository chatsRepository,
+    public ChatsService(IChatsRepository chatsRepository,
         IChatParticipantsRepository chatParticipantsRepository)
     {
         _chatsRepository = chatsRepository;
         _chatParticipantsRepository = chatParticipantsRepository;
     }
 
-    public async Task<Chat> GetOrCreateChatAsync(Guid currentUserId, Guid otherUserId)
+    public async Task<Chat> GetOrCreateChatAsync(string currentUserId, string otherUserId)
     {
         var chat = await _chatsRepository.GetDuoChatAsync(currentUserId, otherUserId);
         if (chat is not null) return chat;
@@ -35,7 +35,7 @@ public class ChatService : IChatService
         return chat;
     }
 
-    public Task<List<Chat>> GetChatsAsync(Guid currentUserId)
+    public Task<List<Chat>> GetChatsAsync(string currentUserId)
     {
         return _chatsRepository.GetUserChatsAsync(currentUserId);
     }

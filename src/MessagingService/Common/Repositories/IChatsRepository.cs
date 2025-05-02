@@ -4,8 +4,8 @@ namespace MessagingService.Common.Repositories;
 
 public interface IChatsRepository
 {
-    Task<List<Chat>> GetUserChatsAsync(Guid currentUserId);
-    Task<List<Chat>> GetRelatedChatsAsync(Guid currentUserId, Guid otherUserId);
-    Task<Chat?> GetDuoChatAsync(Guid currentUserId, Guid otherUserId);
+    Task<List<Chat>> GetUserChatsAsync(string currentUserId);
+    Task<List<Chat>> GetRelatedChatsAsync(string currentUserId, string otherUserId);
+    Task<Chat?> GetDuoChatAsync(string currentUserId, string otherUserId);
     Task CreateChatAsync(Chat chat);
 }

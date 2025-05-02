@@ -12,8 +12,10 @@ public class Message
     public NpgsqlTsVector SearchVector { get; set; } = null!;
 
     public DateTime SentAt { get; init; } = DateTime.UtcNow;
+    public string SenderId { get; init; }
 
     public ChatParticipant Sender { get; set; } = null!;
+    public Guid ChatId { get; init; }
 
     public Chat Chat { get; set; } = null!;
 }

@@ -2,7 +2,7 @@
 using AuthorizationService.Entities.Enums;
 using Microsoft.AspNetCore.Identity;
 
-namespace AuthorizationService.Helpers.Extensions;
+namespace AuthorizationService.Extensions;
 
 public static class UserSearcherExtensions
 {

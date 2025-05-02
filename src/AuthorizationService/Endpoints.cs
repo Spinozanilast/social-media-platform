@@ -6,8 +6,9 @@ using AuthorizationService.Contracts.Login;
 using AuthorizationService.Contracts.Register;
 using AuthorizationService.Contracts.Users;
 using AuthorizationService.Entities;
-using AuthorizationService.Helpers.Extensions;
+using AuthorizationService.Extensions;
 using MassTransit;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -108,12 +109,67 @@ public static class Endpoints
                     user.UserName ?? string.Empty,
                     user.Email ?? string.Empty,
                     await userManager.GetRolesAsync(user),
-                    accessToken.Expires
+                    accessToken.Expires, null
                 ));
             })
             .AllowAnonymous()
             .WithName("Login")
             .WithOpenApi();
+
+        group.MapGet("/github/login",
+                ChallengeHttpResult () =>
+                    TypedResults.Challenge(
+                        new AuthenticationProperties { RedirectUri = "/api/v1/auth/github/callback" },
+                        new List<string> { "Github" }))
+            .AllowAnonymous()
+            .WithName("GithubLogin")
+            .WithOpenApi();
+
+        group.MapGet("/github/callback", async Task<Results<RedirectHttpResult, UnauthorizedHttpResult>> (
+                [FromServices] ITokenService tokenService,
+                [FromServices] ICookieManager cookieManager,
+                [FromServices] UserManager<User> userManager,
+                [FromServices] IConfiguration configuration,
+                HttpContext context) =>
+            {
+                var authResult = await context.AuthenticateAsync("Github");
+                if (!authResult.Succeeded) return TypedResults.Unauthorized();
+
+                var principal = authResult.Principal;
+                var githubId = principal.FindFirstValue(ClaimTypes.NameIdentifier)!;
+                var email = principal.FindFirstValue(ClaimTypes.Email)!;
+                var username = principal.FindFirstValue(ClaimTypes.Name)!;
+                var avatarUrl = principal.FindFirstValue("urn:github:avatar");
+
+                var user = await userManager.FindByEmailAsync(email) ?? await userManager.FindByNameAsync(username);
+
+                if (user is null)
+                {
+                    user = new User
+                    {
+                        UserName = username, Email = email, AvatarUrl = avatarUrl, GithubId = githubId
+                    };
+
+                    await userManager.CreateAsync(user);
+                    await userManager.AddToRoleAsync(user, IdentityRoles.UserRole.Name!);
+                }
+
+                var deviceId = context.Request.Headers["X-Device-Id"].ToString();
+                var deviceName = context.Request.Headers["X-Device-Name"].ToString();
+                var ipAddress = context.Connection.RemoteIpAddress?.ToString() ?? "Unknown";
+
+                var accessToken = await tokenService.GenerateAccessTokenAsync(user);
+                var refreshToken = tokenService.GenerateRefreshToken(deviceId, deviceName, ipAddress, true);
+
+                cookieManager.SetAuthCookies(accessToken, refreshToken);
+                await tokenService.StoreRefreshTokenAsync(user, refreshToken);
+
+                return TypedResults.Redirect(configuration["Frontend:SuccessRedirectUrl"]);
+            })
+            .AllowAnonymous()
+            .WithName("GitHubCallback")
+            .WithOpenApi();
+
 
         group.MapPost("/logout", async Task<Results<NoContent, UnauthorizedHttpResult>> (
                 [FromBody] LoginRequest request,
@@ -268,7 +324,7 @@ public static class Endpoints
                 return TypedResults.Ok(new AuthResponse(
                     user.Id, user.UserName ?? string.Empty, user.Email ?? string.Empty,
                     await userManager.GetRolesAsync(user),
-                    newAccessToken.Expires));
+                    newAccessToken.Expires, null));
             })
             .AllowAnonymous()
             .WithName("RefreshToken")

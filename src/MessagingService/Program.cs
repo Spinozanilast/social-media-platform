@@ -13,7 +13,8 @@ var dbOperator = new DbOperator<MessagingDbContext>();
 dbOperator.AddDbContextWithSnakeNamingConvention(builder.Services, builder.Configuration,
     o => o.UseNpgsql(optionsBuilder => optionsBuilder.MapEnum<ActivityState>("activity_state")));
 
-builder.Services.AddScoped<IChatService, ChatService>();
+builder.Services.AddScoped<IChatService, ChatsService>();
+builder.Services.AddSignalR();
 
 builder.Services.AddOpenApi();
 
@@ -26,3 +27,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.MapHub<ChatHub>("chat-hub");
+
+app.Run();

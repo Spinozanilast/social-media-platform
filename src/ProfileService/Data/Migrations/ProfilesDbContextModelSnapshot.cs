@@ -12,13 +12,13 @@ using ProfileService.Data;
 namespace ProfileService.Data.Migrations
 {
     [DbContext(typeof(ProfilesDbContext))]
-    partial class ProfileDbContextModelSnapshot : ModelSnapshot
+    partial class ProfilesDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.0")
+                .HasAnnotation("ProductVersion", "9.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -27,26 +27,31 @@ namespace ProfileService.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("IsoCode")
                         .IsRequired()
                         .HasMaxLength(2)
-                        .HasColumnType("character varying(2)");
+                        .HasColumnType("character varying(2)")
+                        .HasColumnName("iso_code");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("name");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_countries");
 
                     b.HasIndex("Name")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_countries_name");
 
-                    b.ToTable("Countries");
+                    b.ToTable("countries", (string)null);
 
                     b.HasData(
                         new
@@ -1519,40 +1524,48 @@ namespace ProfileService.Data.Migrations
                 {
                     b.Property<Guid>("UserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
 
                     b.Property<string>("About")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("about");
 
                     b.Property<DateOnly?>("BirthDate")
-                        .HasColumnType("date");
+                        .HasColumnType("date")
+                        .HasColumnName("birth_date");
 
                     b.Property<int?>("CountryId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("country_id");
 
                     b.PrimitiveCollection<List<string>>("Interests")
                         .IsRequired()
-                        .HasColumnType("text[]");
+                        .HasColumnType("text[]")
+                        .HasColumnName("interests");
 
                     b.PrimitiveCollection<List<string>>("References")
                         .IsRequired()
-                        .HasColumnType("varchar(80)[]");
+                        .HasColumnType("varchar(80)[]")
+                        .HasColumnName("references");
 
                     b.HasKey("UserId")
                         .HasName("Id");
 
-                    b.HasIndex("CountryId");
+                    b.HasIndex("CountryId")
+                        .HasDatabaseName("ix_profiles_country_id");
 
-                    b.ToTable("Profiles");
+                    b.ToTable("profiles", (string)null);
                 });
 
             modelBuilder.Entity("ProfileService.Entities.Profile", b =>
                 {
                     b.HasOne("ProfileService.Entities.Country", "Country")
                         .WithMany("Profiles")
-                        .HasForeignKey("CountryId");
+                        .HasForeignKey("CountryId")
+                        .HasConstraintName("fk_profiles_countries_country_id");
 
                     b.Navigation("Country");
                 });

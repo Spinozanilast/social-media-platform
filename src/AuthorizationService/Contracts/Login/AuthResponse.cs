@@ -5,4 +5,5 @@ public sealed record AuthResponse(
     string UserName,
     string Email,
     IEnumerable<string> Roles,
-    DateTime AccessTokenExpiry);
+    DateTime AccessTokenExpiry,
+    string? AvatarUrl);

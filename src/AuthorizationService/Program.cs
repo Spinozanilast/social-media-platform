@@ -5,6 +5,7 @@ using AuthorizationService;
 using AuthorizationService.Common.Services;
 using AuthorizationService.Data;
 using AuthorizationService.Entities;
+using AuthorizationService.Extensions;
 using AuthorizationService.Services;
 using Microsoft.OpenApi.Models;
 using Shared.Infrastructure;
@@ -63,10 +64,11 @@ builder.Configuration.GetSection(RabbitMqConfiguration.SectionName).Bind(rabbitM
 builder.Services.AddMassTransitConfigured(rabbitMqConfig);
 
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptions.SectionName));
-builder.Services.AddJwtAuthentication();
+builder.Services.AddJwtAuthentication().AddConfiguredGithub(builder.Configuration);
 
-builder.Services.AddAuthentication();
-builder.Services.AddApiVersioning();
+builder.Services.AddConfiguredApiVersioning();
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -75,7 +77,6 @@ var apiVersionSet = app.NewApiVersionSet()
     .ReportApiVersions()
     .Build();
 
-// Endpoints registration
 app.MapGroup("/api/v{version:apiVersion}/auth")
     .MapAuthEndpoints()
     .WithApiVersionSet(apiVersionSet)
@@ -91,6 +92,5 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors(corsBuilder => corsBuilder.AllowAnyOrigin());
 
 app.Run();

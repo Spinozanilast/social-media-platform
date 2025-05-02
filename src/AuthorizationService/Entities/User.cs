@@ -6,8 +6,11 @@ namespace AuthorizationService.Entities;
 
 public class User : IdentityUser<Guid>
 {
-    [Required] [StringLength(40)] public required string FirstName { get; set; }
-    [Required] [StringLength(40)] public required string LastName { get; set; }
+    [StringLength(40)] public string FirstName { get; set; } = string.Empty;
+    [StringLength(40)] public string LastName { get; set; } = string.Empty;
+
+    public string? GithubId { get; set; }
+    public string? AvatarUrl { get; set; }
 
     public List<RefreshToken> RefreshTokens { get; } = new();
 }

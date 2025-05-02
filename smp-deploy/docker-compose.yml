@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   rabbitmq:
     image: rabbitmq:4-management-alpine
@@ -16,7 +14,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - smp_data:/var/lib/postgresql/data
   #  pgadmin:
   #    container_name: pgadmin_container
   #    image: dpage/pgadmin4
@@ -109,4 +107,4 @@ services:
 
 
 volumes:
-  postgres_data:
+  smp_data:

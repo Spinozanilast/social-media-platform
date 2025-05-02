@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <RootNamespace>Authentication.Configuration</RootNamespace>
     <UserSecretsId>e359d3cd-43be-45d6-a76b-3b2e02dc4e61</UserSecretsId>
-    <LangVersion>13</LangVersion>
+    <LangVersion>latestmajor</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

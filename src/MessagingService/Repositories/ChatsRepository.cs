@@ -9,7 +9,7 @@ public class ChatsRepository(MessagingDbContext dbContext) : IChatsRepository
 {
     private readonly MessagingDbContext _dbContext = dbContext;
 
-    public async Task<List<Chat>> GetUserChatsAsync(Guid currentUserId)
+    public async Task<List<Chat>> GetUserChatsAsync(string currentUserId)
     {
         return await _dbContext
             .Chats
@@ -19,7 +19,7 @@ public class ChatsRepository(MessagingDbContext dbContext) : IChatsRepository
             .ToListAsync();
     }
 
-    public async Task<List<Chat>> GetRelatedChatsAsync(Guid currentUserId, Guid otherUserId)
+    public async Task<List<Chat>> GetRelatedChatsAsync(string currentUserId, string otherUserId)
     {
         return await _dbContext
             .Chats
@@ -29,7 +29,7 @@ public class ChatsRepository(MessagingDbContext dbContext) : IChatsRepository
             .ToListAsync();
     }
 
-    public async Task<Chat?> GetDuoChatAsync(Guid currentUserId, Guid otherUserId)
+    public async Task<Chat?> GetDuoChatAsync(string currentUserId, string otherUserId)
     {
         return await _dbContext
             .Chats

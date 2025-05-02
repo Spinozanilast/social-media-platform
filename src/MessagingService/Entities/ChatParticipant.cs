@@ -8,7 +8,7 @@ namespace MessagingService.Entities;
 public class ChatParticipant
 {
     public Guid ChatId { get; init; }
-    public Guid UserId { get; init; }
+    public string UserId { get; init; }
     public Chat Chat { get; set; } = null!;
     public ActivityState ActivityState { get; set; }
 }

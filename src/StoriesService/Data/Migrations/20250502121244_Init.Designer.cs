@@ -13,15 +13,15 @@ using StoriesService.Data;
 namespace StoriesService.Data.Migrations
 {
     [DbContext(typeof(StoriesDbContext))]
-    [Migration("20241214183053_InitStories")]
-    partial class InitStories
+    [Migration("20250502121244_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.0")
+                .HasAnnotation("ProductVersion", "9.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -30,54 +30,68 @@ namespace StoriesService.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<Guid>("AuthorId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("author_id");
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("content");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp")
+                        .HasColumnName("created_at")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<bool>("IsEdited")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_edited");
 
                     b.Property<bool>("IsShared")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_shared");
 
                     b.Property<int?>("OriginalPostId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("original_post_id");
 
                     b.PrimitiveCollection<List<string>>("Tags")
                         .IsRequired()
-                        .HasColumnType("text[]");
+                        .HasColumnType("text[]")
+                        .HasColumnName("tags");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("title");
 
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp")
+                        .HasColumnName("updated_at")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_stories");
 
-                    b.HasIndex("AuthorId");
+                    b.HasIndex("AuthorId")
+                        .HasDatabaseName("ix_stories_author_id");
 
-                    b.HasIndex("OriginalPostId");
+                    b.HasIndex("OriginalPostId")
+                        .HasDatabaseName("ix_stories_original_post_id");
 
-                    b.HasIndex("Tags");
+                    b.HasIndex("Tags")
+                        .HasDatabaseName("ix_stories_tags");
 
-                    b.ToTable("Stories");
+                    b.ToTable("stories", (string)null);
                 });
 
             modelBuilder.Entity("StoriesService.Entities.Story", b =>
@@ -85,7 +99,8 @@ namespace StoriesService.Data.Migrations
                     b.HasOne("StoriesService.Entities.Story", "OriginalPost")
                         .WithMany()
                         .HasForeignKey("OriginalPostId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_stories_stories_original_post_id");
 
                     b.Navigation("OriginalPost");
                 });
