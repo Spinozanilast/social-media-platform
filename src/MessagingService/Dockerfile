@@ -8,8 +8,8 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["src/MessagingService/MessagingService.csproj", "src/MessagingService/"]
 COPY ["src/Shared/Shared.Infrastructure/Shared.Infrastructure.csproj", "src/Shared/Shared.Infrastructure/"]
-RUN dotnet restore "src/MessagingService/MessagingService.csproj"
 COPY . .
+RUN dotnet restore "src/MessagingService/MessagingService.csproj"
 WORKDIR "/src/src/MessagingService"
 RUN dotnet build "./MessagingService.csproj" -c $BUILD_CONFIGURATION -o /app/build
 

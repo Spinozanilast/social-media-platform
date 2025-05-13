@@ -9,8 +9,8 @@ WORKDIR /src
 COPY ["src/GatewayService/GatewayService.csproj", "src/GatewayService/"]
 COPY ["src/Authentication/Authentication.Shared/Authentication.Shared.csproj", "src/Authentication/Authentication.Shared/"]
 COPY ["src/Shared/Shared.Infrastructure/Shared.Infrastructure.csproj", "src/Shared/Shared.Infrastructure/"]
-RUN dotnet restore "src/GatewayService/GatewayService.csproj"
 COPY . .
+RUN dotnet restore "src/GatewayService/GatewayService.csproj"
 WORKDIR "/src/src/GatewayService"
 RUN dotnet build "./GatewayService.csproj" -c $BUILD_CONFIGURATION -o /app/build
 

@@ -8,8 +8,8 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["FriendsServices/FriendsServices.csproj", "FriendsServices/"]
-RUN dotnet restore "FriendsServices/FriendsServices.csproj"
 COPY . .
+RUN dotnet restore "FriendsServices/FriendsServices.csproj"
 WORKDIR "/src/FriendsServices"
 RUN dotnet build "./FriendsServices.csproj" -c $BUILD_CONFIGURATION -o /app/build
 

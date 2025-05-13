@@ -11,8 +11,8 @@ COPY ["src/Authentication/Authentication.Shared/Authentication.Shared.csproj", "
 COPY ["src/AwsConfigurators/AwsConfigurators.csproj", "src/AwsConfigurators/"]
 COPY ["src/Shared/Shared.Infrastructure/Shared.Infrastructure.csproj", "src/Shared/Shared.Infrastructure/"]
 COPY ["src/Shared/Shared.Models/Shared.Models.csproj", "src/Shared/Shared.Models/"]
-RUN dotnet restore "src/ProfileService/ProfileService.csproj"
 COPY . .
+RUN dotnet restore "src/ProfileService/ProfileService.csproj"
 WORKDIR "/src/src/ProfileService"
 RUN dotnet build "./ProfileService.csproj" -c $BUILD_CONFIGURATION -o /app/build
 

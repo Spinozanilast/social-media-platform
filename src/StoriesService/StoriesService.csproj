@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
@@ -8,7 +7,6 @@
     <LangVersion>latestmajor</LangVersion>
     <UserSecretsId>034a0771-741d-4a6a-accb-25f3d2fb2e51</UserSecretsId>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Asp.Versioning.Http" />
     <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" />
@@ -22,20 +20,16 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
   </ItemGroup>
-
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Authentication\Authentication.Shared\Authentication.Shared.csproj" />
     <ProjectReference Include="..\Shared\Shared.Infrastructure\Shared.Infrastructure.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <Content Include="..\..\.dockerignore">
       <Link>.dockerignore</Link>
     </Content>
   </ItemGroup>
-
 </Project>
