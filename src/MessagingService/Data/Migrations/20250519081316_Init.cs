@@ -2,6 +2,7 @@
 using MessagingService.Entities.Enums;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using NpgsqlTypes;
 
 #nullable disable
 
@@ -70,7 +71,9 @@ namespace MessagingService.Data.Migrations
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     content = table.Column<string>(type: "text", nullable: false),
+                    search_vector = table.Column<NpgsqlTsVector>(type: "tsvector", nullable: false),
                     sent_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    sender_id = table.Column<string>(type: "text", nullable: false),
                     sender_chat_id = table.Column<Guid>(type: "uuid", nullable: false),
                     sender_user_id = table.Column<string>(type: "text", nullable: false),
                     chat_id = table.Column<Guid>(type: "uuid", nullable: false)
@@ -108,9 +111,9 @@ namespace MessagingService.Data.Migrations
                 column: "chat_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_messages_content",
+                name: "ix_messages_search_vector",
                 table: "messages",
-                column: "content")
+                column: "search_vector")
                 .Annotation("Npgsql:CreatedConcurrently", true)
                 .Annotation("Npgsql:IndexMethod", "gin");
 

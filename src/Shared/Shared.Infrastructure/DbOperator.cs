@@ -37,17 +37,14 @@ public class DbOperator<TDbContext>(string connectionString)
             optionsAction.Invoke(o);
         });
 
-    public void ApplyMigrations(IApplicationBuilder app)
+    public async Task ApplyMigrations(IApplicationBuilder app)
     {
         using var scope = app.ApplicationServices.CreateScope();
-
         var dbcontext = scope.ServiceProvider.GetRequiredService<TDbContext>();
 
-        if (dbcontext.Database.GetPendingMigrations().Any())
+        if ((await dbcontext.Database.GetPendingMigrationsAsync().ConfigureAwait(false)).Any())
         {
-            return;
+            await dbcontext.Database.MigrateAsync();
         }
-
-        dbcontext.Database.Migrate();
     }
 }

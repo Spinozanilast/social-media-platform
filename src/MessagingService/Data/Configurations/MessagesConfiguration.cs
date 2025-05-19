@@ -9,7 +9,7 @@ public class MessagesConfiguration : IEntityTypeConfiguration<Message>
     public void Configure(EntityTypeBuilder<Message> builder)
     {
         builder
-            .HasIndex(m => m.Content)
+            .HasIndex(m => m.SearchVector)
             .HasMethod("gin")
             .IsCreatedConcurrently();
     }

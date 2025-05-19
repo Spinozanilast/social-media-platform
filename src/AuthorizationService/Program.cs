@@ -2,52 +2,24 @@ using Asp.Versioning;
 using Authentication.Configuration;
 using Authentication.Configuration.Options;
 using AuthorizationService;
-using AuthorizationService.Common.Services;
 using AuthorizationService.Data;
 using AuthorizationService.Entities;
 using AuthorizationService.Extensions;
-using AuthorizationService.Services;
-using Microsoft.OpenApi.Models;
+using Scalar.AspNetCore;
 using Shared.Infrastructure;
 using Shared.Infrastructure.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddConfiguredSerilog(builder.Configuration);
+builder.Services.AddOpenApi();
 
+builder.Services.AddConfiguredSerilog(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(option =>
-{
-    option.SwaggerDoc("v1", new OpenApiInfo { Title = "Identity Api", Version = "v1" });
-    option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        In = ParameterLocation.Header,
-        Description = "Please enter a valid token",
-        Name = "Authorization",
-        Type = SecuritySchemeType.Http,
-        BearerFormat = "JWT",
-        Scheme = "Bearer"
-    });
-    option.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            []
-        }
-    });
-});
 
 var dbOperator = new DbOperator<IdentityAppContext>();
 dbOperator.AddDbContextWithSnakeNamingConvention(builder.Services, builder.Configuration);
-builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddTransient<ICookieManager, CookieManager>();
+
+builder.Services.AddAuthorizationServices(builder.Configuration);
 
 builder.Services
     .AddIdentity<User, Role>(options =>
@@ -84,9 +56,8 @@ app.MapGroup("/api/v{version:apiVersion}/auth")
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-    dbOperator.ApplyMigrations(app);
+    app.MapScalarApiReference();
+    await dbOperator.ApplyMigrations(app);
     await app.Services.SeedRoles();
 }
 

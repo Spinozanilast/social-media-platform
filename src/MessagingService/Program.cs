@@ -1,4 +1,4 @@
-using MessagingService.Common.Services;
+using MessagingService;
 using MessagingService.Data;
 using MessagingService.Entities.Enums;
 using MessagingService.Services;
@@ -13,8 +13,7 @@ var dbOperator = new DbOperator<MessagingDbContext>();
 dbOperator.AddDbContextWithSnakeNamingConvention(builder.Services, builder.Configuration,
     o => o.UseNpgsql(optionsBuilder => optionsBuilder.MapEnum<ActivityState>("activity_state")));
 
-builder.Services.AddScoped<IChatService, ChatsService>();
-builder.Services.AddSignalR();
+builder.Services.AddMessagingServices(builder.Configuration);
 
 builder.Services.AddOpenApi();
 
@@ -23,7 +22,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    dbOperator.ApplyMigrations(app);
+    await dbOperator.ApplyMigrations(app);
 }
 
 app.UseHttpsRedirection();

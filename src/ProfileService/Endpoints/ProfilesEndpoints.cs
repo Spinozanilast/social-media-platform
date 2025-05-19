@@ -25,8 +25,7 @@ public static class ProfilesEndpoints
                 return TypedResults.Ok();
             })
             .RequireAuthorization()
-            .WithName("InitUserProfile")
-            .WithOpenApi();
+            .WithName("InitUserProfile");
 
         group.MapPut("{profileId:guid}/update", async Task<Ok> (
                 [FromRoute] Guid profileId,
@@ -37,8 +36,7 @@ public static class ProfilesEndpoints
                 return TypedResults.Ok();
             })
             .RequireAuthorization()
-            .WithName("UpdateProfile")
-            .WithOpenApi();
+            .WithName("UpdateProfile");
 
         group.MapGet("{profileId:guid}", async Task<Results<Ok<Profile>, NotFound>> (
                 [FromRoute] Guid profileId,
@@ -49,8 +47,7 @@ public static class ProfilesEndpoints
                 return profile is not null ? TypedResults.Ok(profile) : TypedResults.NotFound();
             })
             .AllowAnonymous()
-            .WithName("GetProfile")
-            .WithOpenApi();
+            .WithName("GetProfile");
 
         group.MapDelete("{profileId:guid}/delete", async Task<NoContent> (
                 [FromRoute] Guid profileId,
@@ -60,8 +57,9 @@ public static class ProfilesEndpoints
                 return TypedResults.NoContent();
             })
             .RequireAuthorization()
-            .WithName("DeleteProfile")
-            .WithOpenApi();
+            .WithName("DeleteProfile");
+
+        group.MapOpenApi();
 
         return group;
     }

@@ -61,8 +61,7 @@ public static class Endpoints
                         new RegisterResponse(user.Id, user.UserName));
                 })
             .AllowAnonymous()
-            .WithName("Register")
-            .WithOpenApi();
+            .WithName("Register");
 
         group.MapPost("/login", async Task<Results<Ok<AuthResponse>, ProblemHttpResult>>
             (
@@ -113,8 +112,7 @@ public static class Endpoints
                 ));
             })
             .AllowAnonymous()
-            .WithName("Login")
-            .WithOpenApi();
+            .WithName("Login");
 
         group.MapGet("/github/login",
                 ChallengeHttpResult () =>
@@ -122,8 +120,7 @@ public static class Endpoints
                         new AuthenticationProperties { RedirectUri = "/api/v1/auth/github/callback" },
                         new List<string> { "Github" }))
             .AllowAnonymous()
-            .WithName("GithubLogin")
-            .WithOpenApi();
+            .WithName("GithubLogin");
 
         group.MapGet("/github/callback", async Task<Results<RedirectHttpResult, UnauthorizedHttpResult>> (
                 [FromServices] ITokenService tokenService,
@@ -167,9 +164,7 @@ public static class Endpoints
                 return TypedResults.Redirect(configuration["Frontend:SuccessRedirectUrl"]);
             })
             .AllowAnonymous()
-            .WithName("GitHubCallback")
-            .WithOpenApi();
-
+            .WithName("GitHubCallback");
 
         group.MapPost("/logout", async Task<Results<NoContent, UnauthorizedHttpResult>> (
                 [FromBody] LoginRequest request,
@@ -202,8 +197,7 @@ public static class Endpoints
                 return TypedResults.NoContent();
             })
             .RequireAuthorization()
-            .WithName("Logout")
-            .WithOpenApi();
+            .WithName("Logout");
 
         group.MapPost("/me", async Task<Results<Ok, Ok<UserDto>, NotFound>> (
                 [FromServices] ILogger<Program> logger,
@@ -231,8 +225,7 @@ public static class Endpoints
                 return isUserResponse ? TypedResults.Ok(user.ToUserDto()) : TypedResults.Ok();
             })
             .RequireAuthorization()
-            .WithName("GetCurrentUser")
-            .WithOpenApi();
+            .WithName("GetCurrentUser");
 
         group.MapGet("{idOrUsername}", async Task<Results<Ok<UserDto>, NotFound>> (
                 [FromRoute] string idOrUsername,
@@ -248,8 +241,7 @@ public static class Endpoints
                 return TypedResults.NotFound();
             })
             .AllowAnonymous()
-            .WithName("GetUser")
-            .WithOpenApi();
+            .WithName("GetUser");
 
         group.MapPost("/refresh-token", async Task<Results<Ok<AuthResponse>, ProblemHttpResult>> (
                 [FromServices] ILogger<Program> logger,
@@ -327,8 +319,7 @@ public static class Endpoints
                     newAccessToken.Expires, null));
             })
             .AllowAnonymous()
-            .WithName("RefreshToken")
-            .WithOpenApi();
+            .WithName("RefreshToken");
 
         group.MapGet("/devices", async Task<Results<Ok<IEnumerable<DeviceInfoResponse>>, UnauthorizedHttpResult>> (
                 [FromServices] UserManager<User> userManager,
@@ -349,8 +340,7 @@ public static class Endpoints
                 return TypedResults.Ok(activeSessions);
             })
             .RequireAuthorization()
-            .WithName("GetDevices")
-            .WithOpenApi();
+            .WithName("GetDevices");
 
         group.MapPost("/devices/revoke", async Task<Results<NoContent, ProblemHttpResult, UnauthorizedHttpResult>> (
                 [FromBody] RevokeDeviceRequest request,
@@ -387,9 +377,9 @@ public static class Endpoints
                 return TypedResults.NoContent();
             })
             .RequireAuthorization()
-            .WithName("RevokeDevice")
-            .WithOpenApi();
+            .WithName("RevokeDevice");
 
+        group.MapOpenApi();
 
         return group;
     }

@@ -4,7 +4,7 @@ using MessagingService.Entities;
 
 namespace MessagingService.Repositories;
 
-public class MessagesesRepository(MessagingDbContext dbContext) : IMessagesRepository
+public class MessagesRepository(MessagingDbContext dbContext) : IMessagesRepository
 {
     private readonly MessagingDbContext _dbContext = dbContext;
 

@@ -25,8 +25,7 @@ public static class Endpoints
                 return TypedResults.Ok(result);
             })
             .AllowAnonymous()
-            .WithName("GetAllStories")
-            .WithOpenApi();
+            .WithName("GetAllStories");
 
         group.MapGet("/count", async (
                 [FromQuery] string? tag,
@@ -37,8 +36,7 @@ public static class Endpoints
                 return TypedResults.Ok(count);
             })
             .AllowAnonymous()
-            .WithName("GetStoriesCount")
-            .WithOpenApi();
+            .WithName("GetStoriesCount");
 
         group.MapGet("/{id:int}", async Task<Results<Ok<Story>, NotFound>> (
                 [FromRoute] int id,
@@ -50,8 +48,7 @@ public static class Endpoints
                     : TypedResults.Ok(story);
             })
             .AllowAnonymous()
-            .WithName("GetStoryById")
-            .WithOpenApi();
+            .WithName("GetStoryById");
 
         group.MapPost("/", async Task<Results<CreatedAtRoute<Story>, BadRequest<List<ValidationFailure>>>> (
                 [FromBody] CreateStoryModel model,
@@ -65,8 +62,7 @@ public static class Endpoints
                     : TypedResults.BadRequest(result.Errors);
             })
             .RequireAuthorization()
-            .WithName("CreateStory")
-            .WithOpenApi();
+            .WithName("CreateStory");
 
         group.MapPut("/{id:int}", async Task<Results<NoContent, BadRequest<List<ValidationFailure>>, NotFound>> (
                 [FromRoute] int id,
@@ -84,8 +80,7 @@ public static class Endpoints
                     : TypedResults.BadRequest(result.Errors);
             })
             .RequireAuthorization()
-            .WithName("UpdateStory")
-            .WithOpenApi();
+            .WithName("UpdateStory");
 
         group.MapDelete("/{id:int}", async (
                 [FromRoute] int id,
@@ -95,9 +90,10 @@ public static class Endpoints
                 return TypedResults.NoContent();
             })
             .RequireAuthorization()
-            .WithName("DeleteStory")
-            .WithOpenApi();
+            .WithName("DeleteStory");
 
+        group.MapOpenApi();
+        
         return group;
     }
 }

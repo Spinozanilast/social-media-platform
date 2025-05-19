@@ -21,8 +21,7 @@ public static class ProfilesImagesEndpoints
                     : TypedResults.BadRequest();
             })
             .RequireAuthorization()
-            .WithName("UploadProfileImage")
-            .WithOpenApi();
+            .WithName("UploadProfileImage");
 
         group.MapGet("", async Task<Results<FileStreamHttpResult, NotFound<string>>> (
                 [FromRoute] Guid userId,
@@ -40,8 +39,7 @@ public static class ProfilesImagesEndpoints
                 }
             })
             .AllowAnonymous()
-            .WithName("GetProfileImage")
-            .WithOpenApi();
+            .WithName("GetProfileImage");
 
         group.MapDelete("/delete", async Task<Results<NoContent, NotFound>> (
                 [FromRoute] Guid userId,
@@ -52,8 +50,9 @@ public static class ProfilesImagesEndpoints
                 return result ? TypedResults.NoContent() : TypedResults.NotFound();
             })
             .RequireAuthorization()
-            .WithName("RemoveProfileImage")
-            .WithOpenApi();
+            .WithName("RemoveProfileImage");
+
+        group.MapOpenApi();
 
         return group;
     }

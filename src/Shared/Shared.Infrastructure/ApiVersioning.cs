@@ -1,5 +1,4 @@
 ﻿using Asp.Versioning;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Shared.Infrastructure;

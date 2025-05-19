@@ -4,6 +4,7 @@ using Authentication.Configuration.Options;
 using MassTransit;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using ProfileService;
 using ProfileService.Common.Repositories;
 using ProfileService.Common.Services;
 using ProfileService.Consumers;
@@ -12,6 +13,7 @@ using ProfileService.Endpoints;
 using ProfileService.Entities;
 using ProfileService.Repositories;
 using ProfileService.Services;
+using Scalar.AspNetCore;
 using Shared.Infrastructure;
 using Shared.Infrastructure.Configurations;
 
@@ -19,17 +21,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddConfiguredSerilog(builder.Configuration);
 
+builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 var dbOperator = new DbOperator<ProfilesDbContext>();
 dbOperator.AddDbContextWithSnakeNamingConvention(builder.Services, builder.Configuration);
-
-builder.Services.AddS3Client(builder.Configuration);
-builder.Services.AddScoped<IProfileImageService, ProfileImageService>();
-builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
-builder.Services.AddScoped<ICountriesRepository, CountriesRepository>();
-builder.Services.Configure<ProfileImageStorageConfig>(builder.Configuration.GetSection("ProfileImageStorage"));
 
 var rabbitMqConfig = new RabbitMqConfiguration();
 builder.Configuration.GetSection(RabbitMqConfiguration.SectionName).Bind(rabbitMqConfig);
@@ -42,8 +38,10 @@ builder.Services.AddMassTransitConfigured(rabbitMqConfig,
 );
 
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptions.SectionName));
-builder.Services.AddJwtAuthentication();
 
+builder.Services.AddProfileServices(builder.Configuration);
+
+builder.Services.AddJwtAuthentication();
 builder.Services.AddConfiguredApiVersioning();
 
 var app = builder.Build();
@@ -71,16 +69,16 @@ app.MapGet("api/v{version:apiVersion}/countries",
         })
     .AllowAnonymous()
     .WithName("GetCountries")
-    .WithOpenApi();
+    .WithOpenApi()
+    .HasApiVersion(1, 0);
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-    dbOperator.ApplyMigrations(app);
+    app.MapScalarApiReference();
+    await dbOperator.ApplyMigrations(app);
 }
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
-app.UseAuthorization();
+
 app.Run();

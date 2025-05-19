@@ -1,4 +1,3 @@
-using AuthorizationService.Contracts.Register;
 using AuthorizationService.Contracts.Users;
 using AuthorizationService.Entities;
 

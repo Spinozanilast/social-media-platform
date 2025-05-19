@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using NpgsqlTypes;
 
 #nullable disable
 
@@ -18,7 +19,7 @@ namespace MessagingService.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.4")
+                .HasAnnotation("ProductVersion", "9.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "activity_state", new[] { "chat_in", "offline", "online" });
@@ -117,9 +118,19 @@ namespace MessagingService.Data.Migrations
                         .HasColumnType("text")
                         .HasColumnName("content");
 
+                    b.Property<NpgsqlTsVector>("SearchVector")
+                        .IsRequired()
+                        .HasColumnType("tsvector")
+                        .HasColumnName("search_vector");
+
                     b.Property<Guid>("SenderChatId")
                         .HasColumnType("uuid")
                         .HasColumnName("sender_chat_id");
+
+                    b.Property<string>("SenderId")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("sender_id");
 
                     b.Property<string>("SenderUserId")
                         .IsRequired()
@@ -136,11 +147,11 @@ namespace MessagingService.Data.Migrations
                     b.HasIndex("ChatId")
                         .HasDatabaseName("ix_messages_chat_id");
 
-                    b.HasIndex("Content")
-                        .HasDatabaseName("ix_messages_content")
+                    b.HasIndex("SearchVector")
+                        .HasDatabaseName("ix_messages_search_vector")
                         .HasAnnotation("Npgsql:CreatedConcurrently", true);
 
-                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("Content"), "gin");
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("SearchVector"), "gin");
 
                     b.HasIndex("SenderChatId", "SenderUserId")
                         .HasDatabaseName("ix_messages_sender_chat_id_sender_user_id");
@@ -151,7 +162,7 @@ namespace MessagingService.Data.Migrations
             modelBuilder.Entity("MessagingService.Entities.ChatParticipant", b =>
                 {
                     b.HasOne("MessagingService.Entities.Chat", "Chat")
-                        .WithMany("Users")
+                        .WithMany("Participants")
                         .HasForeignKey("ChatId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
@@ -185,7 +196,7 @@ namespace MessagingService.Data.Migrations
                 {
                     b.Navigation("Messages");
 
-                    b.Navigation("Users");
+                    b.Navigation("Participants");
                 });
 #pragma warning restore 612, 618
         }
