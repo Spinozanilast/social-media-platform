@@ -1,7 +1,7 @@
 import React from 'react';
-import Logo from '../Logo';
-import NavbarButtons from './NavbarButtons';
-import NavSwitchers from '../../common/NavSwitchers';
+import Logo from '~components/layout/logo';
+import NavbarButtons from '~components/layout/navbar/navbar-buttons';
+import NavSwitchers from '~components/common/navigation-switchers';
 
 interface NavbarProps {
     withUser?: boolean;

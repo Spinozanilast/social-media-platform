@@ -1,4 +1,4 @@
-import storage from '@/app/lib/api/storage';
+import storage from '~/lib/api/storage';
 
 const USER_ID_KEY = 'userId';
 

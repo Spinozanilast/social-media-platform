@@ -2,12 +2,12 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useDisclosure } from '@heroui/react';
-import EditProfileModal from '@components/modals/EditProfileModal';
-import { User } from '@api/auth/types';
-import { Profile } from '@api/profile/types';
-import { ProfileImagesService, ProfilesService } from '@api/profile/service';
-import { ProfileHeader } from '@components/profile/ProfileHeader';
-import { ProfileDetails } from '@components/profile/ProfileDetails';
+import EditProfileModal from '~/components/modals/edit-profile';
+import { User } from '~api/auth/types';
+import { Profile } from '~api/profile/types';
+import { ProfileImagesService, ProfilesService } from '~api/profile/service';
+import ProfileHeader from '~/components/profile/profile-header';
+import { ProfileDetails } from '~/components/profile/profile-details';
 
 interface UserProfileProps {
     user: User;

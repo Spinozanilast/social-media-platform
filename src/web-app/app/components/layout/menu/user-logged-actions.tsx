@@ -1,10 +1,10 @@
 'use client';
 
-import AuthService from '@api/auth/service';
+import AuthService from '~api/auth/service';
 import React from 'react';
 import { DropdownItem } from '@heroui/react';
-import { User } from '@/app/api/auth/types';
-import { Router } from '@/app/components/layout/menu/ActionsMenu';
+import { User } from '~/api/auth/types';
+import { Router } from '~/components/layout/menu/actions';
 import { LogOut, UserRound } from 'lucide-react';
 
 type UserLoggedActionsProps = {
@@ -18,11 +18,11 @@ type UserLoggedActionsProps = {
     };
 };
 
-const UserLoggedActions = ({
+export default function UserLoggedActions({
     router,
     currentUser,
     translations,
-}: UserLoggedActionsProps) => {
+}: UserLoggedActionsProps) {
     const handleRedirectToProfile = () => {
         const profileUrl = currentUser.userName;
         if (profileUrl) {
@@ -63,6 +63,4 @@ const UserLoggedActions = ({
             </DropdownItem>
         </>
     );
-};
-
-export default UserLoggedActions;
+}

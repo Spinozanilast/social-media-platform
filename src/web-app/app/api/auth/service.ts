@@ -1,4 +1,4 @@
-import apiClient from '@/app/lib/api/client';
+import apiClient from '~/lib/api/client';
 import { RegisterErrorResponse } from './types';
 import {
     DeviceInfoResponse,
@@ -13,7 +13,7 @@ import {
     User,
 } from './types';
 import { AxiosError } from 'axios';
-import UserStorage from '@api/storage/user';
+import UserStorage from '~api/storage/user';
 
 const API_VERSION = '1.0';
 const BASE_PATH = `/api/v${API_VERSION}/auth`;

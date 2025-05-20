@@ -1,67 +1,36 @@
 {
-  "compilerOptions": {
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
-    "paths": {
-      "@/*": [
-        "./*"
-      ],
-      "@themes/*": [
-        "./app/themes/*"
-      ],
-      "@providers/*": [
-        "./app/providers/*"
-      ],
-      "@app/*": [
-        "./app/*"
-      ],
-      "@api/*": [
-        "./app/api/*"
-      ],
-      "@hooks/*": [
-        "./app/hooks/*"
-      ],
-      "@stores/*": [
-        "./app/stores/*"
-      ],
-      "@models/*": [
-        "./app/models/*"
-      ],
-      "@components/*": [
-        "./app/components/*"
-      ],
-      "@data/*": [
-        "./app/data/*"
-      ]
+    "compilerOptions": {
+        "lib": ["dom", "dom.iterable", "esnext"],
+        "allowJs": true,
+        "skipLibCheck": true,
+        "strict": true,
+        "noEmit": true,
+        "esModuleInterop": true,
+        "module": "esnext",
+        "moduleResolution": "bundler",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "jsx": "preserve",
+        "incremental": true,
+        "plugins": [
+            {
+                "name": "next"
+            }
+        ],
+        "paths": {
+            "~i18n/*": ["./i18n/*"],
+            "~themes/*": ["./app/themes/*"],
+            "~providers/*": ["./app/providers/*"],
+            "~/*": ["./app/*"],
+            "~api/*": ["./app/api/*"],
+            "~hooks/*": ["./app/hooks/*"],
+            "~stores/*": ["./app/stores/*"],
+            "~models/*": ["./app/models/*"],
+            "~components/*": ["./app/components/*"],
+            "~data/*": ["./app/data/*"]
+        },
+        "target": "ES2017"
     },
-    "target": "ES2017"
-  },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+    "exclude": ["node_modules"]
 }

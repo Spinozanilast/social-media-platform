@@ -1,6 +1,6 @@
 import useSWR from 'swr';
-import StoriesService from '@api/story/service';
-import { Story } from '@api/story/types';
+import StoriesService from '~api/story/service';
+import { Story } from '~api/story/types';
 
 type useStoriesParams = {
     authorId: string;

@@ -1,5 +1,5 @@
 import { Button, Image, Snippet, Spinner } from '@heroui/react';
-import ImageTooltip from '@components/common/ImageTooltip';
+import ImageTooltip from '~/components/common/image-tooltip';
 import { UserRoundPen } from 'lucide-react';
 import React from 'react';
 
@@ -16,7 +16,7 @@ type ProfileHeaderProps = {
     };
 };
 
-export const ProfileHeader = ({
+export default function ProfileHeader({
     firstName,
     lastName,
     userName,
@@ -24,7 +24,7 @@ export const ProfileHeader = ({
     isOwner,
     onModalOpen,
     translations,
-}: ProfileHeaderProps) => {
+}: ProfileHeaderProps) {
     return (
         <div className="flex flex-row gap-5 items-center justify-center">
             {imageUrl === '/profile.svg' ? (
@@ -87,4 +87,4 @@ export const ProfileHeader = ({
             </div>
         </div>
     );
-};
+}

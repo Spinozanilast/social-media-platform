@@ -1,6 +1,6 @@
-import Copyright from '@/app/components/layout/Copyright';
-import Logo from '@/app/components/layout/Logo';
-import NavSwitchers from '../components/common/NavSwitchers';
+import Copyright from '~/components/layout/copyright';
+import Logo from '~/components/layout/logo';
+import NavSwitchers from '../components/common/navigation-switchers';
 import React from 'react';
 
 export default function Layout({

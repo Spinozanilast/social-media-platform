@@ -1,5 +1,5 @@
 import { getTranslations } from 'next-intl/server';
-import ClientLoginForm from '@app/(auth)/login/ClientLoginForm';
+import ClientLoginForm from '~/components/forms/client-login-form';
 
 export default async function LoginPage() {
     const t = await getTranslations('LoginPage');
@@ -16,7 +16,9 @@ export default async function LoginPage() {
                 forgot_password: t('forgot_password'),
                 sign_in: t('sign_in'),
                 create_account: t('create_account'),
-                error_user_exists_or_not_found: t('error_user_exists_or_not_found'),
+                error_user_exists_or_not_found: t(
+                    'error_user_exists_or_not_found'
+                ),
             }}
         />
     );

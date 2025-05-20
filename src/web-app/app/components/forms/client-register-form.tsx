@@ -4,16 +4,16 @@ import {
     RegisterRequest,
     RegisterResult,
     RegisterSchema,
-} from '@api/auth/types';
+} from '~api/auth/types';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import AuthService from '@api/auth/service';
+import AuthService from '~api/auth/service';
 import { Lock } from 'lucide-react';
-import { TranslatedFields } from '@app/(auth)/register/types';
+import { TranslatedFields } from '~/(auth)/register/types';
 import { Button, cn, Input, Link } from '@heroui/react';
-import PasswordInput from '@components/special/PasswordInput';
+import PasswordInput from '~/components/special/password-input';
 
 interface ClientRegisterFormProps {
     translations: {

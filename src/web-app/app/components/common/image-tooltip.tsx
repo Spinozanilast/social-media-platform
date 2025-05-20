@@ -1,5 +1,5 @@
-import { Tooltip, Image, ImageProps, TooltipProps } from "@heroui/react";
-import React from "react";
+import { Tooltip, Image, ImageProps, TooltipProps } from '@heroui/react';
+import React from 'react';
 
 interface ImageTooltipProps {
     width: number;
@@ -9,13 +9,13 @@ interface ImageTooltipProps {
     toolTipProps?: TooltipProps;
 }
 
-const ImageTooltip: React.FC<ImageTooltipProps> = ({
+export default function ImageTooltip({
     width,
     imageUrl,
     children,
     imageProps,
     toolTipProps,
-}) => {
+}: ImageTooltipProps) {
     return (
         <Tooltip
             className="p-2"
@@ -36,6 +36,4 @@ const ImageTooltip: React.FC<ImageTooltipProps> = ({
             {children}
         </Tooltip>
     );
-};
-
-export default ImageTooltip;
+}

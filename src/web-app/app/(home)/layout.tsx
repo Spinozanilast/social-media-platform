@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-import '@app/globals.css';
-import Navbar from '@components/layout/navbar/Navbar';
+import '~/globals.css';
+import Navbar from '~/components/layout/navbar/navbar';
 
 export const metadata: Metadata = {
     title: 'Platform',

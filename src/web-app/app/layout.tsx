@@ -1,6 +1,6 @@
 import './globals.css';
 
-import HeroProvider from '@providers/hero-provider';
+import HeroProvider from '~providers/hero-provider';
 import React from 'react';
 
 import type { Metadata } from 'next';
@@ -21,7 +21,7 @@ export default async function RootLayout({
     const messages = await getMessages();
 
     return (
-        <html lang={locale}>
+        <html lang={locale} suppressHydrationWarning>
             <head>
                 <script
                     dangerouslySetInnerHTML={{
@@ -38,7 +38,10 @@ export default async function RootLayout({
             `,
                     }}
                 />
-                <script src="https://unpkg.com/react-scan/dist/auto.global.js" />
+                <script
+                    async
+                    src="https://unpkg.com/react-scan/dist/auto.global.js"
+                />
             </head>
             <body>
                 <NextIntlClientProvider messages={messages}>

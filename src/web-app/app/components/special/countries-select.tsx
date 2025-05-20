@@ -2,15 +2,15 @@
 
 import { Select, SelectItem, Avatar } from '@heroui/react';
 import React, { useState, useEffect } from 'react';
-import { getCountries } from '@api/profile/service';
-import { Country } from '@api/profile/types';
+import { getCountries } from '~api/profile/service';
+import { Country } from '~api/profile/types';
 
 interface CountrySelectProps {
     value: Country | undefined;
     onChange: (country: Country) => void;
 }
 
-const CountrySelect = ({ value, onChange }: CountrySelectProps) => {
+export default function CountrySelect({ value, onChange }: CountrySelectProps) {
     const [countries, setCountries] = useState<Country[]>([]);
 
     useEffect(() => {
@@ -90,6 +90,4 @@ const CountrySelect = ({ value, onChange }: CountrySelectProps) => {
             )}
         </Select>
     );
-};
-
-export default CountrySelect;
+}

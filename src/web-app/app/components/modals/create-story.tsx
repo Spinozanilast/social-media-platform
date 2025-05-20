@@ -13,10 +13,10 @@ import MarkdownIt from 'markdown-it';
 import MdEditor from 'react-markdown-editor-lite';
 import 'react-markdown-editor-lite/lib/index.css';
 import { useSWRConfig } from 'swr';
-import StoriesService from '@api/story/service';
-import { CreateStoryModel } from '@api/story/types';
-import { storiesMutationKey } from '@hooks/swr/useStories';
-import { storiesCountMutationKey } from '@hooks/swr/useStoriesCount';
+import StoriesService from '~api/story/service';
+import { CreateStoryModel } from '~api/story/types';
+import { storiesMutationKey } from '~hooks/swr/useStories';
+import { storiesCountMutationKey } from '~hooks/swr/useStoriesCount';
 
 const mdParser = new MarkdownIt();
 

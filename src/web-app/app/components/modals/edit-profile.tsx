@@ -12,11 +12,11 @@ import {
     Spinner,
 } from '@heroui/react';
 import { parseDate } from '@internationalized/date';
-import ImageTooltip from '../common/ImageTooltip';
-import { Profile } from '@api/profile/types';
-import CountrySelect from '@components/special/CountriesSelect';
-import InterestManager from '@components/profile/InterestManager';
-import ReferenceManager from '@components/profile/ReferencesManager';
+import ImageTooltip from '~components/common/image-tooltip';
+import { Profile } from '~api/profile/types';
+import CountrySelect from '~/components/special/countries-select';
+import InterestManager from '~/components/profile/interest-manager';
+import ReferenceManager from '~/components/profile/reference-manager';
 import Image from 'next/image';
 
 interface EditProfileProps {

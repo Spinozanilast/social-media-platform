@@ -3,7 +3,7 @@
 import React from 'react';
 import { LogIn, UserPlus } from 'lucide-react';
 import { DropdownItem } from '@heroui/react';
-import { Router } from '@/app/components/layout/menu/ActionsMenu';
+import { Router } from '~/components/layout/menu/actions';
 
 type AnonymousUserActionsProps = {
     router: Router;
@@ -14,10 +14,10 @@ type AnonymousUserActionsProps = {
     };
 };
 
-const AnonymousUserActions = ({
+export default function AnonymousUserActions({
     router,
     translations,
-}: AnonymousUserActionsProps) => {
+}: AnonymousUserActionsProps) {
     return (
         <>
             <DropdownItem
@@ -39,6 +39,4 @@ const AnonymousUserActions = ({
             </DropdownItem>
         </>
     );
-};
-
-export default AnonymousUserActions;
+}

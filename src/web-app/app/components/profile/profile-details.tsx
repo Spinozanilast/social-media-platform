@@ -1,5 +1,5 @@
-import { Profile } from '@api/profile/types';
-import { getLinkStyle } from '@components/special/LinkStyle';
+import { Profile } from '~api/profile/types';
+import { getLinkStyle } from '~/utils/link-style';
 import Link from 'next/link';
 import React from 'react';
 import { Roboto } from 'next/font/google';

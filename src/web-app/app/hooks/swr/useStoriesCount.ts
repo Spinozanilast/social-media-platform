@@ -1,5 +1,5 @@
-import { Story } from '@api/story/types';
-import StoriesService from '@api/story/service';
+import { Story } from '~api/story/types';
+import StoriesService from '~api/story/service';
 import useSWR from 'swr';
 
 const storiesCountFetcher = async ([, authorId]: [

@@ -1,4 +1,4 @@
-import apiClient from '@/app/lib/api/client';
+import apiClient from '~/lib/api/client';
 import { Country, Profile } from './types';
 
 const API_VERSION = '1.0';

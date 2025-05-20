@@ -7,7 +7,10 @@ type ReferenceManagerProps = {
     onUpdate: (references: string[]) => void;
 };
 
-const ReferenceManager = ({ references, onUpdate }: ReferenceManagerProps) => {
+export default function ReferenceManager({
+    references,
+    onUpdate,
+}: ReferenceManagerProps) {
     const [newRef, setNewRef] = useState('');
 
     const addReference = () => {
@@ -57,6 +60,4 @@ const ReferenceManager = ({ references, onUpdate }: ReferenceManagerProps) => {
             </div>
         </div>
     );
-};
-
-export default ReferenceManager;
+}

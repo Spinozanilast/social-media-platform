@@ -1,6 +1,6 @@
-// import IdentityService from '@api/services/user';
-// import ProfileService from '@api/services/profile';
-// import Profile from '@/app/api/types/profiles/profile';
+// import IdentityService from '~api/services/user';
+// import ProfileService from '~api/services/profile';
+// import Profile from '~/api/types/profiles/profile';
 //
 // export const fetchIsAuthenticated = async (
 //     userName: string,

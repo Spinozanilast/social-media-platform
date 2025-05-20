@@ -1,6 +1,6 @@
 'use client';
 
-import AuthService from '@api/auth/service';
+import AuthService from '~api/auth/service';
 import Image from 'next/image';
 import React, { useEffect } from 'react';
 import {
@@ -14,11 +14,11 @@ import {
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { EllipsisVertical } from 'lucide-react';
-import { User } from '@api/auth/types';
-import UserLoggedActions from '@components/layout/menu/UserLoggedActions';
-import AnonymousUserActions from '@components/layout/menu/AnonymousUserActions';
+import { User } from '~api/auth/types';
+import UserLoggedActions from '~/components/layout/menu/user-logged-actions';
+import AnonymousUserActions from '~/components/layout/menu/anonymous-actions';
 
-const ActionsMenu = () => {
+export default function ActionsMenu() {
     const t = useTranslations('CurrentUser');
 
     const router = useRouter();
@@ -91,8 +91,6 @@ const ActionsMenu = () => {
             </DropdownMenu>
         </Dropdown>
     );
-};
+}
 
 export type Router = ReturnType<typeof useRouter>;
-
-export default ActionsMenu;

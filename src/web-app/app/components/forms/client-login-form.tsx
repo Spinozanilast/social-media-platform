@@ -7,9 +7,9 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { LockOpen } from 'lucide-react';
-import PasswordInput from '@/app/components/special/PasswordInput';
-import { LoginRequest, LoginSchema } from '@api/auth/types';
-import AuthService from '@api/auth/service';
+import PasswordInput from '~/components/special/password-input';
+import { LoginRequest, LoginSchema } from '~api/auth/types';
+import AuthService from '~api/auth/service';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 interface ClientLoginFormProps {

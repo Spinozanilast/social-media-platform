@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import AuthService from '@api/auth/service';
+import AuthService from '~api/auth/service';
 
 const protectedRoutes = ['/messages'];
 const authRoutes = ['/login', '/register'];

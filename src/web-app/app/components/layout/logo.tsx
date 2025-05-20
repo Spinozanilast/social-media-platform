@@ -1,8 +1,9 @@
 'use client';
 
-import OnDisplayAnimatedSpan from '../special/OnDisplayAnimatedSpan';
+import OnDisplayAnimatedSpan from '~/components/special/animated-span';
 import '@fontsource/share-tech-mono';
 import { useState } from 'react';
+import Link from 'next/link';
 
 type LogoProps = {
     animationType: 'backward' | 'forward';
@@ -27,11 +28,12 @@ export default function Logo({
         animationType === 'forward' ? 'group-hover:inline hidden' : 'inline';
 
     return (
-        <div
+        <Link
             className="w-32"
             style={{ fontFamily: 'Share Tech Mono' }}
             onMouseEnter={handlePointerEnter}
             onMouseLeave={handlePointerLeave}
+            href="/"
         >
             <p
                 className={`w-full group logo text-accent-orange text-3xl + ${textClassName}`}
@@ -47,6 +49,6 @@ export default function Logo({
                 </OnDisplayAnimatedSpan>
                 m
             </p>
-        </div>
+        </Link>
     );
 }

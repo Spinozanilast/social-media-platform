@@ -18,8 +18,8 @@ import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
 import React, { useCallback } from 'react';
 import { EllipsisVertical } from 'lucide-react';
-import { Story } from '@api/story/types';
-import StoriesService from '@api/story/service';
+import { Story } from '~api/story/types';
+import StoriesService from '~api/story/service';
 
 type StoryCardProps = {
     key: string | number;
@@ -77,7 +77,7 @@ export const StoryCard: React.FC<StoryCardProps> = ({
                             )}
                     </div>
                     {isAuthenticated && (
-                        <Dropdown backdrop='opaque'>
+                        <Dropdown backdrop="opaque">
                             <DropdownTrigger>
                                 <Button
                                     isIconOnly

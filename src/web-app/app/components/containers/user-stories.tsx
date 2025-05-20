@@ -10,16 +10,16 @@ import {
     Pagination,
     Skeleton,
 } from '@heroui/react';
-import StoriesService from '@api/story/service';
+import StoriesService from '~api/story/service';
 import { useDisclosure } from '@heroui/react';
 import { MessageSquarePlus } from 'lucide-react';
-import { StoryCard } from '@components/common/Story';
+import { StoryCard } from '~/components/common/story';
 import useStoriesCount, {
     storiesCountMutationKey,
-} from '@hooks/swr/useStoriesCount';
-import useStories, { storiesMutationKey } from '@hooks/swr/useStories';
-import { CreateStoryModal } from '@components/modals/CreatyStory';
-import { Story } from '@api/story/types';
+} from '~hooks/swr/useStoriesCount';
+import useStories, { storiesMutationKey } from '~hooks/swr/useStories';
+import { CreateStoryModal } from '~/components/modals/create-story';
+import { Story } from '~api/story/types';
 import { mutate } from 'swr';
 
 type UserStoriesContainerProps = {
@@ -28,11 +28,11 @@ type UserStoriesContainerProps = {
     isOwner: boolean;
 };
 
-const UserStoriesContainer = ({
+export default function UserStoriesContainer({
     userId,
     initialStories,
     isOwner,
-}: UserStoriesContainerProps) => {
+}: UserStoriesContainerProps) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize] = useState(10);
@@ -142,6 +142,4 @@ const UserStoriesContainer = ({
             )}
         </div>
     );
-};
-
-export default UserStoriesContainer;
+}

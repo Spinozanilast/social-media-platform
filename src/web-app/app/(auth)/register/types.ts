@@ -1,4 +1,4 @@
-import { RegisterSchemaKeys } from '@api/auth/types';
+import { RegisterSchemaKeys } from '~api/auth/types';
 
 export type FormField = {
     id: RegisterSchemaKeys;

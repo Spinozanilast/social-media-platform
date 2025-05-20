@@ -3,8 +3,8 @@ import {
     FormField,
     RegisterFormFields,
     TranslatedFields,
-} from '@app/(auth)/register/types';
-import ClientRegisterForm from '@app/(auth)/register/ClientRegisterForm';
+} from '~/(auth)/register/types';
+import ClientRegisterForm from '~/components/forms/client-register-form';
 
 export default function RegisterPage() {
     const t = useTranslations('RegisterPage');
