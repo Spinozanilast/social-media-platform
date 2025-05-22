@@ -6,6 +6,7 @@ using AuthorizationService.Contracts.Login;
 using AuthorizationService.Contracts.Register;
 using AuthorizationService.Contracts.Users;
 using AuthorizationService.Entities;
+using AuthorizationService.Entities.OAuthInfos;
 using AuthorizationService.Extensions;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication;
@@ -117,12 +118,13 @@ public static class Endpoints
         group.MapGet("/github/login",
                 ChallengeHttpResult () =>
                     TypedResults.Challenge(
-                        new AuthenticationProperties { RedirectUri = "/api/v1/auth/github/callback" },
-                        new List<string> { "Github" }))
+                        new AuthenticationProperties
+                            { RedirectUri = "/api/v1/auth/signin-github" },
+                        ["Github"]))
             .AllowAnonymous()
             .WithName("GithubLogin");
 
-        group.MapGet("/github/callback", async Task<Results<RedirectHttpResult, UnauthorizedHttpResult>> (
+        group.MapGet("/signin-github", async Task<Results<RedirectHttpResult, UnauthorizedHttpResult>> (
                 [FromServices] ITokenService tokenService,
                 [FromServices] ICookieManager cookieManager,
                 [FromServices] UserManager<User> userManager,
@@ -132,19 +134,34 @@ public static class Endpoints
                 var authResult = await context.AuthenticateAsync("Github");
                 if (!authResult.Succeeded) return TypedResults.Unauthorized();
 
-                var principal = authResult.Principal;
-                var githubId = principal.FindFirstValue(ClaimTypes.NameIdentifier)!;
-                var email = principal.FindFirstValue(ClaimTypes.Email)!;
-                var username = principal.FindFirstValue(ClaimTypes.Name)!;
-                var avatarUrl = principal.FindFirstValue("urn:github:avatar");
 
-                var user = await userManager.FindByEmailAsync(email) ?? await userManager.FindByNameAsync(username);
+                var principal = authResult.Principal;
+
+                var githubId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
+                var avatarUrl = principal.FindFirstValue("urn:github:avatar_url");
+                var profileUrl = principal.FindFirstValue("urn:github:html_url");
+                var username = principal.FindFirstValue(ClaimTypes.Name);
+                var email = principal.FindFirstValue(ClaimTypes.Email)
+                            ?? principal.FindFirstValue("urn:github:email");
+
+                var user = string.IsNullOrEmpty(email)
+                    ? await userManager.FindByNameAsync(username)
+                    : await userManager.FindByEmailAsync(email);
 
                 if (user is null)
                 {
                     user = new User
                     {
-                        UserName = username, Email = email, AvatarUrl = avatarUrl, GithubId = githubId
+                        UserName = username,
+                        Email = email,
+                        GithubInfo = new GithubInfo
+                        {
+                            GithubId = githubId,
+                            GithubEmail = email,
+                            GithubUsername = username,
+                            ProfileUrl = profileUrl,
+                            AvatarUrl = avatarUrl,
+                        }
                     };
 
                     await userManager.CreateAsync(user);

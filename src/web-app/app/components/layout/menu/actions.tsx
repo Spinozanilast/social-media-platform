@@ -18,7 +18,7 @@ import { User } from '~api/auth/types';
 import UserLoggedActions from '~/components/layout/menu/user-logged-actions';
 import AnonymousUserActions from '~/components/layout/menu/anonymous-actions';
 
-export default function ActionsMenu() {
+export default function UserActions() {
     const t = useTranslations('CurrentUser');
 
     const router = useRouter();

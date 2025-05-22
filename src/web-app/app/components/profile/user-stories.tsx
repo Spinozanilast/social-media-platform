@@ -13,12 +13,12 @@ import {
 import StoriesService from '~api/story/service';
 import { useDisclosure } from '@heroui/react';
 import { MessageSquarePlus } from 'lucide-react';
-import { StoryCard } from '~/components/common/story';
+import { StoryCard } from '~/components/stories/story';
 import useStoriesCount, {
     storiesCountMutationKey,
 } from '~hooks/swr/useStoriesCount';
 import useStories, { storiesMutationKey } from '~hooks/swr/useStories';
-import { CreateStoryModal } from '~/components/modals/create-story';
+import { CreateStoryModal } from '~/components/stories/create-story';
 import { Story } from '~api/story/types';
 import { mutate } from 'swr';
 

@@ -39,6 +39,7 @@ app.MapGroup("/api/v{version:apiVersion}/stories")
 
 if (app.Environment.IsDevelopment())
 {
+    app.MapOpenApi();
     app.MapScalarApiReference();
     await dbOperator.ApplyMigrations(app);
 }

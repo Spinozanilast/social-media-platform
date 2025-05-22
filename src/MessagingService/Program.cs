@@ -3,6 +3,7 @@ using MessagingService.Data;
 using MessagingService.Entities.Enums;
 using MessagingService.Services;
 using Microsoft.EntityFrameworkCore;
+using Scalar.AspNetCore;
 using Shared.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +23,8 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference();
+
     await dbOperator.ApplyMigrations(app);
 }
 

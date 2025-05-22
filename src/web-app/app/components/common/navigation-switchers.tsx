@@ -1,6 +1,6 @@
 'use client';
 
-import LangSwitchSelect from '~/components/special/lang-switch-select';
+import LangSwitchSelect from '~/components/common/lang-switch-select';
 import { ThemeSwitcher } from '~components/layout/theme-switcher';
 
 export type NavSwitcherProps = {

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useDisclosure } from '@heroui/react';
-import EditProfileModal from '~/components/modals/edit-profile';
+import EditProfileModal from '~/components/profile/edit-profile-modal';
 import { User } from '~api/auth/types';
 import { Profile } from '~api/profile/types';
 import { ProfileImagesService, ProfilesService } from '~api/profile/service';

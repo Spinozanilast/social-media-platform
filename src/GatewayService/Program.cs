@@ -13,17 +13,7 @@ builder.Services.AddReverseProxy()
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptions.SectionName));
 builder.Services.AddJwtAuthentication();
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("NextFrontend", b =>
-    {
-        b
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials()
-            .WithOrigins(builder.Configuration["ClientApp"]!);
-    });
-});
+builder.Services.AddCorsPolicy("NextFrontend", builder.Configuration["ClientApp"]);
 
 var app = builder.Build();
 app.UseCors("NextFrontend");

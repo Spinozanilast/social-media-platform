@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { Button, ButtonGroup, Link } from '@heroui/react';
-import ActionsMenu from '~/components/layout/menu/actions';
+import UserActions from '~/components/layout/menu/actions';
 import React from 'react';
 import {
     BookOpenText,
@@ -48,7 +48,7 @@ export default function NavbarButtons() {
     const t = useTranslations('PagesNavbar');
     return (
         <ButtonGroup>
-            <ActionsMenu />
+            <UserActions />
             {PersonalUrlPagesItems.map((item) => (
                 <Button
                     variant="bordered"

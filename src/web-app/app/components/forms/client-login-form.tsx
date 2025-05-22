@@ -7,10 +7,11 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { LockOpen } from 'lucide-react';
-import PasswordInput from '~/components/special/password-input';
+import PasswordInput from '~/components/common/password-input';
 import { LoginRequest, LoginSchema } from '~api/auth/types';
 import AuthService from '~api/auth/service';
 import { zodResolver } from '@hookform/resolvers/zod';
+import GithubAuthButton from '~/components/github-button';
 
 interface ClientLoginFormProps {
     translations: {
@@ -77,9 +78,11 @@ export default function ClientLoginForm(props: ClientLoginFormProps) {
                     <h1 className="text-3xl my-2 fira-sans">{t.login}</h1>
                 </div>
                 <form
-                    className="flex flex-col gap-4"
+                    className="flex flex-col gap-4 form-container"
                     onSubmit={handleSubmit(onSubmit)}
                 >
+                    <GithubAuthButton />
+
                     <div className="flex flex-col gap-1">
                         <Input
                             label={t.email}

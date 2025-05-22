@@ -10,10 +10,11 @@ import React, { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import AuthService from '~api/auth/service';
-import { Lock } from 'lucide-react';
+import { Lock, SeparatorHorizontal } from 'lucide-react';
 import { TranslatedFields } from '~/(auth)/register/types';
-import { Button, cn, Input, Link } from '@heroui/react';
-import PasswordInput from '~/components/special/password-input';
+import { Button, cn, Divider, Input, Link } from '@heroui/react';
+import PasswordInput from '~/components/common/password-input';
+import GithubAuthButton from '~/components/github-button';
 
 interface ClientRegisterFormProps {
     translations: {
@@ -85,7 +86,11 @@ export default function ClientRegisterForm(props: ClientRegisterFormProps) {
                     </h1>
                 </div>
 
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    className="space-y-4 form-container"
+                >
+                    <GithubAuthButton />
                     <div className="grid grid-cols-2 gap-4">
                         {formFields.map((field) => (
                             <div

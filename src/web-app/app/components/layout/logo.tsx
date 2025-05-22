@@ -1,6 +1,6 @@
 'use client';
 
-import OnDisplayAnimatedSpan from '~/components/special/animated-span';
+import OnDisplayAnimatedSpan from '~/components/common/animated-span';
 import '@fontsource/share-tech-mono';
 import { useState } from 'react';
 import Link from 'next/link';

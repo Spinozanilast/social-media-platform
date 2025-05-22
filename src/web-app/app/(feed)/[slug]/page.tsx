@@ -1,7 +1,7 @@
 import StoriesService from '~api/story/service';
 import AuthService from '~api/auth/service';
-import UserProfile from '~/components/user-profile';
-import UserStoriesContainer from '~/components/containers/user-stories';
+import UserProfile from '~/components/profile/user-profile';
+import UserStoriesContainer from '~/components/profile/user-stories';
 import React from 'react';
 import { ProfilesService } from '~api/profile/service';
 import { notFound } from 'next/navigation';

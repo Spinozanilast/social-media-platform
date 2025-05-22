@@ -70,10 +70,12 @@ app.MapGet("api/v{version:apiVersion}/countries",
     .AllowAnonymous()
     .WithName("GetCountries")
     .WithOpenApi()
+    .WithApiVersionSet(apiVersionSet)
     .HasApiVersion(1, 0);
 
 if (app.Environment.IsDevelopment())
 {
+    app.MapOpenApi();
     app.MapScalarApiReference();
     await dbOperator.ApplyMigrations(app);
 }

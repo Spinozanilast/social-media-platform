@@ -14,6 +14,10 @@
 }
 
 @layer components {
+    .form-container {
+        @apply bg-background-secondary p-4 rounded-xl;
+    }
+
     .search-bar {
         @apply bg-transparent rounded-lg text-base border-transparent focus:outline-none focus:border-solid focus:placeholder:text-transparent transition duration-300;
     }

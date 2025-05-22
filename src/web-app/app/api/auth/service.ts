@@ -15,7 +15,7 @@ import {
 import { AxiosError } from 'axios';
 import UserStorage from '~api/storage/user';
 
-const API_VERSION = '1.0';
+const API_VERSION = '1';
 const BASE_PATH = `/api/v${API_VERSION}/auth`;
 
 type CurrentUserQuery = { isUserResponse: boolean };
@@ -23,6 +23,7 @@ type CurrentUserQuery = { isUserResponse: boolean };
 const authEndpoints = {
     register: `${BASE_PATH}/register`,
     login: `${BASE_PATH}/login`,
+    githubSignIn: `${BASE_PATH}/github/login`,
     logout: `${BASE_PATH}/logout`,
     refreshToken: `${BASE_PATH}/refresh-token`,
     user: (idOrUsername: string) => `${BASE_PATH}/${idOrUsername}`,
@@ -64,10 +65,19 @@ const AuthService = {
         return data;
     },
 
+    async githubSignIn(): Promise<void> {
+        window.location.href = `${BASE_PATH}/github/login`;
+    },
+
     async logOut(): Promise<void> {
-        await apiClient.post(authEndpoints.logout, null, {
-            withCredentials: true,
-        });
+        apiClient
+            .post(authEndpoints.logout, null, {
+                withCredentials: true,
+            })
+            .then((response) => {
+                console.log('response:');
+                console.log(response);
+            });
     },
 
     async refreshToken(): Promise<AuthResponse> {
@@ -84,7 +94,7 @@ const AuthService = {
             const response = await apiClient.get<User>(
                 authEndpoints.user(idOrUsername)
             );
-
+            console.log(response);
             if (response && response.status === 200) {
                 return response.data as User;
             }

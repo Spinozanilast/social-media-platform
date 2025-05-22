@@ -40,6 +40,7 @@ builder.Services.AddJwtAuthentication().AddConfiguredGithub(builder.Configuratio
 
 builder.Services.AddConfiguredApiVersioning();
 
+builder.Services.AddCorsPolicy("NextFrontend", builder.Configuration["ClientApp"]);
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
@@ -56,11 +57,13 @@ app.MapGroup("/api/v{version:apiVersion}/auth")
 
 if (app.Environment.IsDevelopment())
 {
+    app.MapOpenApi();
     app.MapScalarApiReference();
     await dbOperator.ApplyMigrations(app);
     await app.Services.SeedRoles();
 }
 
+app.UseCors("NextFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 
