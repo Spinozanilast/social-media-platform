@@ -57,7 +57,7 @@ export default function LangSwitchSelect({
                     showOutline={false}
                 >
                     <Button
-                        className="utility-small-icon min-w-fit"
+                        className="utility-large-icon min-w-fit"
                         onPress={handleButtonPress}
                     >
                         <Languages />

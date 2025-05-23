@@ -30,7 +30,7 @@ export function ThemeSwitcher(props: SwitchProps) {
                 {...getWrapperProps()}
                 className={slots.wrapper({
                     class: [
-                        'utility-small-icon',
+                        'utility-large-icon',
                         'flex items-center justify-center',
                         'px-0 mr-0 rounded-lg',
                     ],

@@ -1,4 +1,6 @@
-﻿namespace AuthorizationService.Contracts.Login;
+﻿using AuthorizationService.Entities.OAuthInfos;
+
+namespace AuthorizationService.Contracts.Login;
 
 public sealed record AuthResponse(
     Guid UserId,
@@ -6,4 +8,4 @@ public sealed record AuthResponse(
     string Email,
     IEnumerable<string> Roles,
     DateTime AccessTokenExpiry,
-    string? AvatarUrl);
+    GithubInfo GithubInfo);

@@ -11,6 +11,6 @@ public class UserRegisteredConsumer(ILogger<UserRegisteredConsumer> logger, IPro
     {
         logger.LogInformation("Consuming message created for user with id: {id}", context.Message.UserId);
         var userRegisteredMessage = context.Message;
-        await profileRepository.InitUserProfileAsync(userRegisteredMessage.UserId);
+        await profileRepository.InitUserProfileAsync(userRegisteredMessage.UserId, userRegisteredMessage.References);
     }
 }

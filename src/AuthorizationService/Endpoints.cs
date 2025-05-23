@@ -50,7 +50,7 @@ public static class Endpoints
 
                     try
                     {
-                        var registeredUser = new UserRegistered(user.Id);
+                        var registeredUser = new UserRegistered(user.Id, null);
                         await publishEndpoint.Publish(registeredUser);
                     }
                     catch (Exception ex)
@@ -105,11 +105,12 @@ public static class Endpoints
                 logger.LogInformation("User logged in: {UserId}", user.Id);
 
                 return TypedResults.Ok(new AuthResponse(
-                    user.Id,
-                    user.UserName ?? string.Empty,
-                    user.Email ?? string.Empty,
-                    await userManager.GetRolesAsync(user),
-                    accessToken.Expires, null
+                    UserId: user.Id,
+                    UserName: user.UserName ?? string.Empty,
+                    Email: user.Email ?? string.Empty,
+                    Roles: await userManager.GetRolesAsync(user),
+                    AccessTokenExpiry: accessToken.Expires,
+                    GithubInfo: user.GithubInfo
                 ));
             })
             .AllowAnonymous()
@@ -129,6 +130,8 @@ public static class Endpoints
                 [FromServices] ICookieManager cookieManager,
                 [FromServices] UserManager<User> userManager,
                 [FromServices] IConfiguration configuration,
+                [FromServices] ILogger<Program> logger,
+                [FromServices] IPublishEndpoint publishEndpoint,
                 HttpContext context) =>
             {
                 var authResult = await context.AuthenticateAsync("Github");
@@ -166,6 +169,16 @@ public static class Endpoints
 
                     await userManager.CreateAsync(user);
                     await userManager.AddToRoleAsync(user, IdentityRoles.UserRole.Name!);
+
+                    try
+                    {
+                        var registeredUser = new UserRegistered(user.Id, [profileUrl!]);
+                        await publishEndpoint.Publish(registeredUser);
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.LogError(ex, "Failed to publish registered user to Profile service");
+                    }
                 }
 
                 var deviceId = context.Request.Headers["X-Device-Id"].ToString();
@@ -184,7 +197,6 @@ public static class Endpoints
             .WithName("GitHubCallback");
 
         group.MapPost("/logout", async Task<Results<NoContent, UnauthorizedHttpResult>> (
-                [FromBody] LoginRequest request,
                 [FromServices] ILogger<Program> logger,
                 [FromServices] IPublishEndpoint publishEndpoint,
                 [FromServices] UserManager<User> userManager,

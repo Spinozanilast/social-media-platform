@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useDisclosure } from '@heroui/react';
 import EditProfileModal from '~/components/profile/edit-profile-modal';
@@ -21,8 +21,11 @@ const UserProfile: React.FC<UserProfileProps> = ({
     isOwner,
 }) => {
     const t = useTranslations('Profile');
+    console.log(user);
 
-    const [imageUrl, setImageUrl] = useState('/profile.svg');
+    const [imageUrl, setImageUrl] = useState(
+        user.githubInfo?.AvatarUrl ?? '/profile.svg'
+    );
     const [profileInfo, setProfileInfo] = useState(profile);
 
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -33,6 +36,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
                 setImageUrl(URL.createObjectURL(data));
             }
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user.id]);
 
     const handleSaveProfile = async (updatedProfile: Profile) => {

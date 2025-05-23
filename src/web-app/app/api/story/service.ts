@@ -1,7 +1,7 @@
 import apiClient from '~/lib/api/client';
-import { CreateStoryModel, Story, UpdateStoryModel } from './types';
+import { CreateStoryModel, Story, UpdateStoryModel } from '~api/story/types';
 
-const API_VERSION = '1.0';
+const API_VERSION = '1';
 const BASE_PATH = `/api/v${API_VERSION}/stories`;
 
 const storiesEndpoints = {

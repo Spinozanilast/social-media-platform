@@ -100,12 +100,24 @@
         font-family: 'Fira Sans';
     }
 
+    .flex-centered-row {
+        @apply flex flex-row items-center;
+    }
+
+    .flex-centered-column {
+        @apply flex flex-column items-center;
+    }
+
     .rounded-button {
         @apply ml-2 w-8;
     }
 
-    .utility-small-icon {
+    .utility-large-icon {
         @apply w-8 h-8 p-0;
+    }
+
+    .utility-small-icon {
+        @apply w-4 h-4 p-0;
     }
 
     .logo-container {

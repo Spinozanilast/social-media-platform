@@ -11,19 +11,19 @@ import {
     RegisterRequest,
     RegisterResponse,
     User,
-} from './types';
+} from '~api/auth/types';
 import { AxiosError } from 'axios';
 import UserStorage from '~api/storage/user';
 
 const API_VERSION = '1';
 const BASE_PATH = `/api/v${API_VERSION}/auth`;
+const IDENTITY_SERVICE_BASE_PATH = process.env.NEXT_PUBLIC_IDENTITY_SERVICE_URL;
 
 type CurrentUserQuery = { isUserResponse: boolean };
 
 const authEndpoints = {
     register: `${BASE_PATH}/register`,
     login: `${BASE_PATH}/login`,
-    githubSignIn: `${BASE_PATH}/github/login`,
     logout: `${BASE_PATH}/logout`,
     refreshToken: `${BASE_PATH}/refresh-token`,
     user: (idOrUsername: string) => `${BASE_PATH}/${idOrUsername}`,
@@ -31,6 +31,10 @@ const authEndpoints = {
     revokeDevice: `${BASE_PATH}/devices/revoke`,
     currentUser: (query: CurrentUserQuery) =>
         `${BASE_PATH}/me?isUserResponse=${query.isUserResponse}`,
+};
+
+const oauthEndpoints = {
+    githubSignIn: `${IDENTITY_SERVICE_BASE_PATH}/github/login`,
 };
 
 const AuthService = {
@@ -66,18 +70,13 @@ const AuthService = {
     },
 
     async githubSignIn(): Promise<void> {
-        window.location.href = `${BASE_PATH}/github/login`;
+        window.location.href = oauthEndpoints.githubSignIn;
     },
 
     async logOut(): Promise<void> {
-        apiClient
-            .post(authEndpoints.logout, null, {
-                withCredentials: true,
-            })
-            .then((response) => {
-                console.log('response:');
-                console.log(response);
-            });
+        await apiClient.post(authEndpoints.logout, null, {
+            withCredentials: true,
+        });
     },
 
     async refreshToken(): Promise<AuthResponse> {
@@ -94,7 +93,7 @@ const AuthService = {
             const response = await apiClient.get<User>(
                 authEndpoints.user(idOrUsername)
             );
-            console.log(response);
+
             if (response && response.status === 200) {
                 return response.data as User;
             }

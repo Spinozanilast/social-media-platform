@@ -1,7 +1,7 @@
 import apiClient from '~/lib/api/client';
-import { Country, Profile } from './types';
+import { Country, Profile } from '~api/profile/types';
 
-const API_VERSION = '1.0';
+const API_VERSION = '1';
 const BASE_PATH = `/api/v${API_VERSION}/profiles`;
 
 const userProfileEndpoint = (userId: string) => `${BASE_PATH}/${userId}`;

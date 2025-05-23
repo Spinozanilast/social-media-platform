@@ -1,5 +1,3 @@
-// app/lib/api/stories/types.ts
-
 export interface Story {
     id: number;
     authorId: string;

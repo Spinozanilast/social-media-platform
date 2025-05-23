@@ -60,6 +60,7 @@ export interface AuthResponse {
     email: string;
     roles: string[];
     accessTokenExpiry: string;
+    githubInfo: GithubInfo;
 }
 
 /*
@@ -91,5 +92,14 @@ export interface User {
     firstName: string;
     lastName: string;
     email: string;
+    githubInfo?: GithubInfo;
     phoneNumber?: string;
 }
+
+export type GithubInfo = {
+    GithubId: string;
+    ProfileUrl: string;
+    GithubUsername: string;
+    GithubEmail: string;
+    AvatarUrl?: string;
+};

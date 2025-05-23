@@ -7,9 +7,15 @@ namespace ProfileService.Repositories;
 
 public class ProfileRepository(ProfilesDbContext context) : IProfileRepository
 {
-    public async Task InitUserProfileAsync(Guid userId)
+    public async Task InitUserProfileAsync(Guid userId, ICollection<string>? references)
     {
         var profile = new Profile(userId);
+        
+        if (references is not null)
+        {
+            profile.References.AddRange(references);
+        }
+
         context.Profiles.Add(profile);
         await context.SaveChangesAsync();
     }

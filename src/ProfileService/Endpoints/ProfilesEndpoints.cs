@@ -20,7 +20,7 @@ public static class ProfilesEndpoints
                     return TypedResults.BadRequest("Profile already exists");
                 }
 
-                await profilesRepository.InitUserProfileAsync(userId);
+                await profilesRepository.InitUserProfileAsync(userId, null);
 
                 return TypedResults.Ok();
             })

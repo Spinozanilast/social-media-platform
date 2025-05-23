@@ -5,7 +5,7 @@ import {
     SiWhatsapp,
 } from '@icons-pack/react-simple-icons';
 
-import type { JSX } from "react";
+import type { JSX } from 'react';
 
 const linkStyles: Record<
     string,

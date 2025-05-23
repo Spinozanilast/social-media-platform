@@ -9,11 +9,12 @@ public static class UserMapping
     {
         return new UserDto(
             Id: user.Id,
-            Email: user.Email!,
-            LastName: user.LastName,
+            UserName: user.UserName!,
             FirstName: user.FirstName,
-            PhoneNumber: user.PhoneNumber,
-            UserName: user.UserName!
+            LastName: user.LastName,
+            Email: user.Email!,
+            GithubInfo: user.GithubInfo,
+            PhoneNumber: user.PhoneNumber
         );
     }
 }
