@@ -23,6 +23,7 @@ builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptio
 builder.Services.AddJwtAuthentication();
 
 builder.Services.AddAuthentication();
+builder.Services.AddAuthorization();
 builder.Services.AddApiVersioning();
 
 var app = builder.Build();
@@ -44,10 +45,12 @@ if (app.Environment.IsDevelopment())
     await dbOperator.ApplyMigrations(app);
 }
 
+app.UseCors(corsBuilder => corsBuilder.AllowAnyOrigin());
+
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.UseHttpsRedirection();
-app.UseCors(corsBuilder => corsBuilder.AllowAnyOrigin());
 app.MapControllers();
 
 app.Run();

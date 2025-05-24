@@ -11,7 +11,7 @@ import {
     ModalHeader,
     Spinner,
 } from '@heroui/react';
-import { parseDate } from '@internationalized/date';
+import { getLocalTimeZone, parseDate, today } from '@internationalized/date';
 import ImageTooltip from '~components/common/image-tooltip';
 import { Profile } from '~api/profile/types';
 import CountrySelect from '~/components/common/countries-select';
@@ -66,7 +66,7 @@ const EditProfileModal: React.FC<EditProfileProps> = ({
             <ModalContent>
                 <ModalHeader className="border-b">Edit Profile</ModalHeader>
 
-                <ModalBody className="space-y-4">
+                <ModalBody className="space-y-4 mb-4">
                     <div className="space-y-4">
                         <div className="flex items-center justify-center gap-4">
                             <ImageTooltip
@@ -75,9 +75,9 @@ const EditProfileModal: React.FC<EditProfileProps> = ({
                                         ? URL.createObjectURL(selectedImage)
                                         : imageUrl
                                 }
-                                toolTipProps={{
+                                toolTipProps={selectedImage ? {
                                     content: 'Preview new profile image',
-                                }}
+                                } : undefined}
                                 width={300}
                             >
                                 <div className="relative group flex justify-center">
@@ -85,8 +85,8 @@ const EditProfileModal: React.FC<EditProfileProps> = ({
                                         src={
                                             selectedImage
                                                 ? URL.createObjectURL(
-                                                      selectedImage
-                                                  )
+                                                    selectedImage
+                                                )
                                                 : imageUrl
                                         }
                                         alt={'tooltip image'}
@@ -131,26 +131,28 @@ const EditProfileModal: React.FC<EditProfileProps> = ({
                             <DatePicker
                                 classNames={{
                                     input: 'min-h-16',
+                                    base: "h-full",
+                                    inputWrapper: 'h-full',
                                 }}
                                 showMonthAndYearPickers
                                 label="Birth Date"
+                                errorMessage={(value) => {
+                                    if (value.isInvalid) {
+                                        return "Please enter a valid date.";
+                                    }
+                                }}
+                                maxValue={today(getLocalTimeZone())}
                                 value={
                                     form.birthDate
                                         ? parseDate(
-                                              form.birthDate.split('T')[0]
-                                          )
+                                            form.birthDate.split('T')[0]
+                                        )
                                         : null
                                 }
                                 onChange={(date) => {
-                                    const isoDate = new Date(
-                                        Date.UTC(
-                                            date!.year,
-                                            date!.month - 1,
-                                            date!.day
-                                        )
-                                    ).toISOString();
-
-                                    setform({ ...form, birthDate: isoDate });
+                                    if (!date) return;
+                                    const formattedDate = `${date.year}-${String(date.month).padStart(2, '0')}-${String(date.day).padStart(2, '0')}`;
+                                    setform({ ...form, birthDate: formattedDate });
                                 }}
                             />
                         </div>

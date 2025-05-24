@@ -13,7 +13,7 @@ import {
 import StoriesService from '~api/story/service';
 import { useDisclosure } from '@heroui/react';
 import { MessageSquarePlus } from 'lucide-react';
-import { StoryCard } from '~/components/stories/story';
+import StoryCard from '~/components/stories/story';
 import useStoriesCount, {
     storiesCountMutationKey,
 } from '~hooks/swr/useStoriesCount';

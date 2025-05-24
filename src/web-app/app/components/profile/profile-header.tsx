@@ -31,6 +31,17 @@ export default function ProfileHeader({
             return (
                 <div className="flex flex-col gap-1">
                     <h2 className="text-2xl font-bold">{userName}</h2>
+                    {isOwner && (
+                        <Button
+                            size="sm"
+                            className="p-4 w-fit self-end mb-1"
+                            color="primary"
+                            onPress={onModalOpen}
+                            endContent={<UserRoundPen />}
+                        >
+                            {translations.edit}
+                        </Button>
+                    )}
                 </div>
             );
         }

@@ -22,18 +22,14 @@ const profileImagesEndpoints = {
 };
 
 export const getCountries = async (): Promise<Country[]> => {
-    const response = await fetch(
-        `${apiClient.getUri()}${BASE_PATH}/countries`,
-        {
-            cache: 'force-cache',
-        }
-    );
-
-    if (response.ok) {
-        return response.json();
+    try {
+        const response = await apiClient.get<Country[]>(
+            `${BASE_PATH}/countries`
+        );
+        return response.data;
+    } catch (error) {
+        return [];
     }
-
-    return [];
 };
 
 export const ProfilesService = {
@@ -63,16 +59,17 @@ export const ProfilesService = {
 
 export const ProfileImagesService = {
     async get(userId: string): Promise<Blob | null> {
-        const response = await fetch(
-            apiClient.getUri() + profileImagesEndpoints.get(userId),
-            { cache: 'force-cache' }
-        );
-
-        if (!response.ok) {
+        try {
+            const response = await apiClient.get(
+                profileImagesEndpoints.get(userId),
+                {
+                    responseType: 'blob',
+                }
+            );
+            return response.data;
+        } catch (error) {
             return null;
         }
-
-        return await response.blob();
     },
 
     async upload(profileImage: Blob, userId: string): Promise<void> {

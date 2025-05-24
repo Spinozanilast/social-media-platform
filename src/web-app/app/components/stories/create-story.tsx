@@ -10,13 +10,13 @@ import {
     Button,
 } from '@heroui/react';
 import MarkdownIt from 'markdown-it';
-import MdEditor from 'react-markdown-editor-lite';
-import 'react-markdown-editor-lite/lib/index.css';
 import { useSWRConfig } from 'swr';
 import StoriesService from '~api/story/service';
 import { CreateStoryModel } from '~api/story/types';
 import { storiesMutationKey } from '~hooks/swr/useStories';
 import { storiesCountMutationKey } from '~hooks/swr/useStoriesCount';
+import MDEditor, { selectWord } from "@uiw/react-md-editor";
+
 
 const mdParser = new MarkdownIt();
 
@@ -85,7 +85,7 @@ export const CreateStoryModal = ({
             className="min-w-[75%] min-h-[75%]"
             backdrop="opaque"
         >
-            <ModalContent className="h-[90%]">
+            <ModalContent className="h-[90%] overflow-y-auto">
                 <ModalHeader className="flex justify-between items-center">
                     <h2 className="text-xl font-semibold">Create New Story</h2>
                 </ModalHeader>
@@ -95,19 +95,17 @@ export const CreateStoryModal = ({
                         label="Title"
                         placeholder="Enter story title"
                         value={title}
-                        onChange={() => setTitle}
+                        onChange={(value) => setTitle(value.target.value)}
                         isRequired
                         isDisabled={isSubmitting}
                     />
 
                     <div className="flex flex-col gap-1 h-[100%]">
                         <label className="text-sm font-medium">Content:</label>
-                        <MdEditor
+                        <MDEditor
                             value={content}
-                            className="h-full w-full"
-                            renderHTML={(text) => mdParser.render(text)}
-                            onChange={({ text }) => setContent(text)}
-                            readOnly={isSubmitting}
+                            className="min-h-full"
+                            onChange={(text) => setContent(text ?? "")}
                         />
                     </div>
 

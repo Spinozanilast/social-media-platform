@@ -1,4 +1,7 @@
-import './globals.css';
+import '~/styles/globals.css';
+import '~/styles/github-markdown.css';
+import '~/styles/github-markdown-light.css';
+import '~/styles/github-markdown-dark.css';
 
 import HeroProvider from '~providers/hero-provider';
 import React from 'react';

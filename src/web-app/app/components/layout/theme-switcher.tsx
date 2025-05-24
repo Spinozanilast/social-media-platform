@@ -18,6 +18,10 @@ export function ThemeSwitcher(props: SwitchProps) {
         setMounted(true);
     }, []);
 
+    useEffect(() => {
+        document.documentElement.setAttribute('data-theme', theme!);
+    }, [theme]);
+
     if (!mounted) return null;
 
     return (

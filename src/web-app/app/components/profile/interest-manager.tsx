@@ -18,11 +18,11 @@ const InterestManager = ({ interests, onUpdate }: InterestManagerProps) => {
     };
 
     return (
-        <div>
+        <div className='space-y-2'>
             <h3 className="font-semibold">Interests</h3>
-            <div className="flex gap-2 flex-wrap mb-1">
+            <div className="flex gap-2 mb-1 w-full">
                 {interests.map((interest, index) => (
-                    <div key={index} className="relative group">
+                    <div key={index} className="relative group flex flex-row gap-2 items-center">
                         <Input
                             value={interest}
                             size="sm"
@@ -34,7 +34,7 @@ const InterestManager = ({ interests, onUpdate }: InterestManagerProps) => {
                         />
                         <Button
                             size="sm"
-                            className="absolute opacity-0 group-hover:opacity-100"
+                            className="absolute right-0 opacity-0 group-hover:opacity-100"
                             color="danger"
                             isIconOnly
                             onPress={() =>

@@ -5,6 +5,7 @@ import {
     CardBody,
     CardHeader,
     Chip,
+    cn,
     Divider,
     Dropdown,
     DropdownItem,
@@ -17,12 +18,12 @@ import { Roboto } from 'next/font/google';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
 import React, { useCallback } from 'react';
-import { EllipsisVertical } from 'lucide-react';
+import { Calendar, CalendarCog, Edit3Icon, EllipsisVertical, X } from 'lucide-react';
 import { Story } from '~api/story/types';
 import StoriesService from '~api/story/service';
+import { useTheme } from 'next-themes';
 
 type StoryCardProps = {
-    key: string | number;
     story: Story;
     isAuthenticated: boolean;
     onDeleteStoryAction: (storyId: number) => void;
@@ -37,12 +38,12 @@ const roboto = Roboto({
     weight: ['700'],
 });
 
-export const StoryCard: React.FC<StoryCardProps> = ({
-    key,
+export default function StoryCard({
     story,
     isAuthenticated,
     onDeleteStoryAction,
-}) => {
+}: StoryCardProps) {
+    const theme = useTheme();
     const markdownText = story.content.replace(/\\n/gi, '&nbsp;&nbsp;\n');
     const handleDeleteStory = useCallback(async () => {
         try {
@@ -54,22 +55,20 @@ export const StoryCard: React.FC<StoryCardProps> = ({
     }, [onDeleteStoryAction, story.id]);
 
     return (
-        <Card className="w-full" key={key}>
+        <Card className="w-full">
             <CardHeader className="flex flex-col gap-2">
                 <div className="flex flex-row w-full h-min gap-2">
                     <div className="flex flex-row justify-between w-full">
-                        <div className="flex flex-row gap-1">
-                            <p className="timestamp-pre-text">Created At</p>
+                        <div className="flex flex-row gap-1 items-center">
+                            <Calendar className='utility-small-icon' />
                             <p className="story-timestamp">
                                 {formatStoryDateStamp(story.createdAt)}
                             </p>
                         </div>
                         {story.updatedAt &&
                             story.updatedAt !== story.createdAt && (
-                                <div className="flex flex-row gap-1">
-                                    <p className="timestamp-pre-text">
-                                        Edited At
-                                    </p>
+                                <div className="flex flex-row gap-1 items-center">
+                                    <CalendarCog className='utility-small-icon' />
                                     <p className="story-timestamp">
                                         {formatStoryDateStamp(story.updatedAt)}
                                     </p>
@@ -79,25 +78,24 @@ export const StoryCard: React.FC<StoryCardProps> = ({
                     {isAuthenticated && (
                         <Dropdown backdrop="opaque">
                             <DropdownTrigger>
-                                <Button
-                                    isIconOnly
+                                <button
                                     className="h-fit w-min"
-                                    variant="shadow"
                                 >
                                     <EllipsisVertical size={16} />
-                                </Button>
+                                </button>
                             </DropdownTrigger>
                             <DropdownMenu
                                 aria-label="Static Actions"
                                 variant="faded"
                             >
-                                <DropdownItem key="edit">
+                                <DropdownItem startContent={<Edit3Icon />} key="edit">
                                     Edit Story
                                 </DropdownItem>
                                 <DropdownItem
                                     key="delete"
                                     className="text-danger"
                                     color="danger"
+                                    startContent={<X />}
                                     onPress={handleDeleteStory}
                                 >
                                     Delete Story
@@ -106,15 +104,22 @@ export const StoryCard: React.FC<StoryCardProps> = ({
                         </Dropdown>
                     )}
                 </div>
-                <div className="flex flex-row items-center gap-2">
-                    {story.tags.map((tag, index) => (
-                        <Chip color="primary" variant="shadow" key={index}>
-                            {tag}
-                        </Chip>
-                    ))}
-                </div>
+                {story.tags.length > 0 && (
+                    <div className="flex flex-row items-center gap-2">
+                        {story.tags.map((tag, index) => {
+                            if (tag.length > 0) {
+                                return (
+                                    <Chip color="primary" variant="shadow" key={index}>
+                                        {tag}
+                                    </Chip>)
+                            }
+
+                            return null;
+                        })}
+                    </div>
+                )}
                 <h1
-                    className={`text-xl text-accent-orange font-bold ${roboto.className}`}
+                    className={`text-4xl text-accent-orange font-bold ${roboto.className}`}
                 >
                     {story.title}
                 </h1>
@@ -123,7 +128,7 @@ export const StoryCard: React.FC<StoryCardProps> = ({
             <CardBody>
                 <Markdown
                     remarkPlugins={[remarkGfm, remarkBreaks]}
-                    className="markdown"
+                    className="markdown markdown-body"
                 >
                     {markdownText}
                 </Markdown>

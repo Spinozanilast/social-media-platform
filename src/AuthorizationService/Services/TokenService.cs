@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Authentication.Configuration.Options;
 using AuthorizationService.Common.Services;
+using AuthorizationService.Contracts;
 using AuthorizationService.Data;
 using AuthorizationService.Entities;
 using AuthorizationService.Entities.Tokens;
@@ -61,7 +62,7 @@ public class TokenService(
         }
     }
 
-    public RefreshToken GenerateRefreshToken(string deviceId, string deviceName, string ipAddress, bool rememberUser)
+    public RefreshToken GenerateRefreshToken(DeviceInfo deviceInfo, bool rememberUser)
     {
         var randomNumber = RandomNumberGenerator.GetBytes(64);
 
@@ -72,9 +73,9 @@ public class TokenService(
                 ? DateTime.UtcNow.AddDays(_jwtOptions.RefreshTokenExpiryDays)
                 : DateTime.UtcNow.AddHours(_jwtOptions.ShortRefreshTokenExpiryHours),
             CreatedAt = DateTime.UtcNow,
-            DeviceId = deviceId,
-            DeviceName = deviceName,
-            IpAddress = ipAddress
+            DeviceName = deviceInfo.DeviceName,
+            IpAddress = deviceInfo.IpAddress,
+            IsLongActive = rememberUser
         };
     }
 
@@ -130,13 +131,48 @@ public class TokenService(
         await _userManager.UpdateAsync(user);
     }
 
+    public ClaimsPrincipal? GetPrincipalFromToken(string token)
+    {
+        var parameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey)),
+            ValidateIssuer = _jwtOptions.ValidateIssuer,
+            ValidateAudience = _jwtOptions.ValidateAudience,
+            ValidateLifetime = true
+        };
+
+        try
+        {
+            return new JwtSecurityTokenHandler().ValidateToken(token, parameters, out _);
+        }
+        catch
+        {
+            _logger.LogError("Failed to validate token");
+            return null;
+        }
+    }
+
+    public bool IsTokenExpired(string token)
+    {
+        try
+        {
+            var jwtToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
+            return jwtToken.ValidTo < DateTime.UtcNow;
+        }
+        catch
+        {
+            return true;
+        }
+    }
+
     public ClaimsPrincipal? GetPrincipalFromExpiredToken(string token)
     {
         var tokenValidationParams = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey)),
-            ValidateLifetime = true,
+            ValidateLifetime = false,
             ValidateIssuer = _jwtOptions.ValidateIssuer,
             ValidateAudience = _jwtOptions.ValidateAudience,
         };

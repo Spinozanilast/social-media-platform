@@ -18,13 +18,13 @@ export default function GithubAuthButton({
 
     return (
         <div className="w-full flex-col flex items-center justify-center">
-            <Button onPress={handleClick} className={className}>
+            <Button variant="faded" onPress={handleClick} className={className}>
                 Sign in with Github <SiGithub />
             </Button>
             {withDividerAfter && (
-                <div className="w-full flex flex-row justify-center mt-4 items-center">
+                <div className="w-full flex flex-row justify-center mt-4 items-center text-foreground-500">
                     <Divider className="shrink" />
-                    <p className="text-sm text-center text-gray-500 mx-2">OR</p>
+                    <p className="text-sm text-center mx-2">OR</p>
                     <Divider className="shrink" />
                 </div>
             )}

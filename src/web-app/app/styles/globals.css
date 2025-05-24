@@ -15,7 +15,7 @@
 
 @layer components {
     .form-container {
-        @apply bg-background-secondary p-4 rounded-xl;
+        @apply p-4 rounded-xl;
     }
 
     .search-bar {
@@ -98,6 +98,10 @@
 
     .fira-sans {
         font-family: 'Fira Sans';
+    }
+
+    .form-card {
+        @apply w-full max-w-md space-y-6 rounded-xl p-8 shadow-lg;
     }
 
     .flex-centered-row {

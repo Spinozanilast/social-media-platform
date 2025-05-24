@@ -73,7 +73,7 @@ export default function ClientRegisterForm(props: ClientRegisterFormProps) {
 
     return (
         <div className="flex items-center justify-center p-4">
-            <div className="w-full max-w-md space-y-6 rounded-xl p-8 shadow-lg">
+            <div className="form-card">
                 <div className="flex flex-col items-center gap-4">
                     <div className="rounded-full bg-accent-orange p-3 text-white">
                         <Lock className="h-8 w-8" />

@@ -15,6 +15,11 @@ const nextConfig = {
                 hostname: 'cdn.simpleicons.org',
                 port: '',
             },
+            {
+                protocol: 'https',
+                hostname: 'avatars.githubusercontent.com',
+                port: '',
+            }
         ],
     },
 };

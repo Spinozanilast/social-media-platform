@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Authentication.Configuration.Options;
 using AuthorizationService.Common.Services;
+using AuthorizationService.Contracts;
 using AuthorizationService.Data;
 using AuthorizationService.Entities;
 using AuthorizationService.Entities.Tokens;
@@ -114,12 +115,11 @@ public class TokenServiceTests
         var rememberUser = true;
 
         // Act
-        var resultToken = _sut.GenerateRefreshToken(deviceId, deviceName, ipAddress, rememberUser);
+        var resultToken = _sut.GenerateRefreshToken(new DeviceInfo(deviceName, ipAddress), rememberUser);
 
         // Assert
         Assert.NotNull(resultToken);
         Assert.Equal(64, Convert.FromBase64String(resultToken.TokenValue).Length);
-        Assert.Equal(deviceId, resultToken.DeviceId);
         Assert.Equal(deviceName, resultToken.DeviceName);
         Assert.Equal(ipAddress, resultToken.IpAddress);
         Assert.True(resultToken.Expires >=
@@ -135,12 +135,11 @@ public class TokenServiceTests
         var rememberUser = false;
 
         // Act
-        var resultToken = _sut.GenerateRefreshToken(deviceId, deviceName, ipAddress, rememberUser);
+        var resultToken = _sut.GenerateRefreshToken(new DeviceInfo(deviceName, ipAddress), rememberUser);
 
         // Assert
         Assert.NotNull(resultToken);
         Assert.Equal(64, Convert.FromBase64String(resultToken.TokenValue).Length);
-        Assert.Equal(deviceId, resultToken.DeviceId);
         Assert.Equal(deviceName, resultToken.DeviceName);
         Assert.Equal(ipAddress, resultToken.IpAddress);
         Assert.True(resultToken.Expires <=
@@ -153,7 +152,7 @@ public class TokenServiceTests
         string ipAddress)
     {
         // Arrange
-        var refreshToken = _sut.GenerateRefreshToken(deviceId, deviceName, ipAddress, false);
+        var refreshToken = _sut.GenerateRefreshToken(new DeviceInfo(deviceName, ipAddress), false);
         user.RefreshTokens.Add(refreshToken);
 
         // Act
@@ -168,7 +167,7 @@ public class TokenServiceTests
         string ipAddress)
     {
         // Arrange
-        var refreshToken = _sut.GenerateRefreshToken(deviceId, deviceName, ipAddress, false);
+        var refreshToken = _sut.GenerateRefreshToken(new DeviceInfo(deviceName, ipAddress), false);
         refreshToken.Revoked = DateTime.UtcNow;
         user.RefreshTokens.Add(refreshToken);
 
@@ -185,7 +184,7 @@ public class TokenServiceTests
         string ipAddress)
     {
         // Arrange
-        var refreshToken = _sut.GenerateRefreshToken(deviceId, deviceName, ipAddress, true);
+        var refreshToken = _sut.GenerateRefreshToken(new DeviceInfo(deviceName, ipAddress), true);
         user.RefreshTokens.Add(refreshToken);
 
         // Act
@@ -202,7 +201,7 @@ public class TokenServiceTests
         string ipAddress)
     {
         // Arrange
-        var refreshToken = _sut.GenerateRefreshToken(deviceId, deviceName, ipAddress, true);
+        var refreshToken = _sut.GenerateRefreshToken(new DeviceInfo(deviceName, ipAddress), true);
         refreshToken.Revoked = DateTime.UtcNow;
         user.RefreshTokens.Add(refreshToken);
 
@@ -220,9 +219,9 @@ public class TokenServiceTests
         // Arrange
         var refreshTokens = new List<RefreshToken>
         {
-            _sut.GenerateRefreshToken("device-321", "device-name-321", "213.23.421.1", false),
-            _sut.GenerateRefreshToken("device-322", "device-name-322", "213.23.421.2", false),
-            _sut.GenerateRefreshToken("device-323", "device-name-323", "213.23.421.3", false),
+            _sut.GenerateRefreshToken(new DeviceInfo("device-name-321", "213.23.421.1"), false),
+            _sut.GenerateRefreshToken(new DeviceInfo("device-name-322", "213.23.421.2"), false),
+            _sut.GenerateRefreshToken(new DeviceInfo("device-name-323", "213.23.421.3"), false),
         };
 
         refreshTokens[0].Revoked = DateTime.UtcNow;
@@ -243,9 +242,9 @@ public class TokenServiceTests
         // Arrange
         var refreshTokens = new List<RefreshToken>
         {
-            _sut.GenerateRefreshToken("device-321", "device-name-321", "213.23.421.1", false),
-            _sut.GenerateRefreshToken("device-322", "device-name-322", "213.23.421.2", false),
-            _sut.GenerateRefreshToken("device-323", "device-name-323", "213.23.421.3", false),
+            _sut.GenerateRefreshToken(new DeviceInfo("device-name-321", "213.23.421.1"), false),
+            _sut.GenerateRefreshToken(new DeviceInfo("device-name-322", "213.23.421.2"), false),
+            _sut.GenerateRefreshToken(new DeviceInfo("device-name-323", "213.23.421.3"), false),
         };
 
         user.RefreshTokens.AddRange(refreshTokens);
@@ -266,12 +265,12 @@ public class TokenServiceTests
         _jwtOptions.MaxRefreshTokensPerUser = 4;
         var refreshTokens = new List<RefreshToken>
         {
-            _sut.GenerateRefreshToken("device-321", "device-name-321", "213.23.421.1", false),
-            _sut.GenerateRefreshToken("device-322", "device-name-322", "213.23.421.2", false),
-            _sut.GenerateRefreshToken("device-323", "device-name-323", "213.23.421.3", false),
+            _sut.GenerateRefreshToken(new DeviceInfo("device-name-321", "213.23.421.1"), false),
+            _sut.GenerateRefreshToken(new DeviceInfo("device-name-322", "213.23.421.2"), false),
+            _sut.GenerateRefreshToken(new DeviceInfo("device-name-323", "213.23.421.3"), false),
         };
 
-        var refreshTokenToAdd = _sut.GenerateRefreshToken("device-324", "device-name-324", "213.23.421.4", false);
+        var refreshTokenToAdd = _sut.GenerateRefreshToken(new DeviceInfo("device-name-324", "213.23.421.4"), false);
 
         user.RefreshTokens.AddRange(refreshTokens);
 
@@ -290,13 +289,13 @@ public class TokenServiceTests
         _jwtOptions.MaxRefreshTokensPerUser = 3;
         var refreshTokens = new List<RefreshToken>
         {
-            _sut.GenerateRefreshToken("device-321", "device-name-321", "213.23.421.1", false),
-            _sut.GenerateRefreshToken("device-322", "device-name-322", "213.23.421.2", false),
-            _sut.GenerateRefreshToken("device-323", "device-name-323", "213.23.421.3", false),
+            _sut.GenerateRefreshToken(new DeviceInfo("device-name-321", "213.23.421.1"), false),
+            _sut.GenerateRefreshToken(new DeviceInfo("device-name-322", "213.23.421.2"), false),
+            _sut.GenerateRefreshToken(new DeviceInfo("device-name-323", "213.23.421.3"), false),
         };
 
         var oldestToken = refreshTokens.MinBy(t => t.CreatedAt);
-        var refreshTokenToAdd = _sut.GenerateRefreshToken("device-324", "device-name-324", "213.23.421.4", false);
+        var refreshTokenToAdd = _sut.GenerateRefreshToken(new DeviceInfo("device-name-324", "213.23.421.4"), false);
 
         user.RefreshTokens.AddRange(refreshTokens);
 

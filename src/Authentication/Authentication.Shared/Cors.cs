@@ -13,9 +13,9 @@ public static class Cors
 
         services.AddCors(options =>
         {
-            options.AddPolicy(policyName, b =>
+            options.AddPolicy(policyName, policy =>
             {
-                b
+                policy
                     .WithOrigins(url)
                     .AllowAnyHeader()
                     .AllowAnyMethod()

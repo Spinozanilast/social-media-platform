@@ -42,6 +42,8 @@ builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptio
 builder.Services.AddProfileServices(builder.Configuration);
 
 builder.Services.AddJwtAuthentication();
+builder.Services.AddAuthorization();
+builder.Services.AddAntiforgery();
 builder.Services.AddConfiguredApiVersioning();
 
 var app = builder.Build();
@@ -61,7 +63,7 @@ app.MapGroup("api/v{version:apiVersion}/profiles/{userId:guid}/image")
     .WithApiVersionSet(apiVersionSet)
     .HasApiVersion(1, 0);
 
-app.MapGet("api/v{version:apiVersion}/countries",
+app.MapGet("api/v{version:apiVersion}/profiles/countries",
         async Task<Ok<List<Country>>> ([FromServices] ICountriesRepository countriesRepository) =>
         {
             var countries = await countriesRepository.GetAll();
@@ -80,7 +82,10 @@ if (app.Environment.IsDevelopment())
     await dbOperator.ApplyMigrations(app);
 }
 
-app.UseHttpsRedirection();
 app.UseAuthentication();
+app.UseAuthorization();
+app.UseAntiforgery();
+
+app.UseHttpsRedirection();
 
 app.Run();

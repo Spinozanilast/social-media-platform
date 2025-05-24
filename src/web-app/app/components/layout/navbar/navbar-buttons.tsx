@@ -3,13 +3,14 @@
 import { useTranslations } from 'next-intl';
 import { Button, ButtonGroup, Link } from '@heroui/react';
 import UserActions from '~/components/layout/menu/actions';
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
     BookOpenText,
     LayoutDashboard,
     LucideProps,
     MessageSquare,
 } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
 
 export type CompleteItemData = {
     id: number;
@@ -46,13 +47,20 @@ export const PersonalUrlPagesItems: VisualCompleteItemData[] = [
 
 export default function NavbarButtons() {
     const t = useTranslations('PagesNavbar');
+    const pathname = usePathname();
+
+    const isProfilePage = useCallback(() => !PersonalUrlPagesItems.some(
+        (item) => item.url === pathname
+    ), [pathname]);
+
     return (
         <ButtonGroup>
-            <UserActions />
+            <UserActions currentlyInProfile={isProfilePage()} />
             {PersonalUrlPagesItems.map((item) => (
                 <Button
-                    variant="bordered"
+                    variant="flat"
                     as={Link}
+                    color={pathname === item.url ? 'primary' : 'default'}
                     href={item.url}
                     key={item.id}
                     endContent={<item.icon size={16} />}

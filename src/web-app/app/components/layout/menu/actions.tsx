@@ -18,7 +18,11 @@ import { User } from '~api/auth/types';
 import UserLoggedActions from '~/components/layout/menu/user-logged-actions';
 import AnonymousUserActions from '~/components/layout/menu/anonymous-actions';
 
-export default function UserActions() {
+type UserActionsProps = {
+    currentlyInProfile?: boolean;
+}
+
+export default function UserActions({ currentlyInProfile = false }: UserActionsProps) {
     const t = useTranslations('CurrentUser');
 
     const router = useRouter();
@@ -33,7 +37,7 @@ export default function UserActions() {
     return (
         <Dropdown placement="left-start">
             <DropdownTrigger>
-                <Button variant="bordered">
+                <Button variant="flat" color={currentlyInProfile ? 'primary' : 'default'}>
                     <Image
                         className="rounded-md p-2"
                         src="/profile.svg"
@@ -70,23 +74,23 @@ export default function UserActions() {
                 >
                     {isUserLogged
                         ? UserLoggedActions({
-                              router: router,
-                              currentUser: currentUser,
-                              translations: {
-                                  profile_description: t('profile_description'),
-                                  profile: t('profile'),
-                                  logout_description: t('logout_description'),
-                                  logout: t('logout'),
-                              },
-                          })
+                            router: router,
+                            currentUser: currentUser,
+                            translations: {
+                                profile_description: t('profile_description'),
+                                profile: t('profile'),
+                                logout_description: t('logout_description'),
+                                logout: t('logout'),
+                            },
+                        })
                         : AnonymousUserActions({
-                              router: router,
-                              translations: {
-                                  login_description: t('login_description'),
-                                  login: t('login'),
-                                  register: t('register'),
-                              },
-                          })}
+                            router: router,
+                            translations: {
+                                login_description: t('login_description'),
+                                login: t('login'),
+                                register: t('register'),
+                            },
+                        })}
                 </DropdownSection>
             </DropdownMenu>
         </Dropdown>

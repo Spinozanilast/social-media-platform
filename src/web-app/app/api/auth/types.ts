@@ -97,9 +97,9 @@ export interface User {
 }
 
 export type GithubInfo = {
-    GithubId: string;
-    ProfileUrl: string;
-    GithubUsername: string;
-    GithubEmail: string;
-    AvatarUrl?: string;
+    githubId: string;
+    profileUrl: string;
+    githubUsername: string;
+    githubEmail: string;
+    avatarUrl?: string;
 };

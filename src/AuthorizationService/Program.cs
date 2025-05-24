@@ -64,6 +64,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("NextFrontend");
+app.UseRefreshTokenMiddleware();
 app.UseAuthentication();
 app.UseAuthorization();
 

@@ -1,6 +1,8 @@
-import axios from 'axios';
+import Axios from 'axios';
+import { setupCache } from 'axios-cache-interceptor';
+import { config } from '../../../middleware';
 
-const apiClient = axios.create({
+const instance = Axios.create({
     baseURL: process.env.NEXT_PUBLIC_GATEWAY_URL!,
     headers: {
         'Content-Type': 'application/json',
@@ -8,5 +10,7 @@ const apiClient = axios.create({
     },
     timeout: 10000,
 });
+
+const apiClient = setupCache(instance);
 
 export default apiClient;

@@ -8,6 +8,7 @@ import { Profile } from '~api/profile/types';
 import { ProfileImagesService, ProfilesService } from '~api/profile/service';
 import ProfileHeader from '~/components/profile/profile-header';
 import { ProfileDetails } from '~/components/profile/profile-details';
+import AuthService from '~/api/auth/service';
 
 interface UserProfileProps {
     user: User;
@@ -24,7 +25,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
     console.log(user);
 
     const [imageUrl, setImageUrl] = useState(
-        user.githubInfo?.AvatarUrl ?? '/profile.svg'
+        user.githubInfo?.avatarUrl ?? '/profile.svg'
     );
     const [profileInfo, setProfileInfo] = useState(profile);
 
@@ -36,6 +37,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
                 setImageUrl(URL.createObjectURL(data));
             }
         });
+        console.log(user);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user.id]);
 
@@ -58,7 +60,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
     };
 
     return (
-        <div className="page-column content-center flex-col gap-5 font-thin max-w-full">
+        <div className="page-column content-center flex gap-5 font-thin max-w-full sm:flex-col md:flex-row">
             <ProfileHeader
                 firstName={user.firstName}
                 lastName={user.lastName}

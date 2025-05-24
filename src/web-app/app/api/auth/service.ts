@@ -16,8 +16,9 @@ import { AxiosError } from 'axios';
 import UserStorage from '~api/storage/user';
 
 const API_VERSION = '1';
-const BASE_PATH = `/api/v${API_VERSION}/auth`;
 const IDENTITY_SERVICE_BASE_PATH = process.env.NEXT_PUBLIC_IDENTITY_SERVICE_URL;
+// const BASE_PATH = `${IDENTITY_SERVICE_BASE_PATH}/api/v${API_VERSION}/auth`;
+const BASE_PATH = `${IDENTITY_SERVICE_BASE_PATH}`;
 
 type CurrentUserQuery = { isUserResponse: boolean };
 
@@ -104,60 +105,31 @@ const AuthService = {
         }
     },
 
-    /**
-     * Returns currently authenticated user (if there is not the one then returns null)
-     * @param {string?} cookie param for using function in server components (they doesnt have direct access to cookies)
-     * @returns {User | null}
-     */
-    async getCurrentUser(cookie?: string): Promise<User | null> {
+    async getCurrentUser(): Promise<User | null> {
         try {
-            const headers: HeadersInit = {};
-            if (cookie) {
-                headers['Cookie'] = cookie;
-            }
-
-            const response = await fetch(
-                apiClient.getUri() +
-                    authEndpoints.currentUser({ isUserResponse: true }),
+            const response = await apiClient.post<User>(
+                authEndpoints.currentUser({ isUserResponse: true }),
+                null,
                 {
-                    headers: headers,
-                    method: 'POST',
-                    credentials: 'include',
+                    withCredentials: true,
                 }
             );
-
-            if (response.ok) {
-                return (await response.json()) as User;
-            }
-
-            return null;
+            return response.data;
         } catch (error) {
             return null;
         }
     },
 
-    /**
-     * Returns if the user is authorized or not
-     * @param {number} cookie param for using function in server components (they doesnt have direct access to cookies)
-     * @returns {boolean}
-     */
     async getAuthenticated(cookie?: string): Promise<boolean> {
         try {
-            const headers: HeadersInit = {};
-            if (cookie) {
-                headers['Cookie'] = cookie;
-            }
-
-            const response = await fetch(
+            const response = await apiClient.post(
                 authEndpoints.currentUser({ isUserResponse: false }),
+                null,
                 {
-                    headers: headers,
-                    method: 'POST',
-                    credentials: 'include',
+                    withCredentials: true,
                 }
             );
-
-            return response.ok;
+            return response.status === 200;
         } catch (error) {
             return false;
         }

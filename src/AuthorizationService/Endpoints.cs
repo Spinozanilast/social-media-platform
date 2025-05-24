@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using AuthorizationService.Common.Mappers;
 using AuthorizationService.Common.Services;
+using AuthorizationService.Contracts;
 using AuthorizationService.Contracts.Devices;
 using AuthorizationService.Contracts.Login;
 using AuthorizationService.Contracts.Register;
@@ -72,7 +73,7 @@ public static class Endpoints
                 [FromServices] UserManager<User> userManager,
                 [FromServices] ITokenService tokenService,
                 [FromServices] ICookieManager cookieManager,
-                HttpContext httpContext) =>
+                HttpContext context) =>
             {
                 var user = await userManager.FindByEmailAsync(request.Email);
 
@@ -90,13 +91,12 @@ public static class Endpoints
                         statusCode: StatusCodes.Status401Unauthorized);
                 }
 
-                var deviceId = httpContext.Request.Headers["X-Device-Id"].ToString();
-                var deviceName = httpContext.Request.Headers["X-Device-Name"].ToString();
-                var ipAddress = httpContext.Connection.RemoteIpAddress?.ToString() ?? "Unknown";
+                var deviceInfo = context.GetDeviceInfo();
 
                 var accessToken = await tokenService.GenerateAccessTokenAsync(user);
                 var refreshToken =
-                    tokenService.GenerateRefreshToken(deviceId, deviceName, ipAddress, request.RememberMe);
+                    tokenService.GenerateRefreshToken(deviceInfo,
+                        request.RememberMe);
 
                 cookieManager.SetAuthCookies(accessToken, refreshToken);
 
@@ -159,10 +159,10 @@ public static class Endpoints
                         Email = email,
                         GithubInfo = new GithubInfo
                         {
-                            GithubId = githubId,
-                            GithubEmail = email,
-                            GithubUsername = username,
-                            ProfileUrl = profileUrl,
+                            GithubId = githubId!,
+                            GithubEmail = email!,
+                            GithubUsername = username!,
+                            ProfileUrl = profileUrl!,
                             AvatarUrl = avatarUrl,
                         }
                     };
@@ -181,12 +181,11 @@ public static class Endpoints
                     }
                 }
 
-                var deviceId = context.Request.Headers["X-Device-Id"].ToString();
-                var deviceName = context.Request.Headers["X-Device-Name"].ToString();
-                var ipAddress = context.Connection.RemoteIpAddress?.ToString() ?? "Unknown";
+                var deviceInfo = context.GetDeviceInfo();
 
                 var accessToken = await tokenService.GenerateAccessTokenAsync(user);
-                var refreshToken = tokenService.GenerateRefreshToken(deviceId, deviceName, ipAddress, true);
+                var refreshToken =
+                    tokenService.GenerateRefreshToken(deviceInfo, true);
 
                 cookieManager.SetAuthCookies(accessToken, refreshToken);
                 await tokenService.StoreRefreshTokenAsync(user, refreshToken);
@@ -317,7 +316,7 @@ public static class Endpoints
 
                 var deviceId = principal?.FindFirst("deviceId")?.Value;
                 var storedToken =
-                    user.RefreshTokens.FirstOrDefault(rt => rt.TokenValue == refreshToken && rt.DeviceId == deviceId);
+                    user.RefreshTokens.FirstOrDefault(rt => rt.TokenValue == refreshToken);
 
                 if (storedToken is null || !storedToken.IsActive)
                 {
@@ -334,7 +333,8 @@ public static class Endpoints
 
                 var clientIpAddress = httpContext.Connection.RemoteIpAddress?.ToString() ?? "Unknown";
                 var newRefreshToken =
-                    tokenService.GenerateRefreshToken(storedToken.DeviceId, storedToken.DeviceName, clientIpAddress,
+                    tokenService.GenerateRefreshToken(
+                        new DeviceInfo(storedToken.DeviceName, clientIpAddress),
                         true);
 
                 await tokenService.StoreRefreshTokenAsync(user, newRefreshToken);
@@ -345,7 +345,7 @@ public static class Endpoints
                 return TypedResults.Ok(new AuthResponse(
                     user.Id, user.UserName ?? string.Empty, user.Email ?? string.Empty,
                     await userManager.GetRolesAsync(user),
-                    newAccessToken.Expires, null));
+                    newAccessToken.Expires, user.GithubInfo));
             })
             .AllowAnonymous()
             .WithName("RefreshToken");
@@ -360,7 +360,6 @@ public static class Endpoints
                 var activeSessions = user.RefreshTokens
                     .Where(rt => rt.IsActive)
                     .Select(rt => new DeviceInfoResponse(
-                        rt.DeviceId,
                         rt.DeviceName,
                         rt.IpAddress,
                         rt.CreatedAt,
@@ -383,7 +382,7 @@ public static class Endpoints
                 if (user == null) return TypedResults.Unauthorized();
 
                 var tokenToRevoke = user.RefreshTokens
-                    .FirstOrDefault(rt => rt.DeviceId == request.DeviceId && rt.IsActive);
+                    .FirstOrDefault(rt => rt.DeviceName == request.DeviceName && rt.IsActive);
 
                 if (tokenToRevoke == null)
                 {
@@ -396,9 +395,7 @@ public static class Endpoints
 
                 await tokenService.RevokeRefreshTokenAsync(user, tokenToRevoke.TokenValue);
 
-                var currentDeviceId = httpContext.Request.Headers["X-Device-Id"].ToString();
-
-                if (tokenToRevoke.DeviceId == currentDeviceId)
+                if (tokenToRevoke.DeviceName == httpContext.GetDeviceUserAgent())
                 {
                     cookieManager.ClearAuthCookies();
                 }

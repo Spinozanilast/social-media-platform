@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import '~/globals.css';
 import Navbar from '~/components/layout/navbar/navbar';
 
 export const metadata: Metadata = {
@@ -14,7 +13,7 @@ export default function Layout({
 }>) {
     return (
         <div>
-            <div className="logo-container flex justify-center">
+            <div className="m-2 logo-container flex justify-center">
                 <Navbar />
             </div>
             {children}

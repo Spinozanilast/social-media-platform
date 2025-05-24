@@ -8,18 +8,19 @@ interface NavbarProps {
     includeUrlCompleteItems?: boolean;
 }
 
-const Navbar: React.FC<NavbarProps> = () => {
+export default function Navbar(props: NavbarProps) {
     return (
         <div className="w-full flex mx-page-part flex-row justify-between h-8 items-center m-2">
             <div className="logo-container h-fit">
                 <Logo animationType="forward" className="text-left" />
             </div>
-            <div className="flex flex-row gap-2 items-center m-2">
+            <div
+                className="flex flex-row gap-2 absolute left-1/2 transform -translate-x-1/2 items-center
+                    m-2"
+            >
                 <NavbarButtons />
             </div>
             <NavSwitchers />
         </div>
     );
-};
-
-export default Navbar;
+}
