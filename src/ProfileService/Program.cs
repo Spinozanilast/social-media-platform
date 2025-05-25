@@ -2,6 +2,7 @@ using Asp.Versioning;
 using Authentication.Configuration;
 using Authentication.Configuration.Options;
 using MassTransit;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ProfileService;
@@ -43,7 +44,14 @@ builder.Services.AddProfileServices(builder.Configuration);
 
 builder.Services.AddJwtAuthentication();
 builder.Services.AddAuthorization();
-builder.Services.AddAntiforgery();
+
+builder.Services.AddAntiforgery(options => {
+    options.HeaderName = "X-CSRF-TOKEN";
+    options.Cookie.Name = "X-CSRF-COOKIE";
+    options.Cookie.SameSite = SameSiteMode.Strict;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+});
+
 builder.Services.AddConfiguredApiVersioning();
 
 var app = builder.Build();
@@ -72,6 +80,16 @@ app.MapGet("api/v{version:apiVersion}/profiles/countries",
     .AllowAnonymous()
     .WithName("GetCountries")
     .WithOpenApi()
+    .WithApiVersionSet(apiVersionSet)
+    .HasApiVersion(1, 0);
+
+app.MapGet("api/v{version:apiVersion}/profiles/antiforgery/token", 
+        (IAntiforgery antiforgery, HttpContext context) =>
+        {
+            var tokens = antiforgery.GetAndStoreTokens(context);
+            return Results.Ok(new { token = tokens.RequestToken });
+        })
+    .RequireAuthorization()
     .WithApiVersionSet(apiVersionSet)
     .HasApiVersion(1, 0);
 

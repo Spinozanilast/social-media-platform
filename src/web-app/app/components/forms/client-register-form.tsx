@@ -15,6 +15,8 @@ import { TranslatedFields } from '~/(auth)/register/types';
 import { Button, cn, Divider, Input, Link } from '@heroui/react';
 import PasswordInput from '~/components/common/password-input';
 import GithubAuthButton from '~/components/github-button';
+import { Roboto } from 'next/font/google';
+import { useLocale } from 'next-intl';
 
 interface ClientRegisterFormProps {
     translations: {
@@ -30,7 +32,13 @@ interface ClientRegisterFormProps {
     formFields: Array<TranslatedFields>;
 }
 
+const roboto = Roboto({
+    subsets: ['latin'],
+    weight: ['700'],
+});
+
 export default function ClientRegisterForm(props: ClientRegisterFormProps) {
+    const locale = useLocale();
     const { translations, formFields } = props;
 
     const router = useRouter();
@@ -79,8 +87,8 @@ export default function ClientRegisterForm(props: ClientRegisterFormProps) {
                         <Lock className="h-8 w-8" />
                     </div>
                     <h1
-                        className="text-center text-3xl font-bold"
-                        style={{ fontFamily: 'Share Tech Mono' }}
+                        className={cn("text-center text-3xl font-bold")}
+                        style={locale === 'ru-RU' ? roboto.style : { fontFamily: 'Share Tech Mono' }}
                     >
                         {translations.register}
                     </h1>

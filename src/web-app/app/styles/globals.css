@@ -31,15 +31,19 @@
     }
 
     .page-column {
-        @apply p-8;
+        @apply p-8 relative;
     }
 
     .input-icon {
         @apply pointer-events-none text-default-400;
     }
 
-    .logo {
+    .logo-light {
         text-shadow: -2px -2px white;
+    }
+
+    .logo-dark {
+        text-shadow: -2px -2px black;
     }
 
     .story-timestamp {
@@ -110,6 +114,10 @@
 
     .flex-centered-column {
         @apply flex flex-column items-center;
+    }
+
+    .left-up-element {
+        @apply absolute left-1 top-1 h-5 w-5 text-accent-orange;
     }
 
     .rounded-button {

@@ -16,6 +16,7 @@ const profilesEndpoints = {
 };
 
 const profileImagesEndpoints = {
+    getAntiforgeryToken: `${BASE_PATH}/antiforgery/token`,
     get: (userId: string) => `${profileImageEndpoint(userId)}`,
     upload: (userId: string) => `${profileImageEndpoint(userId)}/upload`,
     remove: (userId: string) => `${profileImageEndpoint(userId)}/remove`,
@@ -72,12 +73,25 @@ export const ProfileImagesService = {
         }
     },
 
+    async getCsrfToken(): Promise<string> {
+        const response = await apiClient.get<{ token: string }>(
+            profileImagesEndpoints.getAntiforgeryToken,
+            { withCredentials: true }
+        );
+        return response.data.token;
+    },
+
     async upload(profileImage: Blob, userId: string): Promise<void> {
+        const csrfToken = await this.getCsrfToken();
         const formData = new FormData();
         formData.append('profileImage', profileImage);
+        formData.append('__RequestVerificationToken', csrfToken);
 
         await apiClient.post(profileImagesEndpoints.upload(userId), formData, {
-            headers: { 'Content-Type': 'multipart/form-data' },
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'X-CSRF-TOKEN': csrfToken,
+            },
             withCredentials: true,
         });
     },

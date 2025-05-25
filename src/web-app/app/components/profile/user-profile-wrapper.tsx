@@ -1,18 +1,16 @@
 'use client';
-import { Button, Spinner } from '@heroui/react';
-import { Frown } from 'lucide-react';
-import { useTranslations } from 'next-intl';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { Spinner } from '@heroui/react';
 import { useEffect, useState } from 'react';
 import AuthService from '~/api/auth/service';
-import { AuthResponse, User } from '~/api/auth/types';
+import { User } from '~/api/auth/types';
 import { ProfilesService } from '~/api/profile/service';
 import { Profile } from '~/api/profile/types';
 import StoriesService from '~/api/story/service';
 import { Story } from '~/api/story/types';
 import UserProfile from '~/components/profile/user-profile';
 import UserStoriesContainer from '~/components/profile/user-stories';
+import UserDoesntExists from '~/components/errors/user-doesnt-exists';
+import { useAuth } from '~providers/auth-provider';
 
 type UserProfileWrapperProps = {
     slug: string;
@@ -21,11 +19,8 @@ type UserProfileWrapperProps = {
 export default function UserProfileWrapper({
     slug
 }: UserProfileWrapperProps) {
-    const router = useRouter();
-
-    const tNotFound = useTranslations('UserNotFound');
-
     const [user, setUser] = useState<User | null>(null);
+    const { user: authorizedUser } = useAuth();
     const [profile, setProfile] = useState<Profile | null>(null);
     const [initialStories, setInitialStories] = useState<Story[] | []>([]);
     const [isOwner, setIsOwner] = useState(false);
@@ -46,10 +41,9 @@ export default function UserProfileWrapper({
                     return;
                 }
 
-                const [profileData, storiesData, authData] = await Promise.all([
+                const [profileData, storiesData] = await Promise.all([
                     ProfilesService.get(userData.id),
                     StoriesService.getAllStories({ authorId: userData.id }),
-                    AuthService.getCurrentUser()
                 ]);
 
                 if (!profileData) {
@@ -60,7 +54,7 @@ export default function UserProfileWrapper({
                 setUser(userData);
                 setProfile(profileData);
                 setInitialStories(storiesData);
-                setIsOwner(authData?.id === userData.id);
+                setIsOwner(authorizedUser?.id === userData.id);
             } catch (err) {
                 setError(true);
             } finally {
@@ -69,25 +63,10 @@ export default function UserProfileWrapper({
         };
 
         fetchData();
-    }, [slug]);
+    }, [authorizedUser?.id, slug]);
 
     if (showNotFound) {
-        return (
-            <div className="flex flex-col items-center justify-center gap-4">
-                <Frown className="w-10 text-accent-orange" />
-                <h2 className="text-xl font-semibold">404 Not Found</h2>
-                <p>{tNotFound('user_doesnt_exist')}</p>
-                <Button
-                    variant="shadow"
-                    color="primary"
-                    as={Link}
-                    href="/"
-                    className="mt-4 rounded-md"
-                >
-                    {tNotFound('go_home')}
-                </Button>
-            </div>
-        );
+        return <UserDoesntExists />;
     }
 
     if (error) return <div className="p-4 text-red-500">Error loading profile</div>;
@@ -95,7 +74,7 @@ export default function UserProfileWrapper({
 
     return (
         <div
-            className="bg-gradient-to-br p-1 from-white to-default-200 dark:from-default-50
+            className="bg-gradient-to-br p-1 from-default-100 to-default-200 dark:from-default-50
                 dark:to-black rounded-md flex flex-col max-w-full mt-2 mx-page-part"
         >
             <div className="share-tech-mono">

@@ -182,7 +182,7 @@ public static class Endpoints
                 }
 
                 var deviceInfo = context.GetDeviceInfo();
-
+                
                 var accessToken = await tokenService.GenerateAccessTokenAsync(user);
                 var refreshToken =
                     tokenService.GenerateRefreshToken(deviceInfo, true);

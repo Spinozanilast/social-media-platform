@@ -6,6 +6,9 @@
     "references_title": "Ссылки",
     "edit": "Редактировать"
   },
+  "Stories": {
+    "create_story": "Создать историю"
+  },
   "CurrentUser": {
     "profile_actions": "Действия над профилем",
     "account_actions": "Действия над аккаунтом",
@@ -61,5 +64,11 @@
   "UserNotFound": {
     "user_doesnt_exist": "Пользователь, которого вы ищете, не существует.",
     "go_home": "На домашнюю страницу"
+  },
+  "Copyright": {
+    "copyright": "Все права защищены."
+  },
+  "GithubButton": {
+    "sign_in": "Войти с помощью Github"
   }
 }

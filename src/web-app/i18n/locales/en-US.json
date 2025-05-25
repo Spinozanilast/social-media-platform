@@ -6,6 +6,9 @@
     "references_title": "References",
     "edit": "Edit"
   },
+  "Stories": {
+    "create_story": "Create Story"
+  },
   "CurrentUser": {
     "profile_actions": "Profile Actions",
     "account_actions": "Account Actions",
@@ -61,5 +64,11 @@
   "UserNotFound": {
     "user_doesnt_exist": "User you are looking for does not exist.",
     "go_home": "Go Home"
+  },
+  "Copyright": {
+    "copyright": "All rights reserved."
+  },
+  "GithubButton": {
+    "sign_in": "Sign in with Github"
   }
 }

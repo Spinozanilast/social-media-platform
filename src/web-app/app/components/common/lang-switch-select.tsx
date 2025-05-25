@@ -1,6 +1,6 @@
 'use client';
 import type { Selection } from '@heroui/react';
-import React, { use, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Locale, locales } from '~i18n/i18n.config';
 import {
     SelectItem,

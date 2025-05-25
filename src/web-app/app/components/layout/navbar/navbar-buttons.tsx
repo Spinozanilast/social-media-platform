@@ -28,7 +28,7 @@ export const PersonalUrlPagesItems: VisualCompleteItemData[] = [
     {
         id: 1,
         name: 'messages',
-        url: '/messages',
+        url: '/dialogs',
         icon: MessageSquare,
     },
     {

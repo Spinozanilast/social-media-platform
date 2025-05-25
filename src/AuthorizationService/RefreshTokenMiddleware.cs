@@ -4,6 +4,7 @@ using AuthorizationService.Entities;
 using AuthorizationService.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace AuthorizationService;
 
@@ -43,9 +44,9 @@ public class RefreshTokenMiddleware
             return;
         }
 
-        var user = userManager
+        var user = await userManager
             .Users
-            .SingleOrDefault(u => u.RefreshTokens.Any(t => t.TokenValue == refreshTokenValue));
+            .SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.TokenValue == refreshTokenValue));
 
         if (user is null)
         {

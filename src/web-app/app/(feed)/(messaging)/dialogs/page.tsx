@@ -1,8 +1,9 @@
+import { MessagesSquare } from "lucide-react";
+
 export default function Page() {
     return (
-        <div className="flex flex-col items-center justify-center gap-4">
-            <h1 className="text-xl font-semibold">Messaging</h1>
-            <p>Coming soon...</p>
+        <div className="page-column content-center flex gap-5 font-thin max-w-full sm:flex-col md:flex-row">
+            <MessagesSquare className='left-up-element' />
         </div>
     );
 }

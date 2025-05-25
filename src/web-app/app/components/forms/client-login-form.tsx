@@ -12,6 +12,8 @@ import { LoginRequest, LoginSchema } from '~api/auth/types';
 import AuthService from '~api/auth/service';
 import { zodResolver } from '@hookform/resolvers/zod';
 import GithubAuthButton from '~/components/github-button';
+import { Roboto } from 'next/font/google';
+import { useLocale } from 'next-intl';
 
 interface ClientLoginFormProps {
     translations: {
@@ -28,8 +30,14 @@ interface ClientLoginFormProps {
     };
 }
 
+const roboto = Roboto({
+    subsets: ['latin'],
+    weight: ['700'],
+});
+
 export default function ClientLoginForm(props: ClientLoginFormProps) {
     const t = props.translations;
+    const locale = useLocale();
 
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -77,7 +85,9 @@ export default function ClientLoginForm(props: ClientLoginFormProps) {
                         <div className="p-4 text-white bg-accent-orange rounded-full">
                             <LockOpen size={32} />
                         </div>
-                        <h1 className="text-3xl my-2 fira-sans">{t.login}</h1>
+                        <h1 className="text-3xl my-2 fira-sans"
+                            style={locale === 'ru-RU' ? roboto.style : { fontFamily: 'Share Tech Mono' }
+                            }>{t.login}</h1>
                     </div>
                     <form
                         className="flex flex-col gap-4 form-container"
@@ -145,6 +155,6 @@ export default function ClientLoginForm(props: ClientLoginFormProps) {
                     </p>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

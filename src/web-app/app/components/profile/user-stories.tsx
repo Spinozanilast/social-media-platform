@@ -18,9 +18,10 @@ import useStoriesCount, {
     storiesCountMutationKey,
 } from '~hooks/swr/useStoriesCount';
 import useStories, { storiesMutationKey } from '~hooks/swr/useStories';
-import { CreateStoryModal } from '~/components/stories/create-story';
+import CreateStoryModal from '~/components/stories/story-dialog';
 import { Story } from '~api/story/types';
 import { mutate } from 'swr';
+import { useTranslations } from 'next-intl';
 
 type UserStoriesContainerProps = {
     userId: string;
@@ -33,6 +34,7 @@ export default function UserStoriesContainer({
     initialStories,
     isOwner,
 }: UserStoriesContainerProps) {
+    const t = useTranslations('Stories');
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize] = useState(10);
@@ -50,8 +52,11 @@ export default function UserStoriesContainer({
     };
 
     const handleDeleteStory = async (storyId: number) => {
-        const success = await StoriesService.deleteStory(storyId);
-        if (success) {
+        const previousStories = storiesData || [];
+        try {
+            const success = await StoriesService.deleteStory(storyId);
+            if (!success) throw new Error('Delete failed');
+
             await mutate(
                 storiesMutationKey({
                     authorId: userId,
@@ -60,6 +65,17 @@ export default function UserStoriesContainer({
                 })
             );
             await mutate(storiesCountMutationKey(userId));
+        } catch (error) {
+            mutate(
+                storiesMutationKey({
+                    authorId: userId,
+                    pageNumber: currentPage,
+                    pageSize: pageSize,
+                }),
+                previousStories,
+                false
+            );
+            console.error('Delete failed:', error);
         }
     };
 
@@ -88,13 +104,13 @@ export default function UserStoriesContainer({
                     endContent={<MessageSquarePlus />}
                     onPress={onOpen}
                 >
-                    Create Story
+                    {t('create_story')}
                 </Button>
             )}
 
             <CreateStoryModal
                 isOpen={isOpen}
-                onCloseAction={onClose}
+                onClose={onClose}
                 authorId={userId}
                 currentPage={currentPage}
                 pageSize={pageSize}

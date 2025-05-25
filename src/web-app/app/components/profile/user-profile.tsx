@@ -9,6 +9,7 @@ import { ProfileImagesService, ProfilesService } from '~api/profile/service';
 import ProfileHeader from '~/components/profile/profile-header';
 import { ProfileDetails } from '~/components/profile/profile-details';
 import AuthService from '~/api/auth/service';
+import { UserRound } from 'lucide-react';
 
 interface UserProfileProps {
     user: User;
@@ -22,7 +23,6 @@ const UserProfile: React.FC<UserProfileProps> = ({
     isOwner,
 }) => {
     const t = useTranslations('Profile');
-    console.log(user);
 
     const [imageUrl, setImageUrl] = useState(
         user.githubInfo?.avatarUrl ?? '/profile.svg'
@@ -43,7 +43,8 @@ const UserProfile: React.FC<UserProfileProps> = ({
 
     const handleSaveProfile = async (updatedProfile: Profile) => {
         try {
-            await ProfilesService.save(updatedProfile);
+            const success = await ProfilesService.save(updatedProfile);
+            if (!success) throw new Error('Profile update failed');
             setProfileInfo(updatedProfile);
         } catch (error) {
             console.error('Profile update failed:', error);
@@ -61,6 +62,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
 
     return (
         <div className="page-column content-center flex gap-5 font-thin max-w-full sm:flex-col md:flex-row">
+            <UserRound className='left-up-element' />
             <ProfileHeader
                 firstName={user.firstName}
                 lastName={user.lastName}

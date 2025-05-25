@@ -2,19 +2,27 @@
 
 import OnDisplayAnimatedSpan from '~/components/common/animated-span';
 import '@fontsource/share-tech-mono';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import { useTheme } from 'next-themes';
+import { cn } from '@heroui/react';
 
 type LogoProps = {
     animationType: 'backward' | 'forward';
-    className: string;
+    className?: string;
 };
 
 export default function Logo({
     animationType,
     className: textClassName,
 }: LogoProps) {
+    const [mounted, setMounted] = useState(false);
+    const theme = useTheme();
     const [isHovered, setIsHovered] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const handlePointerEnter = () => {
         setIsHovered(true);
@@ -23,6 +31,14 @@ export default function Logo({
     const handlePointerLeave = () => {
         setIsHovered(false);
     };
+
+    const logoClassName = useMemo(() => {
+        return cn(
+            'w-full group logo text-accent-orange text-3xl',
+            textClassName,
+            mounted && theme.theme === 'light' ? 'logo-dark' : 'logo-light'
+        );
+    }, [theme.theme, textClassName, mounted]);
 
     const animatedSpanStyle =
         animationType === 'forward' ? 'group-hover:inline hidden' : 'inline';
@@ -36,7 +52,7 @@ export default function Logo({
             href="/"
         >
             <p
-                className={`w-full group logo text-accent-orange text-3xl + ${textClassName}`}
+                className={logoClassName}
             >
                 P
                 <OnDisplayAnimatedSpan

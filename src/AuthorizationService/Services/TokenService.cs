@@ -120,6 +120,15 @@ public class TokenService(
 
     public async Task StoreRefreshTokenAsync(User user, RefreshToken refreshToken)
     {
+        var existingActiveTokens = user.RefreshTokens
+            .Where(t => t.DeviceName == refreshToken.DeviceName && t.Revoked == null)
+            .ToList();
+
+        foreach (var token in existingActiveTokens)
+        {
+            token.Revoked = DateTime.UtcNow;
+        }
+
         user.RefreshTokens.Add(refreshToken);
 
         while (user.RefreshTokens.Count > _jwtOptions.MaxRefreshTokensPerUser)

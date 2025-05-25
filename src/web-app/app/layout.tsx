@@ -9,6 +9,7 @@ import React from 'react';
 import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
+import { AuthProvider } from '~providers/auth-provider';
 
 export const metadata: Metadata = {
     title: 'Platform',
@@ -48,7 +49,11 @@ export default async function RootLayout({
             </head>
             <body>
                 <NextIntlClientProvider messages={messages}>
-                    <HeroProvider>{children}</HeroProvider>
+                    <HeroProvider>
+                        <AuthProvider>
+                            {children}
+                        </AuthProvider>
+                    </HeroProvider>
                 </NextIntlClientProvider>
             </body>
         </html>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
     Modal,
     ModalHeader,
@@ -9,50 +9,66 @@ import {
     Input,
     Button,
 } from '@heroui/react';
-import MarkdownIt from 'markdown-it';
 import { useSWRConfig } from 'swr';
 import StoriesService from '~api/story/service';
-import { CreateStoryModel } from '~api/story/types';
+import { CreateStoryModel, Story, UpdateStoryModel } from '~api/story/types';
 import { storiesMutationKey } from '~hooks/swr/useStories';
 import { storiesCountMutationKey } from '~hooks/swr/useStoriesCount';
-import MDEditor, { selectWord } from "@uiw/react-md-editor";
+import MDEditor from "@uiw/react-md-editor";
+import { useTheme } from 'next-themes';
+import { useRouter } from 'next/navigation';
 
-
-const mdParser = new MarkdownIt();
-
-type CreateStoryModalProps = {
+type StoryDialogProps = {
+    mode: 'create' | 'edit';
+    story?: Story;
     isOpen: boolean;
-    onCloseAction: () => void;
     authorId: string;
     currentPage: number;
     pageSize: number;
+    onClose: () => void;
 };
 
-export const CreateStoryModal = ({
+export const StoryDialog = ({
+    mode = 'create',
+    story,
     isOpen,
-    onCloseAction,
     authorId,
     currentPage,
     pageSize,
-}: CreateStoryModalProps) => {
+    onClose,
+}: StoryDialogProps) => {
+    const theme = useTheme();
     const { mutate } = useSWRConfig();
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [tags, setTags] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    useEffect(() => {
+        if (mode === 'edit' && story) {
+            setTitle(story.title);
+            setContent(story.content);
+            setTags(story.tags.join(', '));
+        }
+    }, [mode, story]);
+
     const handleSubmit = async () => {
         setIsSubmitting(true);
-        const payload: CreateStoryModel = {
+
+        const payload = {
             title,
             content,
-            tags: tags.split(',').map((tag) => tag.trim()),
+            tags: tags.split(',').map(tag => tag.trim()),
             authorId,
-            isShared: false,
+            isShared: story?.isShared || false,
         };
 
         try {
-            await StoriesService.createStory(payload);
+            if (mode === 'create') {
+                await StoriesService.createStory(payload);
+            } else if (story?.id) {
+                await StoriesService.updateStory(story.id, payload as UpdateStoryModel);
+            }
 
             await mutate(
                 storiesMutationKey({
@@ -62,10 +78,9 @@ export const CreateStoryModal = ({
                 })
             );
             await mutate(storiesCountMutationKey(authorId));
-
             handleClose();
         } catch (error) {
-            console.error('Story creation failed:', error);
+            console.error(`${mode === 'create' ? 'Creation' : 'Update'} failed:`, error);
         } finally {
             setIsSubmitting(false);
         }
@@ -75,7 +90,7 @@ export const CreateStoryModal = ({
         setTitle('');
         setContent('');
         setTags('');
-        onCloseAction();
+        onClose();
     };
 
     return (
@@ -87,7 +102,9 @@ export const CreateStoryModal = ({
         >
             <ModalContent className="h-[90%] overflow-y-auto">
                 <ModalHeader className="flex justify-between items-center">
-                    <h2 className="text-xl font-semibold">Create New Story</h2>
+                    <h2 className="text-xl font-semibold">
+                        {mode === 'create' ? 'Create New Story' : 'Edit Story'}
+                    </h2>
                 </ModalHeader>
 
                 <ModalBody className="flex flex-col gap-4">
@@ -95,7 +112,7 @@ export const CreateStoryModal = ({
                         label="Title"
                         placeholder="Enter story title"
                         value={title}
-                        onChange={(value) => setTitle(value.target.value)}
+                        onChange={(e) => setTitle(e.target.value)}
                         isRequired
                         isDisabled={isSubmitting}
                     />
@@ -103,9 +120,10 @@ export const CreateStoryModal = ({
                     <div className="flex flex-col gap-1 h-[100%]">
                         <label className="text-sm font-medium">Content:</label>
                         <MDEditor
+                            data-color-mode={theme.theme === 'dark' ? 'dark' : 'light'}
+                            className="min-h-[95%]"
                             value={content}
-                            className="min-h-full"
-                            onChange={(text) => setContent(text ?? "")}
+                            onChange={(text => setContent(text ?? ""))}
                         />
                     </div>
 
@@ -113,7 +131,7 @@ export const CreateStoryModal = ({
                         label="Tags"
                         placeholder="Comma-separated tags"
                         value={tags}
-                        onChange={() => setTags}
+                        onChange={(e) => setTags(e.target.value)}
                         isDisabled={isSubmitting}
                     />
 
@@ -123,10 +141,16 @@ export const CreateStoryModal = ({
                         isDisabled={!title || !content || isSubmitting}
                         isLoading={isSubmitting}
                     >
-                        {isSubmitting ? 'Publishing...' : 'Publish Story'}
+                        {isSubmitting
+                            ? `${mode === 'create' ? 'Publishing...' : 'Updating...'}`
+                            : `${mode === 'create' ? 'Publish Story' : 'Update Story'}`}
                     </Button>
                 </ModalBody>
             </ModalContent>
         </Modal>
     );
 };
+
+export default function CreateStoryModal(props: Omit<StoryDialogProps, 'mode' | 'story'>) {
+    return <StoryDialog mode="create" {...props} />;
+}
